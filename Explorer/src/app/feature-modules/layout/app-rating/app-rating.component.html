@@ -1,0 +1,26 @@
+<div id="rating">
+<p>Ratings</p>
+<div id="ratings-details">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ocena</th>
+                    <th>Komentar</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ar of appRatings">
+                    <td>{{ar.rating}}</td>
+                    <td>{{ar.comment}}</td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    </div>
+</div>
