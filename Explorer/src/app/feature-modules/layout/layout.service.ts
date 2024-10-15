@@ -14,6 +14,9 @@ export class LayoutService {
     getAppRating(): Observable<PagedResults<AppRating>> { 
       return this.http.get<PagedResults<AppRating>>(environment.apiHost + 'ratings/appRating')
     }
+    addRating(rating: AppRating): Observable<AppRating> {
+      return this.http.post<AppRating>(environment.apiHost + 'ratings/appRating', rating);
+    }
 
   
 }
