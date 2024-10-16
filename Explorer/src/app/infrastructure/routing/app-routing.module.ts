@@ -6,13 +6,16 @@ import { EquipmentComponent } from 'src/app/feature-modules/administration/equip
 import { AuthGuard } from '../auth/auth.guard';
 import { RegistrationComponent } from '../auth/registration/registration.component';
 import { AllProblemsComponent } from 'src/app/feature-modules/administration/all-problems/all-problems.component';
+import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
-  {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],}
+  {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],}
+
 
 ];
 
