@@ -4,6 +4,7 @@ import { Equipment } from './model/equipment.model';
 import { environment } from 'src/env/environment';
 import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
+import { Problem } from './model/problem.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class AdministrationService {
 
   getEquipment(): Observable<PagedResults<Equipment>> {
     return this.http.get<PagedResults<Equipment>>(environment.apiHost + 'administration/equipment')
+  }
+
+  getProblem(): Observable<PagedResults<Problem>> {
+    return this.http.get<PagedResults<Problem>>(environment.apiHost + 'administration/problems')
   }
 
   deleteEquipment(id: number): Observable<Equipment> {
