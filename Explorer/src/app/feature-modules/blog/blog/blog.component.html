@@ -1,0 +1,23 @@
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created Date</th>
+                <th>Images</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let blog of blogs">
+                <td>{{blog.title}}</td>
+                <td>{{blog.description}}</td>
+                <td>{{blog.createdDate}}</td>
+                <td>{{blog.images}}</td>
+                <td>{{blog.status}}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>
