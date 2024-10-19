@@ -1,0 +1,25 @@
+.comment-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fafafa; /* Light background for a blog feel */
+  }
+  .comment-time, .comment-modified-time {
+    font-size: 12px;
+    color: #999;
+    margin-left: 10px;
+  }
+  
+  .comment-body {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  .comment-body p {
+    margin: 0;
+  }

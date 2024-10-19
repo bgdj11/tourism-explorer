@@ -1,0 +1,16 @@
+<div>
+    <div *ngFor="let comment of comments" class="comment-card">
+        <div class="comment-header">
+            <strong> {{comment.userId}} </strong>
+            <span class="comment-time">
+                Created: {{ comment.creationTime | date: 'dd.MM.yyy, HH: mm'}}
+            </span>
+            <span *ngIf="comment.lastModifiedTime !== comment.creationTime" class="comment-modified-time">
+                (Last modified:{{ comment.lastModifiedTime | date: 'dd.MM.yyyy, HH:mm' }})
+            </span>
+        </div>
+        <div class="comment-body">
+            <p> {{ comment.text }} </p>
+        </div>
+    </div>
+</div>
