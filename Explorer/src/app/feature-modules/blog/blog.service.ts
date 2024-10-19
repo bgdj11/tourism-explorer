@@ -13,6 +13,5 @@ export class BlogService {
 
   getBlogs() : Observable<PagedResults<Blog>>{
     return this.http.get<PagedResults<Blog>>('https://localhost:44333/api/author/blogs');
-
   }
 }

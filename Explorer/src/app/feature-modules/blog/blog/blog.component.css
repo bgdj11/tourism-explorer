@@ -1,3 +1,19 @@
+#blog {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+#blog-details {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+p {
+    font-size: 20px;
+}
+
 table {
     border-collapse: collapse;
     font-size: 0.9em;
@@ -7,7 +23,7 @@ table {
 }
 
 thead tr {
-    background-color: #b53f53;
+    background-color: #b53f4f;
     color: #ffffff;
     text-align: left;
 }
