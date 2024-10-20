@@ -52,6 +52,41 @@
     class="d-flex justify-content-center mt-3">
   </ngb-pagination>
 
+  <!-- Modal za dodavanje checkpointa -->
+  <ng-template #checkpointModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Dodaj Checkpoint</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #checkpointForm="ngForm" (ngSubmit)="addCheckpoint()">
+        <div class="form-group">
+          <label for="name">Naziv</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="newCheckpoint.name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Opis</label>
+          <textarea class="form-control" id="description" [(ngModel)]="newCheckpoint.description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="latitude">Latituda</label>
+          <input type="number" class="form-control" id="latitude" [(ngModel)]="newCheckpoint.latitude" name="latitude" required>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longituda</label>
+          <input type="number" class="form-control" id="longitude" [(ngModel)]="newCheckpoint.longitude" name="longitude" required>
+        </div>
+        <div class="form-group">
+          <label for="image">Slika</label>
+          <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
+        </div>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+      </form>
+    </div>
+  </ng-template>
+
   <!-- Checkpoints i Equipment Tabele (prikazuju se samo ako je tura selektovana) -->
   <div *ngIf="selectedTour" class="row mt-5">
     <div class="col-md-6">
@@ -65,6 +100,9 @@
             <th>Opis</th>
             <th>Latituda</th>
             <th>Longituda</th>
+            <button class="btn btn-primary" (click)="openCheckpointModal()">
+              <fa-icon [icon]="faPlus"></fa-icon> Dodaj Checkpoint
+            </button>
           </tr>
           </thead>
           <tbody>

@@ -12,7 +12,7 @@ import {Equipment} from "../administration/model/equipment.model";
 })
 export class TourManagementService {
   private apiUrl = environment.apiHost + 'author/tours';
-  private checkpointUrl = environment.apiHost + 'author/tour-checkpoints';
+  private checkpointUrl = environment.apiHost + 'author/tours/tour-checkpoints';
   private equipmentUrl = environment.apiHost + 'author/tours/equipment';
 
   constructor(private http: HttpClient) { }
@@ -37,7 +37,7 @@ export class TourManagementService {
     return this.http.delete<void>(`${this.apiUrl}/${tourId}`);
   }
   createCheckpoint(checkpoint: CheckpointDTO): Observable<CheckpointDTO> {
-    return this.http.post<CheckpointDTO>(this.checkpointUrl, checkpoint);
+    return this.http.post<CheckpointDTO>(`${this.apiUrl}/tour-checkpoints`, checkpoint);
   }
 
   getCheckpointIdsByTourId(tourId: number): Observable<number[]> {
@@ -54,5 +54,8 @@ export class TourManagementService {
 
   getEquipmentById(equipmentId: number): Observable<Equipment> {
     return this.http.get<Equipment>(`${this.equipmentUrl}/${equipmentId}`);
+  }
+  updateTourCheckpointIds(tourId: number, checkpointId: number): Observable<TourDTO> {
+    return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/checkpoint-ids/${checkpointId}`, {});
   }
 }
