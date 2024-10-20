@@ -5,16 +5,18 @@ import {PagedResults} from "../../shared/model/paged-results.model";
 import {TourDTO} from "./model/tour.model";
 import {environment} from "../../../env/environment";
 import { CheckpointDTO } from './model/checkpoint.model';
+import {Equipment} from "../administration/model/equipment.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TourManagementService {
   private apiUrl = environment.apiHost + 'author/tours';
-  constructor(private http: HttpClient) { }
   private checkpointUrl = environment.apiHost + 'author/tour-checkpoints';
+  private equipmentUrl = environment.apiHost + 'author/tours/equipment';
 
-// Metoda za dobavljanje tura sa paginacijom
+  constructor(private http: HttpClient) { }
+
   getTours(page: number, pageSize: number): Observable<PagedResults<TourDTO>> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -36,5 +38,21 @@ export class TourManagementService {
   }
   createCheckpoint(checkpoint: CheckpointDTO): Observable<CheckpointDTO> {
     return this.http.post<CheckpointDTO>(this.checkpointUrl, checkpoint);
+  }
+
+  getCheckpointIdsByTourId(tourId: number): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/${tourId}/checkpoint-ids`);
+  }
+
+  getEquipmentIdsByTourId(tourId: number): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/${tourId}/equipment-ids`);
+  }
+
+  getCheckpointById(checkpointId: number): Observable<CheckpointDTO> {
+    return this.http.get<CheckpointDTO>(`${this.checkpointUrl}/${checkpointId}`);
+  }
+
+  getEquipmentById(equipmentId: number): Observable<Equipment> {
+    return this.http.get<Equipment>(`${this.equipmentUrl}/${equipmentId}`);
   }
 }

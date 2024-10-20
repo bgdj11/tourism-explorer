@@ -5,6 +5,6 @@ export interface TourDTO {
   weight: string;
   tags: string[];
   price?: number;
-  equipmentIds: number[];
-  tourCheckpointIds: number[];
+  equipmentIds?: number[];
+  tourCheckpointIds?: number[];
 }

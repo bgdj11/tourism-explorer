@@ -22,17 +22,19 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let tour of tours; let i = index">
+      <tr *ngFor="let tour of tours; let i = index"
+          [class.table-active]="tour.id === selectedTour?.id"
+          (click)="selectTour(tour)">
         <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
         <td>{{ tour.name }}</td>
         <td>{{ tour.description }}</td>
         <td>{{ tour.weight }}</td>
         <td>{{ tour.price | currency }}</td>
         <td class="text-center">
-          <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', tour)">
+          <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', tour); $event.stopPropagation();">
             <fa-icon [icon]="faPencil"></fa-icon>
           </button>
-          <button class="btn btn-danger btn-sm mx-1" (click)="deleteTour(tour.id)">
+          <button class="btn btn-danger btn-sm mx-1" (click)="deleteTour(tour.id); $event.stopPropagation();">
             <fa-icon [icon]="faTrash"></fa-icon>
           </button>
         </td>
@@ -49,54 +51,55 @@
     aria-label="Pagination"
     class="d-flex justify-content-center mt-3">
   </ngb-pagination>
+
+  <!-- Checkpoints i Equipment Tabele (prikazuju se samo ako je tura selektovana) -->
+  <div *ngIf="selectedTour" class="row mt-5">
+    <div class="col-md-6">
+      <h4 class="text-center">Checkpointi za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Latituda</th>
+            <th>Longituda</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let checkpoint of selectedTourCheckpoints; let j = index">
+            <td>{{ j + 1 }}</td>
+            <td>{{ checkpoint.name }}</td>
+            <td>{{ checkpoint.description }}</td>
+            <td>{{ checkpoint.latitude }}</td>
+            <td>{{ checkpoint.longitude }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4 class="text-center">Oprema za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Naziv</th>
+            <th>Opis</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let equipment of selectedTourEquipment; let k = index">
+            <td>{{ k + 1 }}</td>
+            <td>{{ equipment.name }}</td>
+            <td>{{ equipment.description }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ngBootstrap modal template -->
-<ng-template #tourModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">{{ modalTitle }}</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <form (ngSubmit)="onSubmit()">
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="name" class="form-label">Naziv Ture</label>
-          <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
-        </div>
-        <div class="col-md-6">
-          <label for="weight" class="form-label">Težina</label>
-          <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="description" class="form-label">Opis Ture</label>
-        <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="price" class="form-label">Cena</label>
-          <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
-        </div>
-        <div class="col-md-6">
-          <label for="tags" class="form-label">Tagovi</label>
-          <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
-        </div>
-      </div>
-
-      <!-- Button for adding a checkpoint -->
-      <div class="mb-3">
-        <button type="button" class="btn btn-secondary" (click)="goToAddCheckpoint(); modal.dismiss()">
-          <i class="bi bi-plus-circle"></i> Dodaj Checkpoint
-        </button>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-save"></i> Sačuvaj
-        </button>
-      </div>
-    </form>
-  </div>
-</ng-template>

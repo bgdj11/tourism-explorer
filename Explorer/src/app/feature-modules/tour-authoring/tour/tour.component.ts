@@ -3,7 +3,9 @@ import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Router } from '@angular/router'; // Import Router
+import { Router } from '@angular/router';
+import {Equipment} from "../../administration/model/equipment.model";
+import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
 
 @Component({
   selector: 'xp-tour',
@@ -12,6 +14,9 @@ import { Router } from '@angular/router'; // Import Router
 })
 export class TourComponent implements OnInit {
   tours: TourDTO[] = [];
+  selectedTourCheckpoints: CheckpointDTO[] = [];
+  selectedTourEquipment: Equipment[] = [];
+  selectedTour: any = null;
   totalCount: number = 0;
   currentPage: number = 1;
   pageSize: number = 10;
@@ -35,6 +40,12 @@ export class TourComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router // Inject Router
   ) {}
+
+  selectTour(tour: any): void {
+    this.selectedTour = tour;
+    this.getCheckpointsByTourId(tour.id);
+    this.getEquipmentByTourId(tour.id);
+  }
 
   ngOnInit(): void {
     this.loadTours();
@@ -81,6 +92,10 @@ export class TourComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.tour = {
+      ...this.tour,
+      tags: ['ad', 'asd']
+    }
     if (this.tour.id) {
       this.tourService.updateTour(this.tour).subscribe(
         (response) => {
@@ -115,6 +130,28 @@ export class TourComponent implements OnInit {
         }
       );
     }
+  }
+
+  getCheckpointsByTourId(tourId: number): void {
+    this.selectedTourCheckpoints = [];
+    this.tourService.getCheckpointIdsByTourId(tourId).subscribe(checkpointIds => {
+      checkpointIds.forEach(id => {
+        this.tourService.getCheckpointById(id).subscribe(checkpoint => {
+          this.selectedTourCheckpoints.push(checkpoint);
+        });
+      });
+    });
+  }
+
+  getEquipmentByTourId(tourId: number): void {
+    this.selectedTourEquipment = [];
+    this.tourService.getEquipmentIdsByTourId(tourId).subscribe(equipmentIds => {
+      equipmentIds.forEach(id => {
+        this.tourService.getEquipmentById(id).subscribe(equipment => {
+          this.selectedTourEquipment.push(equipment);
+        });
+      });
+    });
   }
 
   nextPage(): void {
