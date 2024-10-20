@@ -1,83 +1,102 @@
-<div class="container">
-  <h2>Ture</h2>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Ture</h2>
 
   <!-- Dugme za dodavanje nove ture -->
   <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" (click)="openModal('add')">Dodaj novu turu</button>
+    <button class="btn btn-primary" (click)="openModal('add')">
+      <i class="bi bi-plus-circle"></i> Dodaj novu turu
+    </button>
   </div>
 
   <!-- Tabela tura -->
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>#</th>
-      <th>Naziv</th>
-      <th>Opis</th>
-      <th>Težina</th>
-      <th>Cena</th>
-      <th>Akcije</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let tour of tours; let i = index">
-      <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-      <td>{{ tour.name }}</td>
-      <td>{{ tour.description }}</td>
-      <td>{{ tour.weight }}</td>
-      <td>{{ tour.price | currency }}</td>
-      <td>
-        <button class="btn btn-warning btn-sm" (click)="openModal('edit', tour)">Edituj</button>
-        <button class="btn btn-danger btn-sm" (click)="deleteTour(tour.id)">Obriši</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="table-dark text-center">
+      <tr>
+        <th>#</th>
+        <th>Naziv</th>
+        <th>Opis</th>
+        <th>Težina</th>
+        <th>Cena</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let tour of tours; let i = index">
+        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td>{{ tour.name }}</td>
+        <td>{{ tour.description }}</td>
+        <td>{{ tour.weight }}</td>
+        <td>{{ tour.price | currency }}</td>
+        <td class="text-center">
+          <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', tour)">
+            <fa-icon [icon]="faPencil"></fa-icon>
+          </button>
+          <button class="btn btn-danger btn-sm mx-1" (click)="deleteTour(tour.id)">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Paginacija -->
-  <div class="pagination-controls">
-    <button class="btn btn-secondary" (click)="previousPage()" [disabled]="currentPage === 1">Prethodna</button>
-    <button class="btn btn-secondary" (click)="nextPage()" [disabled]="(currentPage * pageSize) >= totalCount">Sledeća</button>
-  </div>
+  <ngb-pagination
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="totalCount"
+    aria-label="Pagination"
+    class="d-flex justify-content-center mt-3">
+  </ngb-pagination>
 </div>
-<!-- Modal za dodavanje/editovanje ture -->
-<div class="modal fade" id="tourModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ modalTitle }}</h5>
-        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+
+<!-- ngBootstrap modal template -->
+<ng-template #tourModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{ modalTitle }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="onSubmit()">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">Naziv Ture</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
+        </div>
+        <div class="col-md-6">
+          <label for="weight" class="form-label">Težina</label>
+          <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Opis Ture</label>
+        <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="price" class="form-label">Cena</label>
+          <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
+        </div>
+        <div class="col-md-6">
+          <label for="tags" class="form-label">Tagovi</label>
+          <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
+        </div>
+      </div>
+
+      <!-- Button for adding a checkpoint -->
+      <div class="mb-3">
+        <button type="button" class="btn btn-secondary" (click)="goToAddCheckpoint(); modal.dismiss()">
+          <i class="bi bi-plus-circle"></i> Dodaj Checkpoint
         </button>
       </div>
-      <div class="modal-body">
-        <!-- Forma za dodavanje/editovanje ture -->
-        <form (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label for="name">Naziv Ture</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
-          </div>
-          <div class="form-group">
-            <label for="description">Opis Ture</label>
-            <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="weight">Težina</label>
-            <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
-          </div>
-          <div class="form-group">
-            <label for="price">Cena</label>
-            <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
-          </div>
-          <div class="form-group">
-            <label for="tags">Tagovi</label>
-            <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="closeModal()">Zatvori</button>
-            <button type="submit" class="btn btn-primary">Sačuvaj</button>
-          </div>
-        </form>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save"></i> Sačuvaj
+        </button>
       </div>
-    </div>
+    </form>
   </div>
-</div>
+</ng-template>
