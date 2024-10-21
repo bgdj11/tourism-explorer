@@ -2,7 +2,7 @@ export interface CheckpointDTO {
   id: number;
   latitude?: number;
   longitude?: number;
-  name: string;
-  description: string;
+  checkpointName: string;
+  checkpointDescription: string;
   image: string;
 }

@@ -33,8 +33,8 @@ export class TourComponent implements OnInit {
   };
   newCheckpoint: CheckpointDTO = {
     id: 0,
-    name: '',
-    description: '',
+    checkpointName: '',
+    checkpointDescription: '',
     latitude: undefined,
     longitude: undefined,
     image: ''
@@ -90,7 +90,7 @@ export class TourComponent implements OnInit {
   }
   openCheckpointModal(): void {
     // Resetovanje forme za novi Checkpoint
-    this.newCheckpoint = { id: 0, name: '', description: '', latitude: undefined, longitude: undefined, image: '' };
+    this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
     this.modalRef = this.modalService.open(this.checkpointModal); // Otvaranje Checkpoint modala
   }
 
@@ -179,20 +179,7 @@ export class TourComponent implements OnInit {
       });
     });
   }
-  // getCheckpointsByTourId(tourId: number): void {
-  //   this.selectedTourCheckpoints = []; // Resetuj postojeće checkpointove
-  //   this.tourService.getCheckpointIdsByTourId(tourId).subscribe(checkpointIds => {
-  //     // Učitaj checkpointove na osnovu ID-ova
-  //     const requests = checkpointIds.map(id => this.tourService.getCheckpointById(id).toPromise());
-  //
-  //     Promise.all(requests).then(checkpoints => {
-  //       // Filtriraj undefined vrednosti
-  //       this.selectedTourCheckpoints = checkpoints.filter((checkpoint): checkpoint is CheckpointDTO => checkpoint !== undefined);
-  //     }).catch(error => {
-  //       console.error('Greška prilikom dohvatanja checkpointova', error);
-  //     });
-  //   });
-  // }
+
   getEquipmentByTourId(tourId: number): void {
     this.selectedTourEquipment = [];
     this.tourService.getEquipmentIdsByTourId(tourId).subscribe(equipmentIds => {

@@ -52,6 +52,49 @@
     class="d-flex justify-content-center mt-3">
   </ngb-pagination>
 
+  <!-- Modal za dodavanje/editovanje ture -->
+  <ng-template #tourModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalTitle }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Naziv Ture</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
+          </div>
+          <div class="col-md-6">
+            <label for="weight" class="form-label">Težina</label>
+            <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Opis Ture</label>
+          <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="price" class="form-label">Cena</label>
+            <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
+          </div>
+          <div class="col-md-6">
+            <label for="tags" class="form-label">Tagovi</label>
+            <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
   <!-- Modal za dodavanje checkpointa -->
   <ng-template #checkpointModal let-modal>
     <div class="modal-header">
@@ -63,12 +106,12 @@
     <div class="modal-body">
       <form #checkpointForm="ngForm" (ngSubmit)="addCheckpoint()">
         <div class="form-group">
-          <label for="name">Naziv</label>
-          <input type="text" class="form-control" id="name" [(ngModel)]="newCheckpoint.name" name="name" required>
+          <label for="checkpointName">Naziv</label>
+          <input type="text" class="form-control" id="checkpointName" [(ngModel)]="newCheckpoint.checkpointName" name="checkpointName" required>
         </div>
         <div class="form-group">
-          <label for="description">Opis</label>
-          <textarea class="form-control" id="description" [(ngModel)]="newCheckpoint.description" name="description" required></textarea>
+          <label for="checkpointDescription">Opis</label>
+          <textarea class="form-control" id="checkpointDescription" [(ngModel)]="newCheckpoint.checkpointDescription" name="checkpointDescription" required></textarea>
         </div>
         <div class="form-group">
           <label for="latitude">Latituda</label>
@@ -101,15 +144,15 @@
             <th>Latituda</th>
             <th>Longituda</th>
             <button class="btn btn-primary" (click)="openCheckpointModal()">
-              <fa-icon [icon]="faPlus"></fa-icon> Dodaj Checkpoint
+              <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let checkpoint of selectedTourCheckpoints; let j = index">
             <td>{{ j + 1 }}</td>
-            <td>{{ checkpoint.name }}</td>
-            <td>{{ checkpoint.description }}</td>
+            <td>{{ checkpoint.checkpointName }}</td>
+            <td>{{ checkpoint.checkpointDescription }}</td>
             <td>{{ checkpoint.latitude }}</td>
             <td>{{ checkpoint.longitude }}</td>
           </tr>
@@ -140,4 +183,3 @@
     </div>
   </div>
 </div>
-
