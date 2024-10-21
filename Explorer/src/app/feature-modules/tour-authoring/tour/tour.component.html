@@ -1,0 +1,221 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Ture</h2>
+
+  <!-- Dugme za dodavanje nove ture -->
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" (click)="openModal('add')">
+      <i class="bi bi-plus-circle"></i> Dodaj novu turu
+    </button>
+  </div>
+
+  <!-- Tabela tura -->
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="table-dark text-center">
+      <tr>
+        <th>#</th>
+        <th>Naziv</th>
+        <th>Opis</th>
+        <th>Težina</th>
+        <th>Cena</th>
+        <th>Akcije</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let tour of tours; let i = index"
+          [class.table-active]="tour.id === selectedTour?.id"
+          (click)="selectTour(tour)">
+        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td>{{ tour.name }}</td>
+        <td>{{ tour.description }}</td>
+        <td>{{ tour.weight }}</td>
+        <td>{{ tour.price | currency }}</td>
+        <td class="text-center">
+          <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', tour); $event.stopPropagation();">
+            <fa-icon [icon]="faPencil"></fa-icon>
+          </button>
+          <button class="btn btn-danger btn-sm mx-1" (click)="deleteTour(tour.id); $event.stopPropagation();">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginacija -->
+  <ngb-pagination
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="totalCount"
+    aria-label="Pagination"
+    class="d-flex justify-content-center mt-3">
+  </ngb-pagination>
+
+  <!-- Modal za dodavanje/editovanje ture -->
+  <ng-template #tourModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalTitle }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Naziv Ture</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
+          </div>
+          <div class="col-md-6">
+            <label for="weight" class="form-label">Težina</label>
+            <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Opis Ture</label>
+          <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="price" class="form-label">Cena</label>
+            <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
+          </div>
+          <div class="col-md-6">
+            <label for="tags" class="form-label">Tagovi</label>
+            <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Sačuvaj
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+  <!-- Modal za dodavanje checkpointa -->
+  <ng-template #checkpointModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Dodaj Checkpoint</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #checkpointForm="ngForm" (ngSubmit)="addCheckpoint()">
+        <div class="form-group">
+          <label for="checkpointName">Naziv</label>
+          <input type="text" class="form-control" id="checkpointName" [(ngModel)]="newCheckpoint.checkpointName" name="checkpointName" required>
+        </div>
+        <div class="form-group">
+          <label for="checkpointDescription">Opis</label>
+          <textarea class="form-control" id="checkpointDescription" [(ngModel)]="newCheckpoint.checkpointDescription" name="checkpointDescription" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="latitude">Latituda</label>
+          <input type="number" class="form-control" id="latitude" [(ngModel)]="newCheckpoint.latitude" name="latitude" required>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longituda</label>
+          <input type="number" class="form-control" id="longitude" [(ngModel)]="newCheckpoint.longitude" name="longitude" required>
+        </div>
+        <div class="form-group">
+          <label for="image">Slika</label>
+          <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
+        </div>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+      </form>
+    </div>
+  </ng-template>
+
+  <!-- Modal za izbor opreme -->
+  <ng-template #equipmentModal let-modal>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Izaberite Opreme</h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <ul class="list-group">
+              <li
+                *ngFor="let equipment of availableEquipment"
+                class="list-group-item"
+                [class.active]="equipment.id ? isEquipmentSelected(equipment.id) : false"
+                (click)="equipment.id ? toggleEquipmentSelection(equipment.id) : null">
+                {{ equipment.name }} - {{ equipment.description }}
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-primary" (click)="addSelectedEquipment()">Dodaj Izabranu Opreme</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <div *ngIf="selectedTour" class="row mt-5">
+    <div class="col-md-6">
+      <h4 class="text-center">Checkpointi za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Latituda</th>
+            <th>Longituda</th>
+            <button class="btn btn-primary" (click)="openCheckpointModal()">
+              <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
+            </button>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let checkpoint of selectedTourCheckpoints; let j = index">
+            <td>{{ j + 1 }}</td>
+            <td>{{ checkpoint.checkpointName }}</td>
+            <td>{{ checkpoint.checkpointDescription }}</td>
+            <td>{{ checkpoint.latitude }}</td>
+            <td>{{ checkpoint.longitude }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <h4 class="text-center">Oprema za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Akcije</th> <!-- Dodana kolona za akcije -->
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let equipment of selectedTourEquipment; let k = index">
+            <td>{{ k + 1 }}</td>
+            <td>{{ equipment.name }}</td>
+            <td>{{ equipment.description }}</td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-sm mx-1" (click)="equipment.id ? removeEquipment(equipment.id) : null">
+                <fa-icon [icon]="faTrash"></fa-icon>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
