@@ -16,8 +16,11 @@ export class TourComponent implements OnInit {
   tours: TourDTO[] = [];
   selectedTourCheckpoints: CheckpointDTO[] = [];
   selectedTourEquipment: Equipment[] = [];
+  availableEquipment: Equipment[] = [];
+  selectedEquipmentIds: number[] = [];
   selectedTour: any = null;
   totalCount: number = 0;
+  totalEquipmentCount: number = 0;
   currentPage: number = 1;
   pageSize: number = 10;
   modalTitle: string = '';
@@ -42,13 +45,16 @@ export class TourComponent implements OnInit {
 
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
+  @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
   private modalRef!: NgbModalRef;
 
   constructor(
     private tourService: TourManagementService,
     private modalService: NgbModal,
     private router: Router // Inject Router
-  ) {}
+  ) {
+    this.loadAvailableEquipment();
+  }
 
   selectTour(tour: any): void {
     this.selectedTour = tour;
@@ -68,6 +74,18 @@ export class TourComponent implements OnInit {
       },
       (error) => {
         console.error('Greška prilikom dohvatanja tura', error);
+      }
+    );
+  }
+
+  loadAvailableEquipment(): void {
+    this.tourService.getAllEquipment(this.currentPage, this.pageSize).subscribe(
+      (data) => {
+        this.availableEquipment = data.results.map(e => ({ ...e, selected: false }));
+        this.totalEquipmentCount = data.totalCount;
+      },
+      (error) => {
+        console.error('Greška prilikom dohvatanja opreme', error);
       }
     );
   }
@@ -92,6 +110,10 @@ export class TourComponent implements OnInit {
     // Resetovanje forme za novi Checkpoint
     this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
     this.modalRef = this.modalService.open(this.checkpointModal); // Otvaranje Checkpoint modala
+  }
+
+  openEquipmentModal(): void {
+    this.modalRef = this.modalService.open(this.equipmentModal);
   }
 
   closeModal(): void {
@@ -125,6 +147,22 @@ export class TourComponent implements OnInit {
         console.error('Greška prilikom dodavanja checkpointa', error);
       }
     );
+  }
+
+  removeEquipment(equipmentId: number): void {
+    if (this.selectedTour) {
+      this.tourService.removeEquipmentFromTour(this.selectedTour.id, equipmentId).subscribe(
+        () => {
+          this.selectedTourEquipment = this.selectedTourEquipment.filter(e => e.id !== equipmentId);
+          console.log(`Oprema sa ID-jem ${equipmentId} je uspešno uklonjena.`);
+        },
+        (error) => {
+          console.error(`Greška prilikom uklanjanja opreme sa ID-jem ${equipmentId}`, error);
+        }
+      );
+    } else {
+      console.error('Nijedna tura nije selektovana.');
+    }
   }
 
 
@@ -190,6 +228,44 @@ export class TourComponent implements OnInit {
       });
     });
   }
+
+  addSelectedEquipment(): void {
+    if (this.selectedTour) {
+      this.selectedEquipmentIds.forEach(equipmentId => {
+        this.tourService.addEquipmentToTour(this.selectedTour.id, equipmentId).subscribe(
+          () => {
+            const equipment = this.availableEquipment.find(e => e.id === equipmentId);
+            if (equipment) {
+              this.selectedTourEquipment.push(equipment);
+            }
+          },
+          (error) => {
+            console.error(`Greška prilikom dodavanja opreme sa ID-jem: ${equipmentId}`, error);
+          }
+        );
+      });
+      // Očistimo selekciju i zatvorimo modal
+      this.selectedEquipmentIds = [];
+      this.closeModal();
+    } else {
+      console.error('Nijedna tura nije selektovana.');
+    }
+  }
+
+
+  isEquipmentSelected(equipmentId: number): boolean {
+    return this.selectedEquipmentIds.includes(equipmentId);
+  }
+
+  toggleEquipmentSelection(equipmentId: number): void {
+    const index = this.selectedEquipmentIds.indexOf(equipmentId);
+    if (index > -1) {
+      this.selectedEquipmentIds.splice(index, 1);
+    } else {
+      this.selectedEquipmentIds.push(equipmentId);
+    }
+  }
+
 
   nextPage(): void {
     if (this.currentPage * this.pageSize < this.totalCount) {
