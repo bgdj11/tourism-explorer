@@ -1,0 +1,27 @@
+<form [formGroup]="preferencesForm" (ngSubmit)="addTourPreferences()">
+    <label for="difficulty">Tezina ture:</label>
+    <select id="difficulty" formControlName="difficulty">
+      <option value="EASY">Laka</option>
+      <option value="MEDIUM">Srednja</option>
+      <option value="HARD">Teska</option>
+    </select>
+  
+    <label for="walkRating">Ocjena za setnju:</label>
+    <input id="walkRating" type="number" formControlName="walkRating" min="0" max="3">
+  
+    <label for="bikeRating">Ocjena za bicikl:</label>
+    <input id="bikeRating" type="number" formControlName="bikeRating" min="0" max="3">
+  
+    <label for="carRating">Ocjena za auto:</label>
+    <input id="carRating" type="number" formControlName="carRating" min="0" max="3">
+  
+    <label for="boatRating">Ocjena za camac:</label>
+    <input id="boatRating" type="number" formControlName="boatRating" min="0" max="3">
+  
+    <label for="interestTags">Tagovi:</label>
+    <input id="interestTags" type="text" formControlName="interestTags">
+  
+    <button color="primary" type="submit" mat-raised-button>Dodaj</button>
+    
+</form>
+  

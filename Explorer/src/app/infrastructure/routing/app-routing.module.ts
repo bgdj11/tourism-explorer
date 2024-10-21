@@ -8,6 +8,7 @@ import { RegistrationComponent } from '../auth/registration/registration.compone
 import { AppRatingComponent } from 'src/app/feature-modules/layout/app-rating/app-rating.component';
 import { AllProblemsComponent } from 'src/app/feature-modules/administration/all-problems/all-problems.component';
 import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
+import { TourPreferencesComponent } from 'src/app/feature-modules/marketplace/tour-preferences/tour-preferences.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -16,9 +17,9 @@ const routes: Routes = [
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
   {path: 'app-rating', component: AppRatingComponent},
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
-  {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],}
-
-
+  {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
+  //{path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]}
+  {path: 'tour-preferences', component: TourPreferencesComponent}
 ];
 
 @NgModule({
