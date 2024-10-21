@@ -4,12 +4,14 @@ import {TourComponent} from "./tour/tour.component";
 import {FormsModule} from "@angular/forms";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import { ObjectComponent } from './object/object.component';
 
 
 
 @NgModule({
   declarations: [
     TourComponent,
+    ObjectComponent,
   ],
   imports: [
     CommonModule,
@@ -19,6 +21,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
   ],
   exports: [
     TourComponent,
+    ObjectComponent
   ]
 })
 export class TourAuthoringModule { }
