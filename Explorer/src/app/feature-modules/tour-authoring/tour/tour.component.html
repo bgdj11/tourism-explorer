@@ -144,6 +144,7 @@
         </table>
       </div>
     </div>
+
     <div class="col-md-6">
       <h4 class="text-center">Oprema za {{ selectedTour.name }}</h4>
       <div class="table-responsive">
@@ -153,9 +154,7 @@
             <th>#</th>
             <th>Naziv</th>
             <th>Opis</th>
-            <button class="btn btn-primary" (click)="openEquipmentModal()">
-              <fa-icon [icon]="faPlus"></fa-icon> Dodaj opremu
-            </button>
+            <th>Akcije</th> <!-- Dodana kolona za akcije -->
           </tr>
           </thead>
           <tbody>
@@ -163,11 +162,18 @@
             <td>{{ k + 1 }}</td>
             <td>{{ equipment.name }}</td>
             <td>{{ equipment.description }}</td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-sm mx-1" (click)="equipment.id ? removeEquipment(equipment.id) : null">
+                <fa-icon [icon]="faTrash"></fa-icon>
+              </button>
+            </td>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
+
+
   </div>
 </div>
 

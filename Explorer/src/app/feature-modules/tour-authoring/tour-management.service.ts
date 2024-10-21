@@ -29,6 +29,10 @@ export class TourManagementService {
     return this.http.post<void>(`${this.apiUrl}/${tourId}/equipment-ids/${equipmentId}`, {});
   }
 
+  removeEquipmentFromTour(tourId: number, equipmentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${tourId}/equipment-ids/${equipmentId}`);
+  }
+
   getAllEquipment(page: number, pageSize: number): Observable<PagedResults<Equipment>> {
     let params = new HttpParams()
       .set('page', page.toString())

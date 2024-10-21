@@ -149,6 +149,22 @@ export class TourComponent implements OnInit {
     );
   }
 
+  removeEquipment(equipmentId: number): void {
+    if (this.selectedTour) {
+      this.tourService.removeEquipmentFromTour(this.selectedTour.id, equipmentId).subscribe(
+        () => {
+          this.selectedTourEquipment = this.selectedTourEquipment.filter(e => e.id !== equipmentId);
+          console.log(`Oprema sa ID-jem ${equipmentId} je uspešno uklonjena.`);
+        },
+        (error) => {
+          console.error(`Greška prilikom uklanjanja opreme sa ID-jem ${equipmentId}`, error);
+        }
+      );
+    } else {
+      console.error('Nijedna tura nije selektovana.');
+    }
+  }
+
 
   onSubmit(): void {
     this.tour = {
