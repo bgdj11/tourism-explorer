@@ -52,7 +52,6 @@
     class="d-flex justify-content-center mt-3">
   </ngb-pagination>
 
-  <!-- Modal za dodavanje checkpointa -->
   <ng-template #checkpointModal let-modal>
     <div class="modal-header">
       <h4 class="modal-title">Dodaj Checkpoint</h4>
@@ -87,7 +86,35 @@
     </div>
   </ng-template>
 
-  <!-- Checkpoints i Equipment Tabele (prikazuju se samo ako je tura selektovana) -->
+  <!-- Modal za izbor opreme -->
+  <ng-template #equipmentModal let-modal>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Izaberite Opreme</h4>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <ul class="list-group">
+              <li
+                *ngFor="let equipment of availableEquipment"
+                class="list-group-item"
+                [class.active]="equipment.id ? isEquipmentSelected(equipment.id) : false"
+                (click)="equipment.id ? toggleEquipmentSelection(equipment.id) : null">
+                {{ equipment.name }} - {{ equipment.description }}
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-primary" (click)="addSelectedEquipment()">Dodaj Izabranu Opreme</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
   <div *ngIf="selectedTour" class="row mt-5">
     <div class="col-md-6">
       <h4 class="text-center">Checkpointi za {{ selectedTour.name }}</h4>
@@ -126,6 +153,9 @@
             <th>#</th>
             <th>Naziv</th>
             <th>Opis</th>
+            <button class="btn btn-primary" (click)="openEquipmentModal()">
+              <fa-icon [icon]="faPlus"></fa-icon> Dodaj opremu
+            </button>
           </tr>
           </thead>
           <tbody>

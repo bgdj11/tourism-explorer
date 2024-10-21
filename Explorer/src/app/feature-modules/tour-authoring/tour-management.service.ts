@@ -25,6 +25,18 @@ export class TourManagementService {
     return this.http.get<PagedResults<TourDTO>>(this.apiUrl, { params });
   }
 
+  addEquipmentToTour(tourId: number, equipmentId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${tourId}/equipment-ids/${equipmentId}`, {});
+  }
+
+  getAllEquipment(page: number, pageSize: number): Observable<PagedResults<Equipment>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<PagedResults<Equipment>>(this.equipmentUrl, {params});
+  }
+
   createTour(tour: TourDTO): Observable<TourDTO> {
     return this.http.post<TourDTO>(this.apiUrl, tour);
   }
@@ -55,6 +67,7 @@ export class TourManagementService {
   getEquipmentById(equipmentId: number): Observable<Equipment> {
     return this.http.get<Equipment>(`${this.equipmentUrl}/${equipmentId}`);
   }
+
   updateTourCheckpointIds(tourId: number, checkpointId: number): Observable<TourDTO> {
     return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/checkpoint-ids/${checkpointId}`, {});
   }
