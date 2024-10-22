@@ -18,13 +18,13 @@ import { MarkdownModule } from 'ngx-markdown';
   imports: [
     CommonModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MarkdownModule.forRoot() // Add this line if you're using ngx-markdown
   ],
   exports: [
     BlogComponent,
     CommentComponent,
-    ReactiveFormsModule,
-    MarkdownModule.forRoot()
+    ReactiveFormsModule
   ],
 })
 export class BlogModule { }
