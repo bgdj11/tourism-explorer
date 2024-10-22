@@ -102,7 +102,8 @@ export class BlogService {
     }
 
     return this.http.delete<Comment>(environment.apiHost + endpoint + comment.id);
-
+  }
+  
   getBlogs() : Observable<PagedResults<Blog>>{
     return this.http.get<PagedResults<Blog>>(environment.apiHost + 'author/blogs');
   }
