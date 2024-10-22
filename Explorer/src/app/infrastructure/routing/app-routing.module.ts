@@ -9,9 +9,11 @@ import { AppRatingComponent } from 'src/app/feature-modules/layout/app-rating/ap
 import { AllProblemsComponent } from 'src/app/feature-modules/administration/all-problems/all-problems.component';
 import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
+import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
+  {path: '', component: HomeComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
@@ -19,6 +21,7 @@ const routes: Routes = [
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'blog', component: BlogComponent}
+  {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
