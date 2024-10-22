@@ -33,8 +33,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     TourAuthoringModule,
     TourExecutionModule,
     AuthModule,
+    HttpClientModule,
+    BlogModule
     FontAwesomeModule,
-    HttpClientModule
   ],
   providers: [
     {
