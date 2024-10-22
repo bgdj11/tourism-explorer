@@ -52,4 +52,8 @@ export class CommentComponent implements OnInit{
     })
   }
 
+  canUserComment(): boolean{
+    return this.service.hasUserAccess();
+  }
+
 }

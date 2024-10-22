@@ -37,7 +37,11 @@ export class BlogService {
     }
   }
 
-  
+  hasUserAccess(): boolean{
+    const userRole = this.getUserRoleFromToken();
+    
+    return userRole === 'author' || userRole === 'tourist';
+  }
 
   getComments(): Observable<PagedResults<Comment>>{
     
@@ -47,6 +51,8 @@ export class BlogService {
     if(userRole === 'author'){
       endpoint = 'author/comment';
     }else if(userRole === 'tourist'){
+      endpoint = 'tourist/comment';
+    }else{
       endpoint = 'tourist/comment';
     }
 
