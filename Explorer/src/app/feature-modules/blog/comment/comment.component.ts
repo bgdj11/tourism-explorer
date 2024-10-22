@@ -11,16 +11,43 @@ import { Comment } from '../model/comment.model';
 export class CommentComponent implements OnInit{
 
   comments: Comment[] = [];
+  selectedComment: Comment;
+  shouldEdit: boolean; 
 
   constructor(private service: BlogService) { }
 
   ngOnInit(): void {
+    this.getComments()
+  }
+
+  getComments(): void {
     this.service.getComments().subscribe({
       next: (result: PagedResults<Comment>) => {
-        this.comments = result.results;
+        this.comments = result.results
       },
       error: (err: any) => {
         console.log(err)
+      }
+    })
+  }
+
+  onEditClicked(comment: Comment): void{
+    this.shouldEdit = true; 
+    this.selectedComment = comment;
+  }
+
+  onCommentUpdated(): void{
+    this.getComments();
+    this.shouldEdit = false; 
+  }
+
+  deleteComment(comment: Comment): void{
+    this.service.deleteComment(comment).subscribe({
+      next:(_) => {
+        this.getComments();
+      },
+      error: (err) => {
+        console.log('Error occured: ', err); 
       }
     })
   }
