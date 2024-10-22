@@ -19,7 +19,7 @@ import { MarkdownModule } from 'ngx-markdown';
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    MarkdownModule.forRoot() // Add this line if you're using ngx-markdown
+    MarkdownModule.forRoot() 
   ],
   exports: [
     BlogComponent,
