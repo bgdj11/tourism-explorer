@@ -64,30 +64,37 @@ export class BlogFormComponent implements OnChanges {
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0 
     };
-    if(this.user?.role === 'author'){
+  
+    if (this.user?.role === 'author') {
       this.service.addBlogAuthor(blog).subscribe({
         next: () => {
           this.blogUpdated.emit();
+          this.blogForm.reset();  
+          this.images.clear();    
+          this.addImageField();   
         },
         error: (err: any) => {
           console.log(err);
         }
       });
     }
-
-    if(this.user?.role === 'tourist'){
+  
+    if (this.user?.role === 'tourist') {
       this.service.addBlogTourist(blog).subscribe({
         next: () => {
           this.blogUpdated.emit();
+          this.blogForm.reset();  
+          this.images.clear();    
+          this.addImageField();   
         },
         error: (err: any) => {
           console.log(err);
         }
       });
     }
-    
   }
-  updateBlog():void {
+  
+  updateBlog(): void {
     const blog: Blog = {
       title: this.blogForm.value.title || "",
       description: this.blogForm.value.description || "",
@@ -97,21 +104,29 @@ export class BlogFormComponent implements OnChanges {
       userId: this.user?.id || 0
     };
     blog.id = this.blog.id;
-
-    if(this.user?.role === 'author'){
+  
+    if (this.user?.role === 'author') {
       this.service.updateBlogAuthor(blog).subscribe({
         next: () => {
           this.blogUpdated.emit();
+          this.blogForm.reset();  
+          this.images.clear();    
+          this.addImageField();   
         }
-      })
+      });
     }
-    if(this.user?.role === 'tourist'){
+  
+    if (this.user?.role === 'tourist') {
       this.service.updateBlogTourist(blog).subscribe({
         next: () => {
           this.blogUpdated.emit();
+          this.blogForm.reset();  
+          this.images.clear();    
+          this.addImageField();  
         }
-      })
-    }   
+      });
+    }
   }
+  
   
 }
