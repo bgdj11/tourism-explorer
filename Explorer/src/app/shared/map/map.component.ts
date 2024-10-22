@@ -1,4 +1,4 @@
-import { Component, AfterViewInit  } from '@angular/core';
+import { Component, AfterViewInit, Input, Output, EventEmitter  } from '@angular/core';
 import * as L from 'leaflet';
 import {MapService} from "./map.service";
 
@@ -9,6 +9,14 @@ import {MapService} from "./map.service";
 })
 export class MapComponent implements AfterViewInit {
   private map: any;
+  private markers: L.Marker[] = [];
+
+  @Input() initialCenter: [number, number] = [45.2396, 19.8227];
+  @Input() initialZoom: number = 13;
+  @Input() waypoints: { lat: number, lng: number }[] = [];
+
+  @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
+  @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
 
   constructor(private mapService: MapService) {
   }
@@ -41,22 +49,46 @@ export class MapComponent implements AfterViewInit {
     L.Marker.prototype.options.icon = DefaultIcon;
     this.initMap();
 
-    // samo za testiranje
-    //this.search();
-    //this.setRoute();
   }
 
-  // samo primer poziva , IZMENITI!
-  search(): void {
-    this.mapService.search('Strazilovska 19, Novi Sad').subscribe({
+  search(address: string): void {
+    this.mapService.search(address).subscribe({
       next: (result) => {
-        console.log(result);
-        L.marker([result[0].lat, result[0].lon])
-          .addTo(this.map)
-          .bindPopup('Pozdrav iz Strazilovske 19.')
-          .openPopup();
+        if (result && result.length > 0) {
+          const lat = result[0].lat;
+          const lng = result[0].lon;
+          L.marker([lat, lng])
+            .addTo(this.map)
+            .bindPopup(`Found: ${address}`)
+            .openPopup();
+
+          this.searchResult.emit({ lat, lng });
+        }
       },
-      error: () => {},
+      error: () => {
+        console.error("Search failed.");
+      },
+    });
+  }
+
+  setRoute(waypoints: { lat: number, lng: number }[]): void {
+    const latLngPoints = waypoints.map(point => L.latLng(point.lat, point.lng));
+
+    const routeControl = L.Routing.control({
+      waypoints: latLngPoints,
+      router: L.Routing.mapbox('pk.eyJ1IjoiYmdkajExIiwiYSI6ImNtMmtrZHpyZzAyZWoycXM5enphbXZia2UifQ.54XDMPHRsMN86I6gUbbOcQ', { profile: 'mapbox/walking' })
+    }).addTo(this.map);
+
+    routeControl.on('routesfound', function (e) {
+      const routes = e.routes;
+      const summary = routes[0].summary;
+      alert(
+        'Total distance is ' +
+        (summary.totalDistance / 1000).toFixed(2) +
+        ' km and total time is ' +
+        Math.round((summary.totalTime % 3600) / 60) +
+        ' minutes'
+      );
     });
   }
 
@@ -65,21 +97,17 @@ export class MapComponent implements AfterViewInit {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
-      new L.Marker([lat, lng]).addTo(this.map);
-    });
-  }
 
-  // prilagoditi za dalju upotrebu !
-  setRoute(): void {
-    const routeControl = L.Routing.control({
-      waypoints: [L.latLng(57.74, 11.94), L.latLng(57.6792, 11.949)], // Ovde ubacujete vasu listu cekpointa, odnosto lat i long !
-      router: L.routing.mapbox('pk.eyJ1IjoiYmdkajExIiwiYSI6ImNtMmtrZHpyZzAyZWoycXM5enphbXZia2UifQ.54XDMPHRsMN86I6gUbbOcQ', {profile: 'mapbox/walking'})
-    }).addTo(this.map);
+      const marker = new L.Marker([lat, lng]).addTo(this.map);
 
-    routeControl.on('routesfound', function(e) {
-      var routes = e.routes;
-      var summary = routes[0].summary;
-      //alert('Total distance is ' + summary.totalDistance / 1000 + ' km and total time is ' + Math.round(summary.totalTime % 3600 / 60) + ' minutes');
+      this.markers.push(marker);
+
+      marker.on('click', () => {
+        this.map.removeLayer(marker);
+        this.markers = this.markers.filter(m => m !== marker);
+      });
+
+      this.mapClick.emit({ lat, lng });
     });
   }
 }
