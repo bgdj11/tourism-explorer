@@ -1,0 +1,32 @@
+<div id="account">
+    <p>Account</p>
+    <hr>
+    <div id="account-details">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th></th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let acc of accounts">
+                    <td>{{acc.username}}</td>
+                    <td>{{acc.email}}</td>
+                    <td>{{acc.role}}</td>
+                    <td>{{ acc.isActive ? 'Active' : 'Blocked'}}</td>
+                    <td>
+                        <button [color]="acc.isActive ? 'warn' : 'primary'"  
+                                (click)="updateAccount(acc)" mat-button>
+                            <mat-icon>{{ acc.isActive ? 'block' : 'check' }}</mat-icon>
+                            <span>{{ acc.isActive ? 'Block' : 'Unblock' }}</span>
+                        </button>
+                    </td>                 
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
