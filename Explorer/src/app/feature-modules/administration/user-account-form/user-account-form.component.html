@@ -1,0 +1,29 @@
+<form [formGroup]="userForm">
+    <div>
+      <label for="firstName">Ime:</label>
+      <input id="firstName" type="text" formControlName="firstName">
+    </div>
+  
+    <div>
+      <label for="lastName">Prezime:</label>
+      <input id="lastName" type="text" formControlName="lastName">
+    </div>
+  
+    <div>
+      <label for="motto">Moto:</label>
+      <input id="motto" type="text" formControlName="motto">
+    </div>
+  
+    <div>
+      <label for="biography">Biografija:</label>
+      <textarea id="biography" formControlName="biography"></textarea>
+    </div>
+  
+    <div>
+      <label for="photo">Fotografija:</label>
+      <input id="photo" type="text" formControlName="photo" placeholder="URL do fotografije">
+    </div>
+  
+    <button color="primary" type="submit" (click)="updateUserAccount()" mat-raised-button>Izmijeni</button>
+  </form>
+  

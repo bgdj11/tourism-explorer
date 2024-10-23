@@ -15,6 +15,7 @@
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['addproblem']">Add Problem</button>
             <button *ngIf="user && user.role === 'tourist'"color='primary' mat-raised-button [routerLink]="['tour-preferences']">Set Tour Preferences</button> 
             <button color="primary" mat-raised-button [routerLink] = "['blog']">Blogs</button>
+            <button *ngIf="user" color="primary" mat-raised-button [routerLink]="['editUserAccount']">Edit User Account</button>
         </div>
     </div>
 </mat-toolbar>
