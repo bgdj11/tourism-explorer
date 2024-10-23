@@ -14,6 +14,8 @@ import { TourPreferencesComponent } from 'src/app/feature-modules/marketplace/to
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
 import { UserAccountComponent } from 'src/app/feature-modules/administration/user-account/user-account.component';
+import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-equipment/my-equipment.component';
+import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
 
 
 const routes: Routes = [
@@ -23,10 +25,13 @@ const routes: Routes = [
   {path: 'register', component: RegistrationComponent},
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard],},
-  {path: 'comment', component: CommentComponent, canActivate: [AuthGuard]},
+  {path: 'comment', component: CommentComponent},
   {path: 'app-rating', component: AppRatingComponent},
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
+  {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
+  {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
+  {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
   {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },

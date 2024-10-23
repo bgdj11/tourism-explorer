@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { AddProblemComponent } from './add-problem/add-problem.component';
 import { MaterialModule } from 'src/app/infrastructure/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MyEquipmentComponent } from './my-equipment/my-equipment.component';
+import { MyEquipmentFormComponent } from './my-equipment-form/my-equipment-form.component';
 
 
 
 @NgModule({
   declarations: [
-    AddProblemComponent
+    AddProblemComponent,
+    MyEquipmentComponent,
+    MyEquipmentFormComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule 
    ],
     exports: [
-      AddProblemComponent
+      AddProblemComponent,
+      MyEquipmentComponent
     ]
 
 })
