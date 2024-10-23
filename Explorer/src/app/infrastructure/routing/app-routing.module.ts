@@ -13,9 +13,9 @@ import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-
 import { TourPreferencesComponent } from 'src/app/feature-modules/marketplace/tour-preferences/tour-preferences.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
+import { UserAccountComponent } from 'src/app/feature-modules/administration/user-account/user-account.component';
 import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-equipment/my-equipment.component';
 import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
-
 
 
 const routes: Routes = [
@@ -34,7 +34,8 @@ const routes: Routes = [
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
   {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
   {path: 'blog', component: BlogComponent},
-  {path: 'author', component: TourComponent, canActivate: [AuthGuard] }
+  {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
+  {path: 'editUserAccount',component: UserAccountComponent}
 ];
 
 @NgModule({

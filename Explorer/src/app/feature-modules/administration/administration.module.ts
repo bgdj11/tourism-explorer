@@ -6,6 +6,8 @@ import { MaterialModule } from 'src/app/infrastructure/material/material.module'
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountsComponent } from './accounts/accounts.component';
 import { AllProblemsComponent } from './all-problems/all-problems.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import { UserAccountFormComponent } from './user-account-form/user-account-form.component';
 
 
 
@@ -14,7 +16,9 @@ import { AllProblemsComponent } from './all-problems/all-problems.component';
     EquipmentFormComponent,
     EquipmentComponent,
     AccountsComponent,
-    AllProblemsComponent
+    AllProblemsComponent,
+    UserAccountComponent,
+    UserAccountFormComponent
   ],
   imports: [
     CommonModule,
