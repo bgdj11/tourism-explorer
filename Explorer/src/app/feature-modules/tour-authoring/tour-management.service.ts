@@ -6,6 +6,7 @@ import {TourDTO} from "./model/tour.model";
 import {environment} from "../../../env/environment";
 import { CheckpointDTO } from './model/checkpoint.model';
 import {Equipment} from "../administration/model/equipment.model";
+import { ClubDTO } from './model/club.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class TourManagementService {
   private apiUrl = environment.apiHost + 'author/tours';
   private checkpointUrl = environment.apiHost + 'author/tours/tour-checkpoints';
   private equipmentUrl = environment.apiHost + 'author/tours/equipment';
+  private clubUrl = environment.apiHost + 'tourist/clubs';
 
   constructor(private http: HttpClient) { }
 
@@ -74,5 +76,30 @@ export class TourManagementService {
 
   updateTourCheckpointIds(tourId: number, checkpointId: number): Observable<TourDTO> {
     return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/checkpoint-ids/${checkpointId}`, {});
+  }
+
+  getClubs(page: number, pageSize: number): Observable<PagedResults<ClubDTO>> {
+    let params = new HttpParams()
+    .set('page', page.toString())
+    .set('pageSize', pageSize.toString());
+
+    return this.http.get<PagedResults<ClubDTO>>(this.clubUrl, { params });
+  }
+
+  getClubById(id : number) : Observable<ClubDTO> {
+    return this.http.get<ClubDTO>(`${this.clubUrl}/${id}`);
+  }
+
+  createClub(club: ClubDTO): Observable<ClubDTO> {
+    return this.http.post<ClubDTO>(environment.apiHost + 'tourist/clubs', club);
+
+  }
+
+  updateClub(club: ClubDTO): Observable<ClubDTO> {
+    return this.http.put<ClubDTO>(environment.apiHost + 'tourist/clubs/' + club.id, club);
+  }
+
+  deleteClub(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.clubUrl}/${id}`);
   }
 }
