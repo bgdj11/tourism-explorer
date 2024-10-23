@@ -6,6 +6,8 @@ import {faPencil, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { Router } from '@angular/router';
 import {Equipment} from "../../administration/model/equipment.model";
 import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
+import {MapComponent} from "../../../shared/map/map.component";
+import {L} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'xp-tour',
@@ -13,6 +15,7 @@ import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
   styleUrls: ['./tour.component.css']
 })
 export class TourComponent implements OnInit {
+  private modalMarker: L.Marker | null = null;
   tours: TourDTO[] = [];
   selectedTourCheckpoints: CheckpointDTO[] = [];
   selectedTourEquipment: Equipment[] = [];
@@ -46,6 +49,7 @@ export class TourComponent implements OnInit {
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
   private modalRef!: NgbModalRef;
 
   constructor(
@@ -106,47 +110,94 @@ export class TourComponent implements OnInit {
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
-  openCheckpointModal(): void {
-    // Resetovanje forme za novi Checkpoint
-    this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
-    this.modalRef = this.modalService.open(this.checkpointModal); // Otvaranje Checkpoint modala
+
+  openCheckpointModal(checkpoint?: CheckpointDTO): void {
+    if (checkpoint) {
+      // Postavljamo podatke za izmenu postojećeg checkpointa
+      this.newCheckpoint = { ...checkpoint };
+    } else {
+      // Resetujemo podatke za novi checkpoint
+      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
+    }
+
+    // Otvaranje modalnog dijaloga
+    this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
   }
+
+
 
   openEquipmentModal(): void {
     this.modalRef = this.modalService.open(this.equipmentModal);
   }
 
+  onMapClick(event: { lat: number, lng: number }) {
+    this.newCheckpoint.latitude = event.lat;
+    this.newCheckpoint.longitude = event.lng;
+
+    // Postavite jedinstveni marker na mapi unutar modalnog dijaloga
+    if (this.mapComponent) {
+      this.mapComponent.setUniqueMarker(event.lat, event.lng);
+    }
+  }
+
+  clearModalMarker(): void {
+    if (this.modalMarker) {
+      this.mapComponent.map.removeLayer(this.modalMarker);
+      this.modalMarker = null;
+    }
+  }
+
   closeModal(): void {
+    // Zatvori modalni dijalog
     this.modalRef.close();
+
+    // Očisti markere sa modalne mape, ali ne uklanjaj glavnu mapu
+    if (this.mapComponent && this.mapComponent.singleMarker) {
+      this.mapComponent.clearSingleMarker(); // Očisti jedinstveni marker na modalnoj mapi
+    }
   }
 
   addCheckpoint(): void {
-    // Logika za dodavanje checkpointa
-    this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
-      (response) => {
-        // Ažuriraj listu checkpointova ture
-        this.selectedTourCheckpoints.push(response);
-
-        // Dodaj ID novog checkpointa u listu ID-eva checkpointa ture
-        if (this.selectedTour) {
-          // Ažuriraj ID nove checkpoint ture na serveru
-          this.tourService.updateTourCheckpointIds(this.selectedTour.id, response.id).subscribe(
-            () => {
-              console.log('Checkpoint ID uspešno dodat u turu.');
-              this.selectedTour.tourCheckpointIds.push(response.id); // Ažuriraj lokalnu listu
-            },
-            (error) => {
-              console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
-            }
-          );
+    // Ako postoji ID, onda se radi o uređivanju postojećeg checkpointa
+    if (this.newCheckpoint.id) {
+      this.tourService.updateCheckpoint(this.newCheckpoint).subscribe(
+        (response) => {
+          // Ažurirajte listu checkpointova ture sa izmenjenim checkpointom
+          const index = this.selectedTourCheckpoints.findIndex(c => c.id === this.newCheckpoint.id);
+          if (index !== -1) {
+            this.selectedTourCheckpoints[index] = response;
+          }
+          this.closeModal();
+        },
+        (error) => {
+          console.error('Greška prilikom ažuriranja checkpointa', error);
         }
+      );
+    } else {
+      // Ako nema ID, onda se radi o dodavanju novog checkpointa
+      this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
+        (response) => {
+          // Ažuriraj listu checkpointova ture
+          this.selectedTourCheckpoints.push(response);
 
-        this.closeModal();
-      },
-      (error) => {
-        console.error('Greška prilikom dodavanja checkpointa', error);
-      }
-    );
+          if (this.selectedTour) {
+            this.tourService.updateTourCheckpointIds(this.selectedTour.id, response.id).subscribe(
+              () => {
+                console.log('Checkpoint ID uspešno dodat u turu.');
+                this.selectedTour.tourCheckpointIds.push(response.id);
+              },
+              (error) => {
+                console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
+              }
+            );
+          }
+          this.closeModal();
+        },
+        (error) => {
+          console.error('Greška prilikom dodavanja checkpointa', error);
+        }
+      );
+    }
   }
 
   removeEquipment(equipmentId: number): void {
@@ -266,6 +317,18 @@ export class TourComponent implements OnInit {
     }
   }
 
+  editCheckpoint(checkpoint: CheckpointDTO): void {
+    // Popunite formu sa postojećim podacima checkpointa
+    this.newCheckpoint = { ...checkpoint };
+
+    // Otvorite modal za uređivanje checkpointa
+    this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
+
+    // Postavite marker na mapu
+    if (this.mapComponent) {
+      this.mapComponent.setUniqueMarker(checkpoint.latitude, checkpoint.longitude);
+    }
+  }
 
   nextPage(): void {
     if (this.currentPage * this.pageSize < this.totalCount) {

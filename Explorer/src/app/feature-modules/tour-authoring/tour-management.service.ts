@@ -75,4 +75,9 @@ export class TourManagementService {
   updateTourCheckpointIds(tourId: number, checkpointId: number): Observable<TourDTO> {
     return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/checkpoint-ids/${checkpointId}`, {});
   }
+
+  updateCheckpoint(newCheckpoint: CheckpointDTO) {
+    return this.http.put<CheckpointDTO>(`${this.checkpointUrl}/${newCheckpoint.id}`, newCheckpoint);
+  }
+
 }
