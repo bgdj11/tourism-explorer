@@ -80,8 +80,8 @@
             <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
           </div>
           <div class="col-md-6">
-            <label for="tags" class="form-label">Tagovi</label>
-            <input type="text" class="form-control" id="tags" [(ngModel)]="tour.tags" name="tags" />
+            <label for="tags" class="form-label">Tagovi (odvojeni zarezima)</label>
+            <input type="text" class="form-control" id="tags" [(ngModel)]="tagsInput" name="tagsInput" />
           </div>
         </div>
 
@@ -238,7 +238,7 @@
     </div>
   </div>
   <div>
-    <xp-map #mainMap></xp-map>
+    <xp-map #mapa></xp-map>
   </div>
 
 </div>

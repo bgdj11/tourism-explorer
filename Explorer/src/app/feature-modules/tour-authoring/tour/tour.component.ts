@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output} from '@angular/core';
 import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -46,11 +46,16 @@ export class TourComponent implements OnInit {
     image: ''
   };
 
+  @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
+
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
   @ViewChild(MapComponent) mapComponent!: MapComponent;
+  @ViewChild("mapa") mapa!: MapComponent;
+
   private modalRef!: NgbModalRef;
+  tagsInput: string = '';
 
   constructor(
     private tourService: TourManagementService,
@@ -124,8 +129,6 @@ export class TourComponent implements OnInit {
     this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
   }
 
-
-
   openEquipmentModal(): void {
     this.modalRef = this.modalService.open(this.equipmentModal);
   }
@@ -148,7 +151,6 @@ export class TourComponent implements OnInit {
   }
 
   closeModal(): void {
-    // Zatvori modalni dijalog
     this.modalRef.close();
 
     // Očisti markere sa modalne mape, ali ne uklanjaj glavnu mapu
@@ -218,10 +220,7 @@ export class TourComponent implements OnInit {
 
 
   onSubmit(): void {
-    this.tour = {
-      ...this.tour,
-      tags: ['ad', 'asd']
-    }
+    this.tour.tags = this.tagsInput.split(',').map(tag => tag.trim());
     if (this.tour.id) {
       this.tourService.updateTour(this.tour).subscribe(
         (response) => {
@@ -264,6 +263,12 @@ export class TourComponent implements OnInit {
       checkpointIds.forEach(id => {
         this.tourService.getCheckpointById(id).subscribe(checkpoint => {
           this.selectedTourCheckpoints.push(checkpoint);
+          // @ts-ignore
+          this.mapa.setRoute(this.selectedTourCheckpoints.map(cp => ({
+            lat: cp.latitude,
+            lng: cp.longitude
+          })));
+
         });
       });
     });
