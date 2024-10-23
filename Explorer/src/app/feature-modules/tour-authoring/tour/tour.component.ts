@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, ChangeDetectorRef} from '@angular/core';
 import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -51,7 +51,7 @@ export class TourComponent implements OnInit {
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
-  @ViewChild(MapComponent) mapComponent!: MapComponent;
+  @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
 
   private modalRef!: NgbModalRef;
@@ -60,6 +60,7 @@ export class TourComponent implements OnInit {
   constructor(
     private tourService: TourManagementService,
     private modalService: NgbModal,
+    private cdr: ChangeDetectorRef,
     private router: Router // Inject Router
   ) {
     this.loadAvailableEquipment();
@@ -138,15 +139,8 @@ export class TourComponent implements OnInit {
     this.newCheckpoint.longitude = event.lng;
 
     // Postavite jedinstveni marker na mapi unutar modalnog dijaloga
-    if (this.mapComponent) {
-      this.mapComponent.setUniqueMarker(event.lat, event.lng);
-    }
-  }
-
-  clearModalMarker(): void {
-    if (this.modalMarker) {
-      this.mapComponent.map.removeLayer(this.modalMarker);
-      this.modalMarker = null;
+    if (this.modalMapComponent) {
+      this.modalMapComponent.setUniqueMarker(event.lat, event.lng);
     }
   }
 
@@ -154,8 +148,8 @@ export class TourComponent implements OnInit {
     this.modalRef.close();
 
     // Očisti markere sa modalne mape, ali ne uklanjaj glavnu mapu
-    if (this.mapComponent && this.mapComponent.singleMarker) {
-      this.mapComponent.clearSingleMarker(); // Očisti jedinstveni marker na modalnoj mapi
+    if (this.modalMapComponent && this.modalMapComponent.singleMarker) {
+      this.modalMapComponent.clearSingleMarker(); // Očisti jedinstveni marker na modalnoj mapi
     }
   }
 
@@ -325,15 +319,12 @@ export class TourComponent implements OnInit {
   editCheckpoint(checkpoint: CheckpointDTO): void {
     // Popunite formu sa postojećim podacima checkpointa
     this.newCheckpoint = { ...checkpoint };
+    console.log(checkpoint.latitude + " nesto nesto " + checkpoint.longitude);
 
     // Otvorite modal za uređivanje checkpointa
     this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
-
-    // Postavite marker na mapu
-    if (this.mapComponent) {
-      this.mapComponent.setUniqueMarker(checkpoint.latitude, checkpoint.longitude);
-    }
   }
+
 
   nextPage(): void {
     if (this.currentPage * this.pageSize < this.totalCount) {

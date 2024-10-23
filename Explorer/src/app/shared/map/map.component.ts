@@ -18,6 +18,7 @@ export class MapComponent implements AfterViewInit {
   @Input() waypoints: { lat: number, lng: number }[] = [];
   @Input() uniqueId: string = '';
   @Input() isModalMap: boolean = false;
+  @Input() initialCheckpoint: {lat?: number, lng?: number} = {};
 
   @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
   @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
@@ -62,6 +63,7 @@ export class MapComponent implements AfterViewInit {
     if (this.isModalMap) {
       console.log("Initializing map inside modal...");
       this.invalidateSize();
+      this.setUniqueMarker(this.initialCheckpoint.lat, this.initialCheckpoint.lng);
     }
 
   }

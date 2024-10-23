@@ -131,6 +131,7 @@
             #modalMap
             [initialCenter]="[45.2396, 19.8227]"
             [initialZoom]="13"
+            [initialCheckpoint]="{ lat: newCheckpoint.latitude!, lng: newCheckpoint.longitude! }"
             [uniqueId]="'checkpoint-map-' + newCheckpoint.id"
             [isModalMap]="true"
             (mapClick)="onMapClick($event)">
