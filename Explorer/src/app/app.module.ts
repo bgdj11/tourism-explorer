@@ -29,13 +29,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MaterialModule,
     AdministrationModule,
-    BlogModule,
     MarketplaceModule,
     TourAuthoringModule,
     TourExecutionModule,
     AuthModule,
     HttpClientModule,
-    BlogModule,
     FontAwesomeModule,
     HttpClientModule,
     ReactiveFormsModule 
