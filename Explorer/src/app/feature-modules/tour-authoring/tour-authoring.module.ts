@@ -4,6 +4,7 @@ import {TourComponent} from "./tour/tour.component";
 import {FormsModule} from "@angular/forms";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import { ObjectComponent } from './object/object.component';
 import {SharedModule} from "../../shared/shared.module";
 import { ClubsComponent } from './club/club.component';
 
@@ -11,7 +12,9 @@ import { ClubsComponent } from './club/club.component';
 @NgModule({
   declarations: [
     TourComponent,
+    ObjectComponent,
     ClubsComponent
+
   ],
   imports: [
     CommonModule,
@@ -22,6 +25,7 @@ import { ClubsComponent } from './club/club.component';
   ],
   exports: [
     TourComponent,
+    ObjectComponent,
     ClubsComponent
   ]
 })

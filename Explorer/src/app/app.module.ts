@@ -16,6 +16,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './infrastructure/auth/jwt/jwt.interceptor';
 import { TourComponent } from './feature-modules/tour-authoring/tour/tour.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,14 +29,14 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     BrowserAnimationsModule,
     MaterialModule,
     AdministrationModule,
-    BlogModule,
     MarketplaceModule,
     TourAuthoringModule,
     TourExecutionModule,
     AuthModule,
     HttpClientModule,
-    BlogModule,
     FontAwesomeModule,
+    HttpClientModule,
+    ReactiveFormsModule 
   ],
   providers: [
     {
