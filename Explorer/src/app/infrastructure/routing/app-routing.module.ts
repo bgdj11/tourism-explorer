@@ -11,6 +11,7 @@ import { AllProblemsComponent } from 'src/app/feature-modules/administration/all
 import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
+import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-equipment/my-equipment.component';
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
+  {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],}
 ];
 
 @NgModule({
