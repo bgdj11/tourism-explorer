@@ -1,0 +1,54 @@
+<div id="blog">
+    <p>Blog</p>
+    <hr>
+    <div id="blog-details">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Created Date</th>
+                        <th>Images</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let blog of blogs">
+                        <td>{{ blog.title }}</td>
+                        <td><markdown [data]="blog.description"></markdown></td>
+                        <td>{{ blog.createdDate | date:'short' }}</td>
+                        <td>
+                            <ng-container *ngIf="blog.images && blog.images.length > 0">
+                                <div *ngFor="let imageUrl of blog.images">
+                                    <img [src]="imageUrl" alt="Blog Image" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="!blog.images || blog.images.length === 0">
+                                No images available
+                            </ng-container>
+                        </td>
+                        <td>{{ getStatusString(blog.status) }}</td> 
+                        <td>
+                            <!-- Prikazivanje dugmadi samo ako je prijavljen korisnik i njegov ID odgovara ID-u autora bloga -->
+                            <button *ngIf="user?.id === blog.userId" color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button *ngIf="user?.id === blog.userId" color="primary" (click)="onEditClicked(blog)" mat-icon-button>
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>                        
+                    </tr>
+                    <tr *ngIf="isAuthor || isTourist">
+                        <button color="primary" (click)="onAddClicked()" mat-icon-button>
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <xp-blog-form (blogUpdated)="getBlogs()" *ngIf="shouldRenderBlogForm" [blog]="selectedBlog" [shouldEdit]="shouldEdit"></xp-blog-form>
+    </div>
+</div>

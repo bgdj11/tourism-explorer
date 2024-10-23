@@ -34,6 +34,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     TourAuthoringModule,
     TourExecutionModule,
     AuthModule,
+    HttpClientModule,
+    BlogModule,
     FontAwesomeModule,
     HttpClientModule,
     ReactiveFormsModule 

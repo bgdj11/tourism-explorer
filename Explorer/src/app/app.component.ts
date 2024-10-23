@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './infrastructure/auth/auth.service';
+import 'leaflet-routing-machine';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.checkIfUserExists();
   }
-  
+
   private checkIfUserExists(): void {
     this.authService.checkIfUserExists();
   }

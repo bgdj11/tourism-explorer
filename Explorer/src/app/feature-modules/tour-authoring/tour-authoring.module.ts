@@ -5,6 +5,7 @@ import {FormsModule} from "@angular/forms";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import { ObjectComponent } from './object/object.component';
+import {SharedModule} from "../../shared/shared.module";
 
 
 
@@ -17,7 +18,8 @@ import { ObjectComponent } from './object/object.component';
     CommonModule,
     FormsModule,
     NgbPagination,
-    FaIconComponent
+    FaIconComponent,
+    SharedModule
   ],
   exports: [
     TourComponent,
