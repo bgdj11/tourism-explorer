@@ -30,7 +30,7 @@ const routes: Routes = [
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
-  {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],}
+  {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
   {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
   {path: 'blog', component: BlogComponent},
