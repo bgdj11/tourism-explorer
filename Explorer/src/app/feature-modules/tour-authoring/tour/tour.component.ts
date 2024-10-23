@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output} from '@angular/core';
 import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {faPencil, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { Router } from '@angular/router';
 import {Equipment} from "../../administration/model/equipment.model";
-import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
+import {CheckpointDTO} from "../model/checkpoint.model";
+import {MapComponent} from "../../../shared/map/map.component"; // Import Router
 
 @Component({
   selector: 'xp-tour',
@@ -43,10 +44,15 @@ export class TourComponent implements OnInit {
     image: ''
   };
 
+  @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
+
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
+  @ViewChild("mapa") mapa!: MapComponent;
+
   private modalRef!: NgbModalRef;
+  tagsInput: string = '';
 
   constructor(
     private tourService: TourManagementService,
@@ -102,7 +108,7 @@ export class TourComponent implements OnInit {
         tags: [],
         price: undefined,
         equipmentIds: [],
-        tourCheckpointIds: []
+        tourCheckpointIds: [],
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
@@ -167,10 +173,8 @@ export class TourComponent implements OnInit {
 
 
   onSubmit(): void {
-    this.tour = {
-      ...this.tour,
-      tags: ['ad', 'asd']
-    }
+    this.tour.tags = this.tagsInput.split(',').map(tag => tag.trim());
+
     if (this.tour.id) {
       this.tourService.updateTour(this.tour).subscribe(
         (response) => {
@@ -213,6 +217,12 @@ export class TourComponent implements OnInit {
       checkpointIds.forEach(id => {
         this.tourService.getCheckpointById(id).subscribe(checkpoint => {
           this.selectedTourCheckpoints.push(checkpoint);
+          // @ts-ignore
+          this.mapa.setRoute(this.selectedTourCheckpoints.map(cp => ({
+            lat: cp.latitude,
+            lng: cp.longitude
+          })));
+
         });
       });
     });

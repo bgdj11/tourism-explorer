@@ -7,14 +7,16 @@
             <button color="primary" mat-raised-button [routerLink]="['home']">Home</button>
             <button *ngIf="user" color="primary" mat-raised-button [routerLink]="['comment']">Comment</button>
             <button *ngIf="user && user.role === 'author'" color="primary" mat-raised-button [routerLink]="['author']">Manage tours</button>
+            <button *ngIf="user && user.role === 'author'" color="primary" mat-raised-button [routerLink]="['author-object']">Manage objects</button>
             <button *ngIf="user && user.role === 'administrator'"color="primary" mat-raised-button [routerLink]="['equipment']">Manage equipment</button>
+            <button *ngIf="user && user.role === 'administrator'"color="primary" mat-raised-button [routerLink]="['accounts']">Manage accounts</button>
             <button *ngIf="user && user.role === 'administrator'"color='primary' mat-raised-button [routerLink]="['app-rating']">Ratings</button>
             <button *ngIf="user && user.role === 'tourist'"color='primary' mat-raised-button [routerLink]="['app-rating']">Rate Us</button>
             <button *ngIf="user && user.role === 'administrator'"color="primary" mat-raised-button [routerLink]="['allproblems']">All problems</button>
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['addproblem']">Add Problem</button>
-            <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['my-equipment']">My equipment</button>
-            
+            <button *ngIf="user && user.role === 'tourist'"color='primary' mat-raised-button [routerLink]="['tour-preferences']">Set Tour Preferences</button> 
             <button color="primary" mat-raised-button [routerLink] = "['blog']">Blogs</button>
+            <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['my-equipment']">My equipment</button>
         </div>
     </div>
 </mat-toolbar>

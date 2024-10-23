@@ -14,16 +14,16 @@
             <p> {{ comment.text }} </p>
         </div>
 
-        <div class="comment-action" *ngIf="canUserComment()">
-            <button (click)="deleteComment(comment)" color="accent" mat-icon-button>
+        <div class="comment-action" *ngIf="isAuthor || isTourist">
+            <button *ngIf="user?.id == comment.userId" (click)="deleteComment(comment)" color="accent" mat-icon-button>
                 <mat-icon>delete</mat-icon>
             </button>
-            <button (click)="onEditClicked(comment)" color="primary" mat-icon-button>
+            <button *ngIf="user?.id == comment.userId" (click)="onEditClicked(comment)" color="primary" mat-icon-button>
                 <mat-icon>edit</mat-icon>
             </button>
         </div>
     </div>
-    <div *ngIf="canUserComment()">
+    <div *ngIf="isAuthor || isTourist">
        <xp-comment-form (commentUpdated)="onCommentUpdated()" [comment]="selectedComment" [shouldEdit]="shouldEdit" ></xp-comment-form>
     </div>
 </div>

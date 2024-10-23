@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { BlogService } from '../blog.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Comment } from '../model/comment.model';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'xp-comment',
@@ -13,11 +15,23 @@ export class CommentComponent implements OnInit{
   comments: Comment[] = [];
   selectedComment: Comment;
   shouldEdit: boolean; 
+  user: User | undefined;
+  isAuthor: boolean = false;
+  isTourist: boolean = false;
 
-  constructor(private service: BlogService) { }
+  constructor(private service: BlogService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getComments()
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
+    if(this.user?.role === 'tourist'){
+      this.isTourist=true;
+    }
+    if(this.user?.role==='author'){
+      this.isAuthor=true;
+    }
   }
 
   getComments(): void {
@@ -50,10 +64,6 @@ export class CommentComponent implements OnInit{
         console.log('Error occured: ', err); 
       }
     })
-  }
-
-  canUserComment(): boolean{
-    return this.service.hasUserAccess();
   }
 
 }
