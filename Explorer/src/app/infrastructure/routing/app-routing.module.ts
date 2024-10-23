@@ -18,8 +18,7 @@ const routes: Routes = [
   {path: 'app-rating', component: AppRatingComponent},
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
-  //{path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]}
-  {path: 'tour-preferences', component: TourPreferencesComponent}
+  {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

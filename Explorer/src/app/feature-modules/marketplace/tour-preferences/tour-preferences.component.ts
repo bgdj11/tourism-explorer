@@ -1,43 +1,67 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component,OnInit} from '@angular/core';
 import { TourPreferences } from '../model/tour-preferences.model';
 import { MarketplaceService } from '../marketplace.service';
-import { DifficultyLevel } from '../model/tour-preferences.model';
-
+import { PagedResults } from 'src/app/shared/model/paged-results.model';
 
 @Component({
   selector: 'xp-tour-preferences',
   templateUrl: './tour-preferences.component.html',
   styleUrls: ['./tour-preferences.component.css']
 })
-export class TourPreferencesComponent implements OnChanges {
 
-  @Input() tourPreferences : TourPreferences;
+export class TourPreferencesComponent implements OnInit {
+  
+  tourPreferences: TourPreferences[] = [];
+  selectedTourPreferences: TourPreferences;
+  shouldRenderTourPreferencesForm: boolean = false;
+  shouldEdit: boolean = false;
 
-  preferencesForm = new FormGroup({
-    id: new FormControl(0),  
-    difficulty: new FormControl(DifficultyLevel.Easy), 
-    walkRating: new FormControl(0, [Validators.min(0), Validators.max(3)]),  
-    bikeRating: new FormControl(0, [Validators.min(0), Validators.max(3)]),  
-    carRating: new FormControl(0, [Validators.min(0), Validators.max(3)]),  
-    boatRating: new FormControl(0, [Validators.min(0), Validators.max(3)]), 
-    interestTags: new FormControl<string[]>([])
-  });
+  constructor(private service: MarketplaceService) { }
 
-  constructor(private service: MarketplaceService) {} 
-
-  ngOnChanges(): void {
-    this.preferencesForm.reset();
-    if (this.tourPreferences) {
-      this.preferencesForm.patchValue(this.tourPreferences);
-    }
+  ngOnInit(): void {
+    this.getTourPreferences();
   }
 
-  addTourPreferences() {
-    if (this.preferencesForm.valid) {
-      const formValues = this.preferencesForm.value;
-      console.log('Submitted tour preferences:', formValues);
-      
+  deleteTourPreferences(id: number): void {
+    this.service.deleteTourPreferences(id).subscribe({
+      next: () => {
+        this.getTourPreferences();
+      }
+    })
+  }
+
+  getTourPreferences(): void {
+    this.service.getTourPreferences().subscribe({
+      next: (result: PagedResults<TourPreferences>) => {
+        this.tourPreferences = result.results;
+      },
+      error: () => {
+      }
+    })
+  }
+
+  onEditClicked(tourPreferences: TourPreferences): void {
+    this.selectedTourPreferences = tourPreferences;
+    this.shouldRenderTourPreferencesForm = true;
+    this.shouldEdit = true;
+  }
+
+  onAddClicked(): void {
+    this.shouldEdit = false;
+    this.shouldRenderTourPreferencesForm = true;
+  }
+
+
+  getDifficultyString(difficulty: number): string {
+    switch (difficulty) {
+      case 1:
+        return 'Easy';
+      case 2:
+        return 'Medium';
+      case 3:
+        return 'Hard';
+      default:
+        return 'Unknown';
     }
   }
 }

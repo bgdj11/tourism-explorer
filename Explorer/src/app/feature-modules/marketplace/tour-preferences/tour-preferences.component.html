@@ -1,27 +1,40 @@
-<form [formGroup]="preferencesForm" (ngSubmit)="addTourPreferences()">
-    <label for="difficulty">Tezina ture:</label>
-    <select id="difficulty" formControlName="difficulty">
-      <option value="EASY">Laka</option>
-      <option value="MEDIUM">Srednja</option>
-      <option value="HARD">Teska</option>
-    </select>
-  
-    <label for="walkRating">Ocjena za setnju:</label>
-    <input id="walkRating" type="number" formControlName="walkRating" min="0" max="3">
-  
-    <label for="bikeRating">Ocjena za bicikl:</label>
-    <input id="bikeRating" type="number" formControlName="bikeRating" min="0" max="3">
-  
-    <label for="carRating">Ocjena za auto:</label>
-    <input id="carRating" type="number" formControlName="carRating" min="0" max="3">
-  
-    <label for="boatRating">Ocjena za camac:</label>
-    <input id="boatRating" type="number" formControlName="boatRating" min="0" max="3">
-  
-    <label for="interestTags">Tagovi:</label>
-    <input id="interestTags" type="text" formControlName="interestTags">
-  
-    <button color="primary" type="submit" mat-raised-button>Dodaj</button>
-    
-</form>
-  
+<div id="tour-preferences">
+  <hr>
+  <div id="tour-preferences-details">
+    <table>
+      <thead>
+        <tr>
+            <th>Difficulty</th>
+            <th>WalkRating</th>
+            <th>BikeRating</th>
+            <th>CarRating</th>
+            <th>BoatRating</th>
+            <th>Tages</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tp of tourPreferences">
+        <td>{{ getDifficultyString(tp.difficulty) }}</td>
+        <td>{{tp.walkRating}}</td>
+        <td>{{tp.bikeRating}}</td>
+        <td>{{tp.carRating}}</td>
+        <td>{{tp.boatRating}}</td>
+        <td>{{tp.interestTags}}</td>
+        <td> 
+          <button color="accent" (click)="deleteTourPreferences(tp.id || 0)" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button color="primary" (click)="onEditClicked(tp)" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </button>
+        </td>
+      </tr>
+      <tr><button color="primary" (click)="onAddClicked()" mat-icon-button>
+        <mat-icon>add</mat-icon>
+    </button></tr>
+    </tbody>
+    </table>
+  </div>
+  <hr>
+  <xp-tour-preferences-form *ngIf="shouldRenderTourPreferencesForm" [shouldEdit]="shouldEdit" [tourPreferences]="selectedTourPreferences" (tourPreferencesUpdate) = "getTourPreferences()"></xp-tour-preferences-form>
+</div>

@@ -1,10 +1,11 @@
 export enum DifficultyLevel {
-    Easy = 'EASY',
-    Medium = 'MEDIUM',
-    Hard = 'HARD'
+  Easy = 1,
+  Medium = 2,
+  Hard = 3
 }
+  
 export interface TourPreferences {
-    id: number, 
+    id?: number, 
     difficulty: DifficultyLevel,
     walkRating: number, 
     bikeRating: number, 
