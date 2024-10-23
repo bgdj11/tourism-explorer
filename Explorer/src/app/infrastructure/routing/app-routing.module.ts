@@ -12,7 +12,7 @@ import { AllProblemsComponent } from 'src/app/feature-modules/administration/all
 import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
-
+import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -27,6 +27,7 @@ const routes: Routes = [
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
+  {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
 ];
 
 @NgModule({
