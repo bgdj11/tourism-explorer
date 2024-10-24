@@ -1,0 +1,37 @@
+<div id="equipment">
+    <p>Equipment</p>
+    <hr>
+    <div id="equipment-details">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Naziv</th>
+              <th>Opis</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let eq of equipment">
+              <td>{{ eq.name }}</td>
+              <td>{{ eq.description }}</td>
+              <td>
+                <!-- Conditionally display delete or add icon based on ownership -->
+                <button *ngIf="equipmentOwnership[eq.id]" color="accent" mat-icon-button (click)="onDelete(eq.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button *ngIf="!equipmentOwnership[eq.id]" color="primary" mat-icon-button (click)="onAdd(eq.id)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <!-- xp-my-equipment-form *ngIf="shouldRenderEquipmentForm" [shouldEdit]="shouldEdit" [equipment]="selectedEquipment" (equipmentUpdated)="getEquipment()"></xp-my-equipment-form -->
+      </div>
+    </div>
+  </div>
+

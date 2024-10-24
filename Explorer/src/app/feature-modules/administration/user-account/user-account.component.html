@@ -1,0 +1,33 @@
+<div id="tour-preferences">
+    <hr>
+    <div id="tour-preferences-details">
+      <table>
+        <thead>
+          <tr>
+              <th>FirstName</th>
+              <th>LastName</th>
+              <th>motto</th>
+              <th>biography</th>
+              <th>photo</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tp of userAccount">
+          <td>{{tp.firstName}}</td>
+          <td>{{tp.lastName}}</td>
+          <td>{{tp.motto}}</td>
+          <td>{{tp.biography}}</td>
+          <td>{{tp.photo}}</td>
+          <td> 
+            <button color="primary" (click)="onEditClicked(tp)" mat-icon-button>
+              <mat-icon>edit</mat-icon>
+          </button>
+
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+    <hr>
+    <xp-user-account-form *ngIf="shouldRenderUserAccountForm" [shouldEdit]="shouldEdit" [userAccount]="selectedUserAccount" (userAccountUpdate) = "getUserAccount()"></xp-user-account-form>
+  </div>
