@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import {Equipment} from "../../administration/model/equipment.model";
 import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
 import {MapComponent} from "../../../shared/map/map.component";
-import {L} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'xp-tour',
@@ -15,7 +14,6 @@ import {L} from "@angular/cdk/keycodes";
   styleUrls: ['./tour.component.css']
 })
 export class TourComponent implements OnInit {
-  private modalMarker: L.Marker | null = null;
   tours: TourDTO[] = [];
   selectedTourCheckpoints: CheckpointDTO[] = [];
   selectedTourEquipment: Equipment[] = [];
@@ -60,7 +58,6 @@ export class TourComponent implements OnInit {
   constructor(
     private tourService: TourManagementService,
     private modalService: NgbModal,
-    private cdr: ChangeDetectorRef,
     private router: Router // Inject Router
   ) {
     this.loadAvailableEquipment();

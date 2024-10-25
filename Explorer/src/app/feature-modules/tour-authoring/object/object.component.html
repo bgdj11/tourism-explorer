@@ -1,13 +1,13 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Ture</h2>
-  
+
     <!-- Dugme za dodavanje nove ture -->
     <div class="d-flex justify-content-end mb-3">
       <button class="btn btn-primary" (click)="openModal('add')">
         <i class="bi bi-plus-circle"></i> Dodaj novi objekat
       </button>
     </div>
-  
+
     <!-- Tabela tura -->
     <div class="table-responsive">
       <table class="table table-hover table-bordered">
@@ -21,7 +21,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let object of objects; let i = index"
-            
+
             (click)="selectObject(object)">
           <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
           <td>{{ object.name }}</td>
@@ -39,7 +39,7 @@
         </tbody>
       </table>
     </div>
-  
+
     <!-- Paginacija -->
     <ngb-pagination
       [(page)]="currentPage"
@@ -48,7 +48,7 @@
       aria-label="Pagination"
       class="d-flex justify-content-center mt-3">
     </ngb-pagination>
-  
+
     <!-- Modal za dodavanje/editovanje ture -->
     <ng-template #objectModal let-modal>
       <div class="modal-header">
@@ -71,7 +71,18 @@
             <label for="description" class="form-label">Opis Objekta</label>
             <textarea class="form-control" id="description" [(ngModel)]="object.description" name="description" required></textarea>
           </div>
-  
+          <!-- Dodavanje mape u modal -->
+          <div class="form-group">
+            <xp-map
+              #objectModalMap
+              [initialCenter]="[45.2396, 19.8227]"
+              [initialZoom]="13"
+              [initialCheckpoint]="{ lat: object.latitude!, lng: object.longitude! }"
+              [uniqueId]="'object-map-' + object.id"
+              [isModalMap]="true"
+              (mapClick)="onMapClick($event)">
+            </xp-map>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
             <button type="submit" class="btn btn-primary">
@@ -82,5 +93,4 @@
       </div>
     </ng-template>
   </div>
-  
-  
+
