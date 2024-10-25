@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, ChangeDetectorRef} from '@angular/core';
 import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {faPencil, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { Router } from '@angular/router';
 import {Equipment} from "../../administration/model/equipment.model";
-import {CheckpointDTO} from "../model/checkpoint.model";
-import {MapComponent} from "../../../shared/map/map.component"; // Import Router
+import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
+import {MapComponent} from "../../../shared/map/map.component";
 
 @Component({
   selector: 'xp-tour',
@@ -49,6 +49,7 @@ export class TourComponent implements OnInit {
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
+  @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
 
   private modalRef!: NgbModalRef;
@@ -108,51 +109,88 @@ export class TourComponent implements OnInit {
         tags: [],
         price: undefined,
         equipmentIds: [],
-        tourCheckpointIds: [],
+        tourCheckpointIds: []
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
-  openCheckpointModal(): void {
-    // Resetovanje forme za novi Checkpoint
-    this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
-    this.modalRef = this.modalService.open(this.checkpointModal); // Otvaranje Checkpoint modala
+
+  openCheckpointModal(checkpoint?: CheckpointDTO): void {
+    if (checkpoint) {
+      // Postavljamo podatke za izmenu postojećeg checkpointa
+      this.newCheckpoint = { ...checkpoint };
+    } else {
+      // Resetujemo podatke za novi checkpoint
+      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
+    }
+
+    // Otvaranje modalnog dijaloga
+    this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
   }
 
   openEquipmentModal(): void {
     this.modalRef = this.modalService.open(this.equipmentModal);
   }
 
+  onMapClick(event: { lat: number, lng: number }) {
+    this.newCheckpoint.latitude = event.lat;
+    this.newCheckpoint.longitude = event.lng;
+
+    // Postavite jedinstveni marker na mapi unutar modalnog dijaloga
+    if (this.modalMapComponent) {
+      this.modalMapComponent.setUniqueMarker(event.lat, event.lng);
+    }
+  }
+
   closeModal(): void {
     this.modalRef.close();
+
+    // Očisti markere sa modalne mape, ali ne uklanjaj glavnu mapu
+    if (this.modalMapComponent && this.modalMapComponent.singleMarker) {
+      this.modalMapComponent.clearSingleMarker(); // Očisti jedinstveni marker na modalnoj mapi
+    }
   }
 
   addCheckpoint(): void {
-    // Logika za dodavanje checkpointa
-    this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
-      (response) => {
-        // Ažuriraj listu checkpointova ture
-        this.selectedTourCheckpoints.push(response);
-
-        // Dodaj ID novog checkpointa u listu ID-eva checkpointa ture
-        if (this.selectedTour) {
-          // Ažuriraj ID nove checkpoint ture na serveru
-          this.tourService.updateTourCheckpointIds(this.selectedTour.id, response.id).subscribe(
-            () => {
-              console.log('Checkpoint ID uspešno dodat u turu.');
-              this.selectedTour.tourCheckpointIds.push(response.id); // Ažuriraj lokalnu listu
-            },
-            (error) => {
-              console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
-            }
-          );
+    // Ako postoji ID, onda se radi o uređivanju postojećeg checkpointa
+    if (this.newCheckpoint.id) {
+      this.tourService.updateCheckpoint(this.newCheckpoint).subscribe(
+        (response) => {
+          // Ažurirajte listu checkpointova ture sa izmenjenim checkpointom
+          const index = this.selectedTourCheckpoints.findIndex(c => c.id === this.newCheckpoint.id);
+          if (index !== -1) {
+            this.selectedTourCheckpoints[index] = response;
+          }
+          this.closeModal();
+        },
+        (error) => {
+          console.error('Greška prilikom ažuriranja checkpointa', error);
         }
+      );
+    } else {
+      // Ako nema ID, onda se radi o dodavanju novog checkpointa
+      this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
+        (response) => {
+          // Ažuriraj listu checkpointova ture
+          this.selectedTourCheckpoints.push(response);
 
-        this.closeModal();
-      },
-      (error) => {
-        console.error('Greška prilikom dodavanja checkpointa', error);
-      }
-    );
+          if (this.selectedTour) {
+            this.tourService.updateTourCheckpointIds(this.selectedTour.id, response.id).subscribe(
+              () => {
+                console.log('Checkpoint ID uspešno dodat u turu.');
+                this.selectedTour.tourCheckpointIds.push(response.id);
+              },
+              (error) => {
+                console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
+              }
+            );
+          }
+          this.closeModal();
+        },
+        (error) => {
+          console.error('Greška prilikom dodavanja checkpointa', error);
+        }
+      );
+    }
   }
 
   removeEquipment(equipmentId: number): void {
@@ -174,7 +212,6 @@ export class TourComponent implements OnInit {
 
   onSubmit(): void {
     this.tour.tags = this.tagsInput.split(',').map(tag => tag.trim());
-
     if (this.tour.id) {
       this.tourService.updateTour(this.tour).subscribe(
         (response) => {
@@ -274,6 +311,15 @@ export class TourComponent implements OnInit {
     } else {
       this.selectedEquipmentIds.push(equipmentId);
     }
+  }
+
+  editCheckpoint(checkpoint: CheckpointDTO): void {
+    // Popunite formu sa postojećim podacima checkpointa
+    this.newCheckpoint = { ...checkpoint };
+    console.log(checkpoint.latitude + " nesto nesto " + checkpoint.longitude);
+
+    // Otvorite modal za uređivanje checkpointa
+    this.modalRef = this.modalService.open(this.checkpointModal, { size: 'lg' });
   }
 
 
