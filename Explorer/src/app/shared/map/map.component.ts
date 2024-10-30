@@ -11,7 +11,7 @@ export class MapComponent implements AfterViewInit {
   map: any;
   private markers: L.Marker[] = [];
   singleMarker: L.Marker | null = null;
-
+  private routeControl: any;
 
   @Input() initialCenter: [number, number] = [45.2396, 19.8227];
   @Input() initialZoom: number = 13;
@@ -34,6 +34,7 @@ export class MapComponent implements AfterViewInit {
     this.map = L.map(mapElementId, {
       center: this.initialCenter,
       zoom: this.initialZoom,
+      
     });
 
     const tiles = L.tileLayer(
@@ -91,12 +92,24 @@ export class MapComponent implements AfterViewInit {
   setRoute(waypoints: { lat: number, lng: number }[]): void {
     const latLngPoints = waypoints.map(point => L.latLng(point.lat, point.lng));
 
-    const routeControl = L.Routing.control({
+    //Brisanje markera po ponovnom pritisku na turu
+    this.markers.forEach(marker => this.map.removeLayer(marker));
+    this.markers = [];
+    //Brisanje leafleta po ponovnom pritisku na turu
+    if (this.routeControl) {
+      this.map.removeControl(this.routeControl); 
+      this.routeControl = null;
+    }
+
+    this.routeControl = L.Routing.control({
       waypoints: latLngPoints,
+      routeWhileDragging: false,
+      lineOptions: { addWaypoints: false, extendToWaypoints: false, missingRouteTolerance: 0},
       router: L.Routing.mapbox('pk.eyJ1IjoiYmdkajExIiwiYSI6ImNtMmtrZHpyZzAyZWoycXM5enphbXZia2UifQ.54XDMPHRsMN86I6gUbbOcQ', { profile: 'mapbox/walking' })
     }).addTo(this.map);
 
-    routeControl.on('routesfound', function (e) {
+    
+    this.routeControl.on('routesfound', function (e: { routes: any; }) {
       const routes = e.routes;
       const summary = routes[0].summary;
       alert(
@@ -107,6 +120,10 @@ export class MapComponent implements AfterViewInit {
         ' minutes'
       );
     });
+    waypoints.forEach(waypoint => {
+      const marker = L.marker([waypoint.lat, waypoint.lng], { draggable: false }).addTo(this.map);
+      this.markers.push(marker);
+    });
   }
 // dobijem nazad lat long kad kliknem na mapu
   registerOnClick(): void {
@@ -114,7 +131,7 @@ export class MapComponent implements AfterViewInit {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
-
+      
       // Ako je mapa u modalnom dijalogu, koristi jedinstveni marker
       if (this.isModalMap) {
         this.setUniqueMarker(lat, lng);
