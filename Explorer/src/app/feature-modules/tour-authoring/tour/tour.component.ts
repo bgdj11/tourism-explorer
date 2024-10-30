@@ -32,6 +32,7 @@ export class TourComponent implements OnInit {
     description: '',
     weight: '',
     tags: [],
+    status:0,
     price: undefined,
     equipmentIds: [],
     tourCheckpointIds: []
@@ -108,6 +109,7 @@ export class TourComponent implements OnInit {
         description: '',
         weight: '',
         tags: [],
+        status:0,
         price: undefined,
         equipmentIds: [],
         tourCheckpointIds: []
@@ -253,6 +255,33 @@ export class TourComponent implements OnInit {
           console.error('Greška prilikom brisanja ture', error);
         }
       );
+    }
+  }
+
+  archiveTour(tourId: number): void {
+    if(confirm('Da li ste sigurni da želite da arhivirate ovu turu? ')){
+      this.tourService.archiveTour(tourId).subscribe(
+        (response)=>{
+          this.loadTours();
+        },
+        (error)=>{
+          console.error('Greska prilikom arhiviranja ture')
+        }
+      );
+    }
+  }
+
+  publishTour(tourId: number): void{
+    if(confirm('Da li ste sigurni da želite da aktivirate ovu turu? ')){
+      this.tourService.publishTour(tourId).subscribe(
+        (response)=>{
+          this.loadTours();
+        },
+        (error)=>{
+          console.error('Greska prilikom publishovanja ture')
+        }
+      );
+      
     }
   }
 

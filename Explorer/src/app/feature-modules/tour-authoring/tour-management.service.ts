@@ -54,6 +54,16 @@ export class TourManagementService {
   deleteTour(tourId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${tourId}`);
   }
+
+  
+  archiveTour(tourId: number): Observable<void>{
+    return this.http.post<void>(`${this.apiUrl}/${tourId}/archive`,{});
+  }
+
+  publishTour(tourId: number): Observable<void>{
+    return this.http.post<void>(`${this.apiUrl}/${tourId}/publish`,{})
+  }
+
   createCheckpoint(checkpoint: CheckpointDTO): Observable<CheckpointDTO> {
     return this.http.post<CheckpointDTO>(`${this.apiUrl}/tour-checkpoints`, checkpoint);
   }
