@@ -1,6 +1,8 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter  } from '@angular/core';
 import * as L from 'leaflet';
 import {MapService} from "./map.service";
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
 
 @Component({
   selector: 'xp-map',
@@ -10,13 +12,18 @@ import {MapService} from "./map.service";
 export class MapComponent implements AfterViewInit {
   private map: any;
   private markers: L.Marker[] = [];
+  private userMarker: L.Marker | null = null;
+  private currentLocation: { lat: number, lng: number } | null = null;
 
+  @Input() user: User | undefined;
   @Input() initialCenter: [number, number] = [45.2396, 19.8227];
   @Input() initialZoom: number = 13;
   @Input() waypoints: { lat: number, lng: number }[] = [];
 
   @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
   @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
+
+  @Output() locationSelected = new EventEmitter<{ lat: number, lng: number }>();
 
   constructor(private mapService: MapService) {
   }
@@ -92,22 +99,50 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  private touristIcon = L.icon({
+    iconUrl: 'assets/tourist.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  private setUserLocation(lat: number, lng: number): void {
+    if (this.userMarker) {
+      this.userMarker.setLatLng([lat, lng]);
+    } else {
+      this.userMarker = L.marker([lat, lng], { icon: this.touristIcon }).addTo(this.map);
+    }
+    this.currentLocation = { lat, lng };
+
+    this.locationSelected.emit({ lat, lng });
+  }
+
+  getCurrentLocation(): { lat: number, lng: number } | null {
+    return this.currentLocation;
+  }
+
   registerOnClick(): void {
     this.map.on('click', (e: any) => {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
 
-      const marker = new L.Marker([lat, lng]).addTo(this.map);
+      if (this.user && this.user.role === 'tourist') {
+        // Ako je korisnik turista, koristi `setUserLocation` za jedinstveni marker
+        this.setUserLocation(lat, lng);
+      } else {
+        // Ako je korisnik bilo koje druge role, koristi postojeću logiku dodavanja markera
+        const marker = new L.Marker([lat, lng]).addTo(this.map);
 
-      this.markers.push(marker);
+        this.markers.push(marker);
 
-      marker.on('click', () => {
-        this.map.removeLayer(marker);
-        this.markers = this.markers.filter(m => m !== marker);
-      });
+        marker.on('click', () => {
+          this.map.removeLayer(marker);
+          this.markers = this.markers.filter(m => m !== marker);
+        });
 
-      this.mapClick.emit({ lat, lng });
+        this.mapClick.emit({ lat, lng });
+      }
     });
   }
 }
