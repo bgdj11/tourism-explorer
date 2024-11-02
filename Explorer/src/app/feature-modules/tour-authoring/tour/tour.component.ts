@@ -1,12 +1,13 @@
-import {Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { TourDTO } from "../model/tour.model";
 import { TourManagementService } from "../tour-management.service";
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import {faPencil, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Router } from '@angular/router';
-import {Equipment} from "../../administration/model/equipment.model";
-import {CheckpointDTO} from "../model/checkpoint.model"; // Import Router
-import {MapComponent} from "../../../shared/map/map.component";
+import { Equipment } from "../../administration/model/equipment.model";
+import { CheckpointDTO } from "../model/checkpoint.model"; // Import Router
+import { MapComponent } from "../../../shared/map/map.component";
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'xp-tour',
@@ -31,6 +32,7 @@ export class TourComponent implements OnInit {
     description: '',
     weight: '',
     tags: [],
+    status:0,
     price: undefined,
     equipmentIds: [],
     tourCheckpointIds: []
@@ -107,6 +109,7 @@ export class TourComponent implements OnInit {
         description: '',
         weight: '',
         tags: [],
+        status:0,
         price: undefined,
         equipmentIds: [],
         tourCheckpointIds: []
@@ -161,6 +164,10 @@ export class TourComponent implements OnInit {
             this.selectedTourCheckpoints[index] = response;
           }
           this.closeModal();
+          //kada se izmeni checkpoint treba da izmeni mapu
+          if (this.selectedTour.tourCheckpointIds.length >= 2) {
+            this.getCheckpointsByTourId(this.selectedTour.id);
+          }
         },
         (error) => {
           console.error('Greška prilikom ažuriranja checkpointa', error);
@@ -178,6 +185,9 @@ export class TourComponent implements OnInit {
               () => {
                 console.log('Checkpoint ID uspešno dodat u turu.');
                 this.selectedTour.tourCheckpointIds.push(response.id);
+                //Ako dodamo drugi checkpoint treba odmah da izracuna duzinu, kao i za svaki naredni
+                if (this.selectedTour.tourCheckpointIds.length >= 2)
+                  this.getCheckpointsByTourId(this.selectedTour.id);
               },
               (error) => {
                 console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
@@ -248,19 +258,60 @@ export class TourComponent implements OnInit {
     }
   }
 
+  archiveTour(tourId: number): void {
+    if(confirm('Da li ste sigurni da želite da arhivirate ovu turu? ')){
+      this.tourService.archiveTour(tourId).subscribe(
+        (response)=>{
+          this.loadTours();
+        },
+        (error)=>{
+          console.error('Greska prilikom arhiviranja ture')
+        }
+      );
+    }
+  }
+
+  publishTour(tourId: number): void{
+    if(confirm('Da li ste sigurni da želite da aktivirate ovu turu? ')){
+      this.tourService.publishTour(tourId).subscribe(
+        (response)=>{
+          this.loadTours();
+        },
+        (error)=>{
+          console.error('Greska prilikom publishovanja ture')
+        }
+      );
+      
+    }
+  }
+
   getCheckpointsByTourId(tourId: number): void {
     this.selectedTourCheckpoints = [];
     this.tourService.getCheckpointIdsByTourId(tourId).subscribe(checkpointIds => {
-      checkpointIds.forEach(id => {
-        this.tourService.getCheckpointById(id).subscribe(checkpoint => {
-          this.selectedTourCheckpoints.push(checkpoint);
-          // @ts-ignore
-          this.mapa.setRoute(this.selectedTourCheckpoints.map(cp => ({
-            lat: cp.latitude,
-            lng: cp.longitude
-          })));
+      //Sortiramo rute da se svaki put ucitaju u istom redosledu
+      checkpointIds.sort((a, b) => a - b);
 
-        });
+      const allCheckpoints = checkpointIds.map(id =>
+        this.tourService.getCheckpointById(id)
+      );
+
+      //Neophodna linija da bi se navigacija (leaflet onaj sa desne strane)
+      //izbrisala ako tura nema nijedan checkpoint
+
+      if (allCheckpoints.length === 0)
+        this.mapa.setRoute([]);
+      // Cekamo da prvo pribavi sve checkpoint-e
+      forkJoin(allCheckpoints).subscribe(checkpoints => {
+        this.selectedTourCheckpoints = checkpoints;
+
+        const routePoints = this.selectedTourCheckpoints
+          .filter(cp => cp.latitude !== undefined && cp.longitude !== undefined)
+          .map(cp => ({
+            lat: cp.latitude!,
+            lng: cp.longitude!
+          }));
+
+        this.mapa.setRoute(routePoints);
       });
     });
   }
@@ -337,7 +388,6 @@ export class TourComponent implements OnInit {
     }
 
   }
-
   protected readonly faTrash = faTrash;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
