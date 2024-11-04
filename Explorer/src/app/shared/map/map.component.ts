@@ -106,15 +106,13 @@ export class MapComponent implements AfterViewInit {
     popupAnchor: [0, -32]
   });
 
-  private setUserLocation(lat: number, lng: number): void {
+  public setUserLocation(lat: number, lng: number): void {
     if (this.userMarker) {
       this.userMarker.setLatLng([lat, lng]);
     } else {
       this.userMarker = L.marker([lat, lng], { icon: this.touristIcon }).addTo(this.map);
     }
     this.currentLocation = { lat, lng };
-
-    this.locationSelected.emit({ lat, lng });
   }
 
   getCurrentLocation(): { lat: number, lng: number } | null {
@@ -130,6 +128,7 @@ export class MapComponent implements AfterViewInit {
       if (this.user && this.user.role === 'tourist') {
         // Ako je korisnik turista, koristi `setUserLocation` za jedinstveni marker
         this.setUserLocation(lat, lng);
+        this.locationSelected.emit({ lat, lng });
       } else {
         // Ako je korisnik bilo koje druge role, koristi postojeću logiku dodavanja markera
         const marker = new L.Marker([lat, lng]).addTo(this.map);
