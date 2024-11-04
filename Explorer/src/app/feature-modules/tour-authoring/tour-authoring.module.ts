@@ -6,13 +6,15 @@ import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import { ObjectComponent } from './object/object.component';
 import {SharedModule} from "../../shared/shared.module";
-
+import { ClubsComponent } from './club/club.component';
 
 
 @NgModule({
   declarations: [
     TourComponent,
     ObjectComponent,
+    ClubsComponent
+
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import {SharedModule} from "../../shared/shared.module";
   ],
   exports: [
     TourComponent,
-    ObjectComponent
+    ObjectComponent,
+    ClubsComponent
   ]
 })
 export class TourAuthoringModule { }

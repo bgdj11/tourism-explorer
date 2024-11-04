@@ -18,6 +18,7 @@
         <th>Opis</th>
         <th>Težina</th>
         <th>Cena</th>
+        <th>Status</th>
         <th>Akcije</th>
       </tr>
       </thead>
@@ -30,12 +31,29 @@
         <td>{{ tour.description }}</td>
         <td>{{ tour.weight }}</td>
         <td>{{ tour.price | currency }}</td>
+        <td>
+          <span *ngIf="tour.status === 0">DRAFT</span>
+          <span *ngIf="tour.status === 1">PUBLISHED</span>
+          <span *ngIf="tour.status === 2">ARCHIVED</span>
+          <span *ngIf="tour.status < 0 || tour.status > 2">UNKNOWN STATUS</span>
+        </td>
         <td class="text-center">
           <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', tour); $event.stopPropagation();">
             <fa-icon [icon]="faPencil"></fa-icon>
           </button>
           <button class="btn btn-danger btn-sm mx-1" (click)="deleteTour(tour.id); $event.stopPropagation();">
             <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+          <button class="btn btn-warning btn-sm mx-1" 
+          (click)="archiveTour(tour.id); $event.stopPropagation();" 
+          [disabled]="tour.status === 2">
+            Archive
+          </button>
+          <button class="btn btn-warning btn-sm mx-1"
+          (click)="publishTour(tour.id);
+          $event.stopPropagation();"
+          [disabled]="tour.status === 1">
+            Publish
           </button>
         </td>
       </tr>
@@ -125,6 +143,18 @@
           <label for="image">Slika</label>
           <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
         </div>
+        <!-- Add the map component here -->
+        <div class="form-group">
+          <xp-map
+            #modalMap
+            [initialCenter]="[45.2396, 19.8227]"
+            [initialZoom]="13"
+            [initialCheckpoint]="{ lat: newCheckpoint.latitude!, lng: newCheckpoint.longitude! }"
+            [uniqueId]="'checkpoint-map-' + newCheckpoint.id"
+            [isModalMap]="true"
+            (mapClick)="onMapClick($event)">
+          </xp-map>
+        </div>
         <button type="submit" class="btn btn-primary">Sačuvaj</button>
       </form>
     </div>
@@ -171,6 +201,7 @@
             <th>Opis</th>
             <th>Latituda</th>
             <th>Longituda</th>
+            <th>Akcije</th>
             <button class="btn btn-primary" (click)="openCheckpointModal()">
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
@@ -183,6 +214,11 @@
             <td>{{ checkpoint.checkpointDescription }}</td>
             <td>{{ checkpoint.latitude }}</td>
             <td>{{ checkpoint.longitude }}</td>
+            <td class="text-center"> <!-- Dodana ikona za edit -->
+              <button class="btn btn-warning btn-sm" (click)="editCheckpoint(checkpoint)">
+                <fa-icon [icon]="faPencil"></fa-icon>
+              </button>
+            </td>
           </tr>
           </tbody>
         </table>

@@ -13,10 +13,11 @@ import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-
 import { TourPreferencesComponent } from 'src/app/feature-modules/marketplace/tour-preferences/tour-preferences.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
+import { UserAccountComponent } from 'src/app/feature-modules/administration/user-account/user-account.component';
 import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-equipment/my-equipment.component';
 import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
 import { LocationSimulatorComponent} from "../../shared/location-simulator/location-simulator.component";
-
+import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -35,7 +36,9 @@ const routes: Routes = [
   {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
-  {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]}
+  {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]},
+  {path: 'editUserAccount',component: UserAccountComponent},
+  {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
 ];
 
 @NgModule({

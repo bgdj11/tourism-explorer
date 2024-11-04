@@ -4,4 +4,6 @@ export interface ObjectDTO {
     description: string;
     image: string;
     category: string;
+    latitude?:number;
+    longitude?:number;
   }
