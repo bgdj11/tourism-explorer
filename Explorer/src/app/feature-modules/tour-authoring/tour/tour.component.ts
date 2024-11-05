@@ -8,6 +8,7 @@ import { Equipment } from "../../administration/model/equipment.model";
 import { CheckpointDTO } from "../model/checkpoint.model"; // Import Router
 import { MapComponent } from "../../../shared/map/map.component";
 import { forkJoin } from 'rxjs';
+import { TransportType, TravelTimeDTO } from '../model/travelTime.model';
 
 @Component({
   selector: 'xp-tour',
@@ -15,11 +16,13 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./tour.component.css']
 })
 export class TourComponent implements OnInit {
+  TransportType = TransportType;
   tours: TourDTO[] = [];
   selectedTourCheckpoints: CheckpointDTO[] = [];
   selectedTourEquipment: Equipment[] = [];
   availableEquipment: Equipment[] = [];
   selectedEquipmentIds: number[] = [];
+  selectedTourTravelTimes: TravelTimeDTO[] = [];
   selectedTour: any = null;
   totalCount: number = 0;
   totalEquipmentCount: number = 0;
@@ -34,8 +37,10 @@ export class TourComponent implements OnInit {
     tags: [],
     status:0,
     price: undefined,
-    equipmentIds: [],
-    tourCheckpointIds: []
+    lengthInKm: 0,
+    equipments: [],
+    tourCheckpoints: [],
+    travelTimes: []
   };
   newCheckpoint: CheckpointDTO = {
     id: 0,
@@ -45,12 +50,17 @@ export class TourComponent implements OnInit {
     longitude: undefined,
     image: ''
   };
+  newTravelTime: TravelTimeDTO = {
+    time: 0,
+    transportType: 0
+  }
 
   @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
 
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
+  @ViewChild('travelTimeModal') travelTimeModal!: TemplateRef<any>;
   @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
 
@@ -67,7 +77,8 @@ export class TourComponent implements OnInit {
 
   selectTour(tour: any): void {
     this.selectedTour = tour;
-    this.getCheckpointsByTourId(tour.id);
+    this.selectedTourCheckpoints = tour.tourCheckpoints;
+    //this.getCheckpointsByTourId(tour.id);
     this.getEquipmentByTourId(tour.id);
   }
 
@@ -79,6 +90,7 @@ export class TourComponent implements OnInit {
     this.tourService.getTours(this.currentPage, this.pageSize).subscribe(
       (data) => {
         this.tours = data.results;
+        
         this.totalCount = data.totalCount;
       },
       (error) => {
@@ -111,8 +123,8 @@ export class TourComponent implements OnInit {
         tags: [],
         status:0,
         price: undefined,
-        equipmentIds: [],
-        tourCheckpointIds: []
+        equipments: [],
+        tourCheckpoints: []
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
@@ -132,6 +144,9 @@ export class TourComponent implements OnInit {
 
   openEquipmentModal(): void {
     this.modalRef = this.modalService.open(this.equipmentModal);
+  }
+  openTravelTimeModal(): void {
+    this.modalRef = this.modalService.open(this.travelTimeModal);
   }
 
   onMapClick(event: { lat: number, lng: number }) {
@@ -154,6 +169,7 @@ export class TourComponent implements OnInit {
   }
 
   addCheckpoint(): void {
+    console.log('NAME:' + this.newCheckpoint.checkpointName);
     // Ako postoji ID, onda se radi o uređivanju postojećeg checkpointa
     if (this.newCheckpoint.id) {
       this.tourService.updateCheckpoint(this.newCheckpoint).subscribe(
@@ -175,7 +191,8 @@ export class TourComponent implements OnInit {
       );
     } else {
       // Ako nema ID, onda se radi o dodavanju novog checkpointa
-      this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
+      
+      this.tourService.createCheckpoint(this.newCheckpoint,this.selectedTour.id).subscribe(
         (response) => {
           // Ažuriraj listu checkpointova ture
           this.selectedTourCheckpoints.push(response);
@@ -273,14 +290,15 @@ export class TourComponent implements OnInit {
 
   publishTour(tourId: number): void{
     if(confirm('Da li ste sigurni da želite da aktivirate ovu turu? ')){
-      this.tourService.publishTour(tourId).subscribe(
-        (response)=>{
-          this.loadTours();
+      this.tourService.publishTour(tourId).subscribe({
+        next: () => {
+          
+          alert('Tour Published succesfully.');
         },
-        (error)=>{
-          console.error('Greska prilikom publishovanja ture')
+        error: (error) => {
+          alert(error.message); // Displays the error message from the backend
         }
-      );
+    });
       
     }
   }
@@ -326,7 +344,12 @@ export class TourComponent implements OnInit {
       });
     });
   }
-
+  addTravelTime(): void {
+    console.log("ADDTRAVELTIME")
+    this.tourService.addNewTravelTime(this.newTravelTime,this.selectedTour.id).subscribe(
+      t=>this.selectedTour.travelTimes.push(t)
+    );
+  }
   addSelectedEquipment(): void {
     if (this.selectedTour) {
       this.selectedEquipmentIds.forEach(equipmentId => {
