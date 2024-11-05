@@ -4,6 +4,7 @@ import { ObjectService } from '../object.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {faPencil, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { Router } from '@angular/router';
+import {MapComponent} from "../../../shared/map/map.component";
 
 
 
@@ -24,9 +25,11 @@ export class ObjectComponent implements OnInit{
     name: '',
     description: '',
     image: '',
-    category: ''
+    category: '',
+    latitude: undefined,
+    longitude: undefined
   };
-
+  @ViewChild('objectModalMap') objectModalMapComponent!: MapComponent;
   @ViewChild('objectModal') objectModal!: TemplateRef<any>;
   private modalRef!: NgbModalRef;
 
@@ -67,7 +70,9 @@ export class ObjectComponent implements OnInit{
         name: '',
         description: '',
         image: '',
-        category: ''
+        category: '',
+        latitude: undefined,
+        longitude: undefined
       };
     this.modalRef = this.modalService.open(this.objectModal);
   }
@@ -131,7 +136,16 @@ export class ObjectComponent implements OnInit{
     }
 
   }
+  // Metoda koja se poziva kada korisnik klikne na mapu
+  onMapClick(event: { lat: number, lng: number }) {
+    this.object.latitude = event.lat;
+    this.object.longitude = event.lng;
 
+    // Postavite jedinstveni marker na mapi unutar modalnog dijaloga
+    if (this.objectModalMapComponent) {
+      this.objectModalMapComponent.setUniqueMarker(event.lat, event.lng);
+    }
+  }
   protected readonly faTrash = faTrash;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;

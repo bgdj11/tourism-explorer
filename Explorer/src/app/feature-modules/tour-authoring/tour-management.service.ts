@@ -78,6 +78,11 @@ export class TourManagementService {
     return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/checkpoint-ids/${checkpointId}`, {});
   }
 
+  updateCheckpoint(newCheckpoint: CheckpointDTO) {
+    return this.http.put<CheckpointDTO>(`${this.checkpointUrl}/${newCheckpoint.id}`, newCheckpoint);
+  }
+
+
   getClubs(page: number, pageSize: number): Observable<PagedResults<ClubDTO>> {
     let params = new HttpParams()
     .set('page', page.toString())

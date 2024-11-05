@@ -125,6 +125,18 @@
           <label for="image">Slika</label>
           <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
         </div>
+        <!-- Add the map component here -->
+        <div class="form-group">
+          <xp-map
+            #modalMap
+            [initialCenter]="[45.2396, 19.8227]"
+            [initialZoom]="13"
+            [initialCheckpoint]="{ lat: newCheckpoint.latitude!, lng: newCheckpoint.longitude! }"
+            [uniqueId]="'checkpoint-map-' + newCheckpoint.id"
+            [isModalMap]="true"
+            (mapClick)="onMapClick($event)">
+          </xp-map>
+        </div>
         <button type="submit" class="btn btn-primary">Sačuvaj</button>
       </form>
     </div>
@@ -171,6 +183,7 @@
             <th>Opis</th>
             <th>Latituda</th>
             <th>Longituda</th>
+            <th>Akcije</th>
             <button class="btn btn-primary" (click)="openCheckpointModal()">
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
@@ -183,6 +196,11 @@
             <td>{{ checkpoint.checkpointDescription }}</td>
             <td>{{ checkpoint.latitude }}</td>
             <td>{{ checkpoint.longitude }}</td>
+            <td class="text-center"> <!-- Dodana ikona za edit -->
+              <button class="btn btn-warning btn-sm" (click)="editCheckpoint(checkpoint)">
+                <fa-icon [icon]="faPencil"></fa-icon>
+              </button>
+            </td>
           </tr>
           </tbody>
         </table>
