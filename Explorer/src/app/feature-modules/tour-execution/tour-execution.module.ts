@@ -5,6 +5,7 @@ import { MaterialModule } from 'src/app/infrastructure/material/material.module'
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyEquipmentComponent } from './my-equipment/my-equipment.component';
 import { MyEquipmentFormComponent } from './my-equipment-form/my-equipment-form.component';
+import { StartTourComponent } from './start-tour/start-tour.component';
 
 
 
@@ -12,7 +13,8 @@ import { MyEquipmentFormComponent } from './my-equipment-form/my-equipment-form.
   declarations: [
     AddProblemComponent,
     MyEquipmentComponent,
-    MyEquipmentFormComponent
+    MyEquipmentFormComponent,
+    StartTourComponent
   ],
   imports: [
     CommonModule,

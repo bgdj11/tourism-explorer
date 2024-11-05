@@ -1,0 +1,16 @@
+<div class="tour-start-container">
+  <h2>Start a Tour</h2>
+
+  <div class="form-group">
+    <label for="tourId">Enter Tour ID:</label>
+    <input type="number" #tourIdInput id="tourId" class="form-control" placeholder="Tour ID" />
+  </div>
+
+  <button (click)="startTour()" class="btn btn-primary mt-2">
+    Start Tour
+  </button>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+    {{ errorMessage }}
+  </div>
+</div>

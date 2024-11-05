@@ -12,9 +12,9 @@ import { TouristEquipment } from './model/tourist-equipment.model';
     providedIn: 'root'
   })
   export class TourExecutionService {
-  
-    constructor(private http: HttpClient) { }  
-  
+
+    constructor(private http: HttpClient) { }
+
     getProblem(): Observable<PagedResults<Problem>> {
       return this.http.get<PagedResults<Problem>>(environment.apiHost + 'tourist/problems')
     }
@@ -38,5 +38,7 @@ import { TouristEquipment } from './model/tourist-equipment.model';
     addTouristEquipment(touristEquipment: TouristEquipment): Observable<TouristEquipment> {
         return this.http.post<TouristEquipment>(`${environment.apiHost}tourist/touristEquipment`, touristEquipment);
       }
-
-  }  
+    startTourExecution(tourId: number, userId: number): Observable<any> {
+      return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/start?tourId=${tourId}&userId=${userId}`, {});
+    }
+  }

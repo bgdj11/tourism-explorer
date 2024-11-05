@@ -18,7 +18,7 @@ import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-
 import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
 import { LocationSimulatorComponent} from "../../shared/location-simulator/location-simulator.component";
 import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
-
+import { StartTourComponent } from 'src/app/feature-modules/tour-execution/start-tour/start-tour.component';
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: '', component: HomeComponent },
@@ -39,6 +39,7 @@ const routes: Routes = [
   {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]},
   {path: 'editUserAccount',component: UserAccountComponent},
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
+  {path: 'start-tour', component: StartTourComponent, canActivate: [AuthGuard], }
 ];
 
 @NgModule({
