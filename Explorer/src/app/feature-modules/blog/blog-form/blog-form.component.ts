@@ -62,7 +62,8 @@ export class BlogFormComponent implements OnChanges {
       createdDate: new Date().toISOString(),
       images: this.blogForm.value.images || [],
       status: this.blogForm.value.status as BlogStatus,
-      userId: this.user?.id || 0 
+      userId: this.user?.id || 0,
+      votes: []
     };
   
     if (this.user?.role === 'author') {
@@ -101,7 +102,8 @@ export class BlogFormComponent implements OnChanges {
       createdDate: new Date().toISOString(),
       images: this.blogForm.value.images || [],
       status: this.blogForm.value.status as BlogStatus,
-      userId: this.user?.id || 0
+      userId: this.user?.id || 0,
+      votes: this.blog.votes || []
     };
     blog.id = this.blog.id;
   

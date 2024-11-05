@@ -5,7 +5,8 @@ export interface Blog{
     description : string,
     createdDate? : string,
     images: string[],
-    status : BlogStatus
+    status : BlogStatus,
+    votes : Vote[]
 }
 
 export enum BlogStatus {
@@ -14,3 +15,16 @@ export enum BlogStatus {
     Closed = 2
   }
   
+export enum Markdown {
+    Upvote = 0,
+    Downvote = 1
+}
+
+export interface Vote {
+    userId?: number;
+    blogId?: number;
+    mark: Markdown;
+    createdDate?: string;
+}
+
+

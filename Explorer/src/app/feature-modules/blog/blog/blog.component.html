@@ -30,6 +30,20 @@
                         </td>
                         <td>{{ getStatusString(blog.status) }}</td> 
                         <td>
+                            <!-- Upvote i Downvote dugmad -->
+                            <button 
+                            (click)="upvote(blog.id || 0)" 
+                            [ngClass]="{'red-button': hasUpvoted(blog)}">
+                            +
+                          </button>
+                          <span>{{ calculateTotalVotes(blog.votes) }}</span>
+                          <button 
+                            (click)="downvote(blog.id || 0)" 
+                            [ngClass]="{'red-button': hasDownvoted(blog)}">
+                            -
+                          </button>
+                        </td>                        
+                        <td>
                             <!-- Prikazivanje dugmadi samo ako je prijavljen korisnik i njegov ID odgovara ID-u autora bloga -->
                             <button *ngIf="user?.id === blog.userId" color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
                                 <mat-icon>delete</mat-icon>
