@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppRating } from './model/appRating.model';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { environment } from 'src/env/environment';
+import { TourSearch } from './model/tour-search.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,7 @@ export class LayoutService {
       return this.http.post<AppRating>(environment.apiHost + 'ratings/appRating', rating);
     }
 
-  
+    getAllTours(): Observable<PagedResults<TourSearch>> {
+      return this.http.get<PagedResults<TourSearch>>(environment.apiHost + 'author/tours');
+    }
 }

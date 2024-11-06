@@ -1,0 +1,14 @@
+<div>
+    <div>
+        <label for="distance">Unesite distancu (u kilometrima):</label>
+        <input type="number" id="distance" min="0" [(ngModel)]="distance">
+    </div>
+    <button (click)="search()">Pretraži</button>
+
+    <xp-map
+        class="map-container"
+        [initialCenter]="[45.2396, 19.8227]"
+        [initialZoom]="13"
+        (mapClick)="onMapClick($event)">
+    </xp-map>
+</div>

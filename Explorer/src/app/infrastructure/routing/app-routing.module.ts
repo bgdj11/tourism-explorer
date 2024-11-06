@@ -17,6 +17,7 @@ import { UserAccountComponent } from 'src/app/feature-modules/administration/use
 import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-equipment/my-equipment.component';
 import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
 import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
+import { TourSearchComponent } from 'src/app/feature-modules/layout/tour-search/tour-search.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -37,6 +38,7 @@ const routes: Routes = [
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'editUserAccount',component: UserAccountComponent},
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
+  {path: 'tour-search', component: TourSearchComponent}
 ];
 
 @NgModule({
