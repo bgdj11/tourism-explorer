@@ -1,18 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { TourExecutionService } from 'src/app/feature-modules/tour-execution/tour.execution.service';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { TourDTO } from '../../tour-authoring/model/tour.model';
 import { TourExecution } from "../model/tour-execution.model";
+import { interval, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 
 @Component({
   selector: 'xp-start-tour',
   templateUrl: './start-tour.component.html',
   styleUrls: ['./start-tour.component.css']
 })
-export class StartTourComponent implements OnInit {
+export class StartTourComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   tours: TourDTO[] = [];
   activeTourExecution: TourExecution | null = null;
+  private executionId: number | null = null;
+  private checkIntervalSubscription!: Subscription;
+  currentLocation: MapLocation | null = null;
+
+  @ViewChild('tourIdInput') tourIdInput!: ElementRef;
 
   constructor(
       private tourExecutionService: TourExecutionService,
@@ -23,16 +31,32 @@ export class StartTourComponent implements OnInit {
     this.checkActiveTour();
   }
 
+  ngOnDestroy(): void {
+    if (this.checkIntervalSubscription) {
+      this.checkIntervalSubscription.unsubscribe();
+    }
+  }
+
   // Provera stanja pokrenute ture pri učitavanju komponente
   checkActiveTour(): void {
     const savedExecution = localStorage.getItem('activeTourExecution');
 
     if (savedExecution) {
-      // Ako postoji pokrenuta tura u localStorage, parsiraj je i postavi kao aktivnu turu
-      this.activeTourExecution = JSON.parse(savedExecution) as TourExecution;
-      this.tours = this.tours.filter(tour => tour.id === this.activeTourExecution?.tourId);
+      const execution = JSON.parse(savedExecution) as TourExecution;
+
+      this.tourExecutionService.getTourExecutionStatus(execution.tourId, execution.userId).subscribe(
+          (existingExecution) => {
+            this.activeTourExecution = existingExecution;
+            this.tours = this.tours.filter(tour => tour.id === this.activeTourExecution?.tourId);
+          },
+          (error) => {
+            console.warn('Tour execution not found on server, clearing local storage.');
+            localStorage.removeItem('activeTourExecution');
+            this.activeTourExecution = null;
+            this.loadTours();
+          }
+      );
     } else {
-      // Ako nema pokrenute ture, učitaj sve ture
       this.loadTours();
     }
   }
@@ -49,28 +73,41 @@ export class StartTourComponent implements OnInit {
     );
   }
 
-  startTour(tourId: number): void {
+  startTour(): void {
     const userId = this.authService.user$.getValue().id;
+    const tourIdValue = this.tourIdInput.nativeElement.value;
+    const tourId = parseInt(tourIdValue, 10);
 
-    if (!tourId || tourId <= 0) {
-      this.errorMessage = 'Invalid Tour ID. Please enter a positive number.';
+    if (isNaN(tourId) || tourId <= 0) {
+      this.errorMessage = 'Please enter a valid positive Tour ID.';
       return;
     }
 
-    // Pokreni turu i učitaj status nove ture
-    this.tourExecutionService.startTourExecution(tourId, userId).subscribe(
-        (execution: TourExecution) => {
-          // Sačuvaj `activeTourExecution` sa svim detaljima uključujući `executionId`
-          this.activeTourExecution = execution;
-          localStorage.setItem('activeTourExecution', JSON.stringify(execution));
+    this.tourExecutionService.getPosition(userId).subscribe(
+      (position) => {
+        this.currentLocation = position.currentLocation;
+        this.tourExecutionService.startTourExecution(tourId, userId).subscribe(
+          (response) => {
+            if (response && response.id) {
+              this.executionId = response.id;
+              alert('Tour execution started successfully.');
 
-          // Nakon što se tura uspešno pokrene, prikaži samo aktivnu turu
-          this.tours = this.tours.filter(tour => tour.id === tourId);
-        },
-        (error) => {
-          console.error('Error starting tour:', error);
-          this.errorMessage = 'Failed to start the tour. Please try again.';
-        }
+              this.startCheckingVisitedCheckpoints(userId);
+            } else {
+              console.error('No execution ID returned from startTourExecution');
+              this.errorMessage = 'Failed to start the tour. Please try again.';
+            }
+          },
+          (error) => {
+            console.error('Error starting tour:', error);
+            this.errorMessage = 'Failed to start the tour. Please try again.';
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching current location:', error);
+        this.errorMessage = 'Failed to fetch current location. Please try again.';
+      }
     );
   }
 
@@ -78,7 +115,6 @@ export class StartTourComponent implements OnInit {
     if (this.activeTourExecution) {
       this.tourExecutionService.completeTourExecution(this.activeTourExecution.id).subscribe(
           () => {
-            // Očisti stanje pokrenute ture nakon završetka
             localStorage.removeItem('activeTourExecution');
             this.activeTourExecution = null;
             this.loadTours();
@@ -95,7 +131,6 @@ export class StartTourComponent implements OnInit {
     if (this.activeTourExecution) {
       this.tourExecutionService.abandonTourExecution(this.activeTourExecution.id).subscribe(
           () => {
-            // Očisti stanje pokrenute ture nakon napuštanja
             localStorage.removeItem('activeTourExecution');
             this.activeTourExecution = null;
             this.loadTours();
@@ -106,5 +141,34 @@ export class StartTourComponent implements OnInit {
           }
       );
     }
+  }
+
+  startCheckingVisitedCheckpoints(userId: number): void {
+    if (!this.executionId) {
+      console.error('Execution ID is undefined');
+      this.errorMessage = 'Execution ID is not set. Cannot check checkpoints.';
+      return;
+    }
+
+    this.checkIntervalSubscription = interval(10000).pipe(
+      switchMap(() =>
+        this.tourExecutionService.getPosition(userId).pipe(
+          switchMap((position) => {
+            return this.tourExecutionService.checkVisitedCheckpoint(this.executionId!, position.currentLocation);
+          })
+        )
+      )
+    ).subscribe(
+      (result) => {
+        if (result.success) {
+          console.log('Checkpoint visited:', result);
+        } else {
+          console.warn('No nearby checkpoints or already visited.');
+        }
+      },
+      (error) => {
+        console.error('Error checking visited checkpoint:', error);
+      }
+    );
   }
 }

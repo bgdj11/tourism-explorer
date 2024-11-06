@@ -10,9 +10,10 @@ import { Comment } from '../model/comment.model';
 })
 export class CommentFormComponent  implements OnChanges{
   
-  @Output() commentUpdated = new EventEmitter<null>();
+  @Output() commentUpdated = new EventEmitter<void>();
   @Input() comment: Comment;
   @Input() shouldEdit: boolean = false;
+  @Input() blogId: number; 
 
   constructor(private service: BlogService){ }
 
@@ -58,7 +59,7 @@ export class CommentFormComponent  implements OnChanges{
     }
 
     const comment: Comment = {
-      blogId: 1, 
+      blogId: this.blogId, 
       userId: userId, // uzmi ga iz autentifikacije
       creationTime: new Date(), 
       lastModifiedTime: new Date(), 
@@ -92,7 +93,7 @@ export class CommentFormComponent  implements OnChanges{
 
     const comment: Comment = {
       id: this.comment.id,
-      blogId: 1,
+      blogId: this.comment.blogId,
       userId: userId,
       creationTime: new Date(),
       lastModifiedTime: new Date(),
