@@ -36,6 +36,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     FontAwesomeModule,
     HttpClientModule,
+    BlogModule,
     ReactiveFormsModule 
   ],
   providers: [

@@ -37,7 +37,10 @@
                             <button *ngIf="user?.id === blog.userId" color="primary" (click)="onEditClicked(blog)" mat-icon-button>
                                 <mat-icon>edit</mat-icon>
                             </button>
-                        </td>                        
+                        </td>  
+                        <td>
+                            <xp-comment *ngIf="blog.id" [blogId]="blog.id"></xp-comment>
+                        </td>                      
                     </tr>
                     <tr *ngIf="isAuthor || isTourist">
                         <button color="primary" (click)="onAddClicked()" mat-icon-button>
@@ -51,4 +54,5 @@
     <div>
         <xp-blog-form (blogUpdated)="getBlogs()" *ngIf="shouldRenderBlogForm" [blog]="selectedBlog" [shouldEdit]="shouldEdit"></xp-blog-form>
     </div>
+        
 </div>
