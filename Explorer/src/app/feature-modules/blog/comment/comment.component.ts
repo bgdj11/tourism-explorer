@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BlogService } from '../blog.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Comment } from '../model/comment.model';
@@ -11,6 +11,9 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
   styleUrls: ['./comment.component.css']
 })
 export class CommentComponent implements OnInit{
+
+  @Input() blogId: number;
+  
 
   comments: Comment[] = [];
   selectedComment: Comment;
@@ -35,7 +38,7 @@ export class CommentComponent implements OnInit{
   }
 
   getComments(): void {
-    this.service.getComments().subscribe({
+    this.service.getComments(this.blogId).subscribe({
       next: (result: PagedResults<Comment>) => {
         this.comments = result.results
       },

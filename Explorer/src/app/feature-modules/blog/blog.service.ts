@@ -40,18 +40,17 @@ export class BlogService {
   }
 
 
-  getComments(): Observable<PagedResults<Comment>>{
-    
+  getComments(blogId: number): Observable<PagedResults<Comment>> {
     const userRole = this.getUserRoleFromToken();
-
+  
     let endpoint = '';
-    if(userRole === 'author'){
-      endpoint = 'author/comment';
-    }else{
-      endpoint = 'tourist/comment';
+    if (userRole === 'author') {
+      endpoint = `author/blog/${blogId}/comment`;
+    } else if (userRole === 'tourist') {
+      endpoint = `tourist/blog/${blogId}/comment`;
     }
-
-    return this.http.get<PagedResults<Comment>>(environment.apiHost + endpoint);
+  
+    return this.http.get<PagedResults<Comment>>(`${environment.apiHost}${endpoint}`);
   }
 
   addComment(comment: Comment): Observable<Comment>{
@@ -59,10 +58,10 @@ export class BlogService {
     const userRole = this.getUserRoleFromToken();
 
     let endpoint = '';
-    if(userRole === 'author'){
-      endpoint = 'author/comment';
-    }else if(userRole === 'tourist'){
-      endpoint = 'tourist/comment';
+    if (userRole === 'author') {
+      endpoint = `author/blog/${comment.blogId}/comment`;
+    } else if (userRole === 'tourist') {
+      endpoint = `tourist/blog/${comment.blogId}/comment`;
     }
 
     console.log('sss: ', userRole);
@@ -73,10 +72,10 @@ export class BlogService {
     const userRole = this.getUserRoleFromToken();
 
     let endpoint = '';
-    if(userRole === 'author'){
-      endpoint = 'author/comment/';
-    }else if(userRole === 'tourist'){
-      endpoint = 'tourist/comment/';
+    if (userRole === 'author') {
+      endpoint = `author/blog/${comment.blogId}/comment/`;
+    } else if (userRole === 'tourist') {
+      endpoint = `tourist/blog/${comment.blogId}/comment/`;
     }
 
     
@@ -88,10 +87,10 @@ export class BlogService {
     const userRole = this.getUserRoleFromToken();
 
     let endpoint = '';
-    if(userRole === 'author'){
-      endpoint = 'author/comment/';
-    }else if(userRole === 'tourist'){
-      endpoint = 'tourist/comment/';
+    if (userRole === 'author') {
+      endpoint = `author/blog/${comment.blogId}/comment/`;
+    } else if (userRole === 'tourist') {
+      endpoint = `tourist/blog/${comment.blogId}/comment/`;
     }
 
     return this.http.delete<Comment>(environment.apiHost + endpoint + comment.id);
