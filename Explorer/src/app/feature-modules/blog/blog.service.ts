@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Comment } from './model/comment.model'; 
-import { Blog } from './model/blog.model';
+import { Blog, Vote } from './model/blog.model';
 
 import { environment } from 'src/env/environment';
 
@@ -122,6 +122,18 @@ export class BlogService {
 
   updateBlogTourist(blog : Blog) : Observable<Blog> {
     return this.http.put<Blog>(environment.apiHost + 'tourist/blogs/' + blog.id,blog);
-
   }
+
+  addVoteTourist(vote: Vote) : Observable<Vote> {
+    return this.http.put<Vote>(environment.apiHost + 'tourist/blogs/vote', vote);
+  }
+
+  addVoteAuthor(vote: Vote) : Observable<Vote> {
+    return this.http.put<Vote>(environment.apiHost + 'author/blogs/vote', vote);
+  }
+
+  removeVote(vote: Vote): Observable<Vote> {
+    return this.http.delete<Vote>(environment.apiHost + 'tourist/blogs/' + vote);
+  }
+  
 }
