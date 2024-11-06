@@ -143,22 +143,54 @@
           <label for="image">Slika</label>
           <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
         </div>
-        <!-- Add the map component here -->
-        <div class="form-group">
-          <xp-map
-            #modalMap
-            [initialCenter]="[45.2396, 19.8227]"
-            [initialZoom]="13"
-            [initialCheckpoint]="{ lat: newCheckpoint.latitude!, lng: newCheckpoint.longitude! }"
-            [uniqueId]="'checkpoint-map-' + newCheckpoint.id"
-            [isModalMap]="true"
-            (mapClick)="onMapClick($event)">
-          </xp-map>
-        </div>
+        
+      
+      <!-- Add the map component here -->
+      <div class="form-group">
+        <xp-map
+          #modalMap
+          [initialCenter]="[45.2396, 19.8227]"
+          [initialZoom]="13"
+          [initialCheckpoint]="{ lat: newCheckpoint.latitude!, lng: newCheckpoint.longitude! }"
+          [uniqueId]="'checkpoint-map-' + newCheckpoint.id"
+          [isModalMap]="true"
+          (mapClick)="onMapClick($event)">
+        </xp-map>
+      </div>
         <button type="submit" class="btn btn-primary">Sačuvaj</button>
       </form>
-    </div>
+      </div>
+      
   </ng-template>
+  <!-- Modal za dodavanje travel time-a -->
+  <ng-template #travelTimeModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Dodaj Travel Time</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #checkpointForm="ngForm" (ngSubmit)="addTravelTime()">
+        <div class="form-group">
+          <label for="longitude">Longituda</label>
+          <select class="form-control" id="transportType" [(ngModel)]="newTravelTime.transportType" name="transportType" required>
+            <option [ngValue]="TransportType.Walk">Walk</option>
+            <option [ngValue]="TransportType.Car">Car</option>
+            <option [ngValue]="TransportType.Bike">Bike</option>
+          </select>
+          <label for="longitude">Longituda</label>
+          <input type="number" class="form-control" id="latitude" [(ngModel)]="newTravelTime.time" name="time" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>    
+      </form>
+    </div>
+   
+  </ng-template>
+        
+      
+    
+  
 
   <!-- Modal za izbor opreme -->
   <ng-template #equipmentModal let-modal>
@@ -202,7 +234,7 @@
             <th>Latituda</th>
             <th>Longituda</th>
             <th>Akcije</th>
-            <button class="btn btn-primary" (click)="openCheckpointModal()">
+            <button class="btn btn-primary"  (click)="openCheckpointModal()">
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>
@@ -215,7 +247,7 @@
             <td>{{ checkpoint.latitude }}</td>
             <td>{{ checkpoint.longitude }}</td>
             <td class="text-center"> <!-- Dodana ikona za edit -->
-              <button class="btn btn-warning btn-sm" (click)="editCheckpoint(checkpoint)">
+              <button class="btn btn-warning btn-sm"  (click)="editCheckpoint(checkpoint)">
                 <fa-icon [icon]="faPencil"></fa-icon>
               </button>
             </td>
@@ -235,7 +267,7 @@
             <th>Naziv</th>
             <th>Opis</th>
             <th>Akcije</th> <!-- Dodana kolona za akcije -->
-            <button class="btn btn-primary" (click)="openEquipmentModal()">
+            <button class="btn btn-primary" disabled="selectedTour.status != DRAFT" (click)="openEquipmentModal()">
               <fa-icon [icon]="faPlus"></fa-icon> Dodaj opremu
             </button>
           </tr>
@@ -246,10 +278,40 @@
             <td>{{ equipment.name }}</td>
             <td>{{ equipment.description }}</td>
             <td class="text-center">
-              <button class="btn btn-danger btn-sm mx-1" (click)="equipment.id ? removeEquipment(equipment.id) : null">
+              <button class="btn btn-danger btn-sm mx-1" disabled="selectedTour.status != DRAFT" (click)="equipment.id ? removeEquipment(equipment.id) : null">
                 <fa-icon [icon]="faTrash"></fa-icon>
               </button>
             </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <div class="col-md-6">
+      <h4 class="text-center">Time travel za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Tip</th>
+            <th>Vreme u minutima</th>
+            <button class="btn btn-primary" (click)="openTravelTimeModal()">
+              <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
+            </button>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let travelTime of selectedTour.travelTimes; let j = index">
+            <td>{{ j + 1 }}</td>
+            <td>
+              <span *ngIf="travelTime.transportType === 1">Walk</span>
+              <span *ngIf="travelTime.transportType === 2">Bike</span>
+              <span *ngIf="travelTime.transportType === 3">Car</span>
+              <span *ngIf="travelTime.transportType < 1 || travelTime.transportType > 3">Unknown Type</span>
+            </td>
+            <td>{{ travelTime.time }}</td>
           </tr>
           </tbody>
         </table>
@@ -259,6 +321,6 @@
   <div>
     <xp-map #mapa></xp-map>
   </div>
-
 </div>
+  
 

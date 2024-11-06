@@ -24,6 +24,6 @@
         </div>
     </div>
     <div *ngIf="isAuthor || isTourist">
-       <xp-comment-form (commentUpdated)="onCommentUpdated()" [comment]="selectedComment" [shouldEdit]="shouldEdit" ></xp-comment-form>
+       <xp-comment-form  [blogId]="blogId" (commentUpdated)="onCommentUpdated()" [comment]="selectedComment" [shouldEdit]="shouldEdit" ></xp-comment-form>
     </div>
 </div>
