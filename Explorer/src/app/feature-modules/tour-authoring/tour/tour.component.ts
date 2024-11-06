@@ -32,8 +32,11 @@ export class TourComponent implements OnInit {
     description: '',
     weight: '',
     tags: [],
-    status:0,
+    status: 0,
     price: undefined,
+    lengthInKm: 0, // Podrazumevana vrednost za dužinu ture
+    publishedDate: '', // Prazan string za datum objave
+    archivedDate: '',  // Prazan string za datum arhiviranja
     equipmentIds: [],
     tourCheckpointIds: []
   };
@@ -109,8 +112,11 @@ export class TourComponent implements OnInit {
         description: '',
         weight: '',
         tags: [],
-        status:0,
+        status: 0,
         price: undefined,
+        lengthInKm: 0, // Dodajemo podrazumevanu vrednost za lengthInKm
+        publishedDate: '', // Inicijalizujemo kao prazan string za datume
+        archivedDate: '',  // Inicijalizujemo kao prazan string za datume
         equipmentIds: [],
         tourCheckpointIds: []
       };
@@ -281,7 +287,7 @@ export class TourComponent implements OnInit {
           console.error('Greska prilikom publishovanja ture')
         }
       );
-      
+
     }
   }
 

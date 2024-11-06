@@ -1,16 +1,40 @@
-<div class="tour-start-container">
-  <h2>Start a Tour</h2>
+<div class="tour-list-container">
+    <h2 *ngIf="!activeTourExecution">Available Tours</h2>
+    <h2 *ngIf="activeTourExecution">Active Tour Execution</h2>
 
-  <div class="form-group">
-    <label for="tourId">Enter Tour ID:</label>
-    <input type="number" #tourIdInput id="tourId" class="form-control" placeholder="Tour ID" />
-  </div>
+    <table *ngIf="!activeTourExecution" class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tour of tours">
+            <td>{{ tour.id }}</td>
+            <td>{{ tour.name }}</td>
+            <td>{{ tour.description }}</td>
+            <td>
+                <button (click)="startTour(tour.id)" class="btn btn-primary">Start Tour</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-  <button (click)="startTour()" class="btn btn-primary mt-2">
-    Start Tour
-  </button>
+    <div *ngIf="activeTourExecution" class="active-tour-info">
+        <p><strong>Tour ID:</strong> {{ activeTourExecution.tourId }}</p>
+        <p><strong>Status:</strong> {{ activeTourExecution.status }}</p>
+        <p><strong>Start Time:</strong> {{ activeTourExecution.startTime | date:'short' }}</p>
+        <p *ngIf="activeTourExecution.endTime"><strong>End Time:</strong> {{ activeTourExecution.endTime | date:'short' }}</p>
 
-  <div *ngIf="errorMessage" class="alert alert-danger mt-2">
-    {{ errorMessage }}
-  </div>
+        <button (click)="completeTour()" class="btn btn-success">Complete Tour</button>
+        <button (click)="abandonTour()" class="btn btn-danger">Abandon Tour</button>
+    </div>
+
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+        {{ errorMessage }}
+    </div>
 </div>
