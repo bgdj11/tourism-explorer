@@ -94,59 +94,66 @@ export class BlogComponent implements OnInit{
   }
 
   upvote(blogId: number): void {
-    const blog = this.blogs.find(b => b.id === blogId);
-    if (!blog || !this.user) return;
-  
-    const currentVote = this.getUserVote(blog);
-    const newVote: Vote = {
-      userId: this.user.id,
-      mark: Markdown.Upvote,
-      createdDate: new Date().toISOString(),
-      blogId: blog.id
-    };
-  
-    if (currentVote && currentVote.mark === Markdown.Upvote) {
-      // Poništi glas
-      blog.votes = blog.votes.filter(vote => vote.userId !== this.user?.id);
-      this.updateVotesInDatabase(blogId, currentVote, 'upvote');
-    } else {
-      // Dodaj ili ažuriraj glas
-      if (currentVote) {
-        currentVote.mark = Markdown.Upvote; // Ažuriraj glas
+    if(this.user?.role==='tourist' || this.user?.role==='author'){
+      const blog = this.blogs.find(b => b.id === blogId);
+      if (!blog || !this.user) return;
+    
+      const currentVote = this.getUserVote(blog);
+      const newVote: Vote = {
+        userId: this.user.id,
+        mark: Markdown.Upvote,
+        createdDate: new Date().toISOString(),
+        blogId: blog.id
+      };
+    
+      if (currentVote && currentVote.mark === Markdown.Upvote) {
+        // Poništi glas
+        blog.votes = blog.votes.filter(vote => vote.userId !== this.user?.id);
         this.updateVotesInDatabase(blogId, currentVote, 'upvote');
       } else {
-        blog.votes.push(newVote); // Dodaj novi glas
-        this.updateVotesInDatabase(blogId, newVote, 'upvote');
+        // Dodaj ili ažuriraj glas
+        if (currentVote) {
+          currentVote.mark = Markdown.Upvote; // Ažuriraj glas
+          this.updateVotesInDatabase(blogId, currentVote, 'upvote');
+        } else {
+          blog.votes.push(newVote); // Dodaj novi glas
+          this.updateVotesInDatabase(blogId, newVote, 'upvote');
+        }
       }
     }
+    
   }
   
   downvote(blogId: number): void {
-    const blog = this.blogs.find(b => b.id === blogId);
-    if (!blog || !this.user) return;
-  
-    const currentVote = this.getUserVote(blog);
-    const newVote: Vote = {
-      userId: this.user.id,
-      mark: Markdown.Downvote,
-      createdDate: new Date().toISOString(),
-      blogId: blog.id
-    };
-  
-    if (currentVote && currentVote.mark === Markdown.Downvote) {
-      // Poništi glas
-      blog.votes = blog.votes.filter(vote => vote.userId !== this.user?.id);
-      this.updateVotesInDatabase(blogId, currentVote, 'downvote');
-    } else {
-      // Dodaj ili ažuriraj glas
-      if (currentVote) {
-        currentVote.mark = Markdown.Downvote; // Ažuriraj glas
+    if(this.user?.role==='tourist' || this.user?.role==='author'){
+      const blog = this.blogs.find(b => b.id === blogId);
+      if (!blog || !this.user) return;
+    
+      const currentVote = this.getUserVote(blog);
+      const newVote: Vote = {
+        userId: this.user.id,
+        mark: Markdown.Downvote,
+        createdDate: new Date().toISOString(),
+        blogId: blog.id
+      };
+    
+      if (currentVote && currentVote.mark === Markdown.Downvote) {
+        // Poništi glas
+        blog.votes = blog.votes.filter(vote => vote.userId !== this.user?.id);
         this.updateVotesInDatabase(blogId, currentVote, 'downvote');
       } else {
-        blog.votes.push(newVote); // Dodaj novi glas
-        this.updateVotesInDatabase(blogId, newVote, 'downvote');
+        // Dodaj ili ažuriraj glas
+        if (currentVote) {
+          currentVote.mark = Markdown.Downvote; // Ažuriraj glas
+          this.updateVotesInDatabase(blogId, currentVote, 'downvote');
+        } else {
+          blog.votes.push(newVote); // Dodaj novi glas
+          this.updateVotesInDatabase(blogId, newVote, 'downvote');
+        }
       }
     }
+
+    
   }
   
 updateVotesInDatabase(blogId: number, vote: Vote, action: 'upvote' | 'downvote' | 'remove'): void {
