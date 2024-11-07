@@ -8,6 +8,7 @@ import { Equipment } from './model/my-equipment.model';
 import { TouristEquipment } from './model/tourist-equipment.model';
 import { TourDTO } from "../tour-authoring/model/tour.model";
 import {TourExecution} from "./model/tour-execution.model";
+import {TourReview} from "./model/review.model";
 
 @Injectable({
     providedIn: 'root'
@@ -59,4 +60,24 @@ import {TourExecution} from "./model/tour-execution.model";
     abandonTourExecution(executionId: number): Observable<void> {
       return this.http.post<void>(`${environment.apiHost}tourist/tour-executions/${executionId}/abandon`, {});
     }
+
+  // Prikaz svih recenzija za turu
+  getAllReviews(tourId: number, page: number, pageSize: number): Observable<PagedResults<TourReview>> {
+    return this.http.get<PagedResults<TourReview>>(`${environment.apiHost}author/tours/${tourId}/reviews?page=${page}&pageSize=${pageSize}`);
+  }
+
+  // Dodavanje nove recenzije za turu
+  addReview(tourId: number, review: TourReview): Observable<TourReview> {
+    return this.http.post<TourReview>(`${environment.apiHost}author/tours/${tourId}/reviews`, review);
+  }
+
+  // Ažuriranje postojeće recenzije
+  updateReview(reviewId: number, review: TourReview): Observable<TourReview> {
+    return this.http.put<TourReview>(`${environment.apiHost}author/tours/reviews/${reviewId}`, review);
+  }
+
+  // Brisanje recenzije
+  deleteReview(reviewId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
+  }
   }
