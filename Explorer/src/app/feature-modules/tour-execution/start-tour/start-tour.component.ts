@@ -6,21 +6,24 @@ import { TourExecution } from "../model/tour-execution.model";
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
+import {VisitedCheckpointsDTO} from "../model/visitedCheckpoints.model";
 
 @Component({
     selector: 'xp-start-tour',
     templateUrl: './start-tour.component.html',
     styleUrls: ['./start-tour.component.css']
 })
+
 export class StartTourComponent implements OnInit, OnDestroy {
     errorMessage: string | null = null;
     tours: TourDTO[] = [];
+    visitedCheckpoints: VisitedCheckpointsDTO[] = [];
     activeTourExecution: TourExecution | null = null;
     private executionId: number | null = null;
     private checkIntervalSubscription!: Subscription;
     currentLocation: MapLocation | null = null;
 
-    @ViewChild('tourIdInput') tourIdInput!: ElementRef;
+    //@ViewChild('tourIdInput') tourIdInput!: ElementRef;
 
     constructor(
         private tourExecutionService: TourExecutionService,
@@ -43,11 +46,13 @@ export class StartTourComponent implements OnInit, OnDestroy {
 
         if (savedExecution) {
             const execution = JSON.parse(savedExecution) as TourExecution;
-
+            console.log(execution);
             this.tourExecutionService.getTourExecutionStatus(execution.tourId, execution.userId).subscribe(
                 (existingExecution) => {
                     this.activeTourExecution = existingExecution;
+                    this.executionId = existingExecution.id;
                     this.tours = this.tours.filter(tour => tour.id === this.activeTourExecution?.tourId);
+
                 },
                 (error) => {
                     console.warn('Tour execution not found on server, clearing local storage.');
@@ -167,7 +172,6 @@ export class StartTourComponent implements OnInit, OnDestroy {
             this.errorMessage = 'Execution ID is not set. Cannot check checkpoints.';
             return;
         }
-
         this.checkIntervalSubscription = interval(10000).pipe(
             switchMap(() =>
                 this.tourExecutionService.getPosition(userId).pipe(
@@ -178,8 +182,12 @@ export class StartTourComponent implements OnInit, OnDestroy {
             )
         ).subscribe(
             (result) => {
-                if (result.success) {
+                // Proveri da li je `result` validan objekat i sadrži `success`
+                if (result && result.success) {
                     console.log('Checkpoint visited:', result);
+
+                } else if (result === null) {
+                    console.warn('No result returned from checkVisitedCheckpoint.');
                 } else {
                     console.warn('No nearby checkpoints or already visited.');
                 }

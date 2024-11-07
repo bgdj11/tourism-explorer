@@ -1,10 +1,14 @@
 // tour-execution.model.ts
+import {VisitedCheckpointsDTO} from "./visitedCheckpoints.model";
+
 export interface TourExecution {
   id: number;
   tourId: number;
   userId: number;
-  startTime: string; // ISO string format za datum i vreme
-  endTime?: string; // ISO string format, može biti undefined ako tura još traje
+  startTime?: Date; // ISO string format za datum i vreme
+  endTime?: Date; // ISO string format, može biti undefined ako tura još traje
+  lastActivity?: Date;
+  visitedCheckpoints: VisitedCheckpointsDTO[];
   status: TourExecutionStatus; // Status ture (IN_PROGRESS, COMPLETED, ABANDONED)
 }
 
