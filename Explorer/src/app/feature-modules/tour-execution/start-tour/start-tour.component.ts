@@ -30,11 +30,21 @@ export class StartTourComponent implements OnInit, OnDestroy {
         private authService: AuthService
     ) {}
 
-    ngOnInit(): void {
-        this.checkActiveTour();
-    }
+  ngOnInit(): void {
+    this.checkActiveTour();
 
-    ngOnDestroy(): void {
+    // Pokreće proveru checkpointova i lokacije na svakih 10 sekundi ako postoji aktivna tura
+    const savedExecution = localStorage.getItem('activeTourExecution');
+    const userId = this.authService.user$.getValue().id;
+    if (savedExecution && userId) {
+      const execution = JSON.parse(savedExecution) as TourExecution;
+      this.executionId = execution.id;
+      this.startCheckingVisitedCheckpoints(userId);
+    }
+  }
+
+
+  ngOnDestroy(): void {
         if (this.checkIntervalSubscription) {
             this.checkIntervalSubscription.unsubscribe();
         }
@@ -166,35 +176,32 @@ export class StartTourComponent implements OnInit, OnDestroy {
         }
     }
 
-    startCheckingVisitedCheckpoints(userId: number): void {
-        if (!this.executionId) {
-            console.error('Execution ID is undefined');
-            this.errorMessage = 'Execution ID is not set. Cannot check checkpoints.';
-            return;
-        }
-        this.checkIntervalSubscription = interval(10000).pipe(
-            switchMap(() =>
-                this.tourExecutionService.getPosition(userId).pipe(
-                    switchMap((position) => {
-                        return this.tourExecutionService.checkVisitedCheckpoint(this.executionId!, position.currentLocation);
-                    })
-                )
-            )
-        ).subscribe(
-            (result) => {
-                // Proveri da li je `result` validan objekat i sadrži `success`
-                if (result && result.success) {
-                    console.log('Checkpoint visited:', result);
-
-                } else if (result === null) {
-                    console.warn('No result returned from checkVisitedCheckpoint.');
-                } else {
-                    console.warn('No nearby checkpoints or already visited.');
-                }
-            },
-            (error) => {
-                console.error('Error checking visited checkpoint:', error);
-            }
-        );
+  startCheckingVisitedCheckpoints(userId: number): void {
+    if (!this.executionId) {
+      console.error('Execution ID is undefined');
+      this.errorMessage = 'Execution ID is not set. Cannot check checkpoints.';
+      return;
     }
+
+    this.checkIntervalSubscription = interval(10000).pipe(
+      switchMap(() =>
+        this.tourExecutionService.getPosition(userId).pipe(
+          switchMap((position) => {
+            return this.tourExecutionService.checkVisitedCheckpoint(this.executionId!, position.currentLocation);
+          })
+        )
+      )
+    ).subscribe(
+      (result) => {
+        if (result.success) {
+          console.log('Checkpoint visited:', result);
+        } else {
+          console.warn('No nearby checkpoints or already visited.');
+        }
+      },
+      (error) => {
+        console.error('Error checking visited checkpoint:', error);
+      }
+    );
+  }
 }
