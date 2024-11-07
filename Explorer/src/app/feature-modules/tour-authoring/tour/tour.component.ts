@@ -39,6 +39,8 @@ export class TourComponent implements OnInit {
     status: 0,
     price: undefined,
     lengthInKm: 0,
+    publishedDate: '',
+    archivedDate: '',
     equipments: [],
     tourCheckpoints: [],
     travelTimes: []
@@ -124,8 +126,12 @@ export class TourComponent implements OnInit {
         tags: [],
         status: 0,
         price: undefined,
+        lengthInKm: 0, // Dodajemo podrazumevanu vrednost za lengthInKm
+        publishedDate: '', // Inicijalizujemo kao prazan string za datume
+        archivedDate: '', 
         equipments: [],
-        tourCheckpoints: []
+        tourCheckpoints: [],
+        travelTimes: []
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
@@ -289,8 +295,7 @@ export class TourComponent implements OnInit {
         error: (error) => {
           alert(error.message); // Displays the error message from the backend
         }
-      });
-
+      );
     }
   }
 
