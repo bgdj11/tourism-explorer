@@ -1,3 +1,8 @@
+import { Equipment } from "../../administration/model/equipment.model";
+import { CheckpointDTO } from "./checkpoint.model";
+import { EquipmentDTO } from "./equipment.model";
+import { TravelTimeDTO } from "./travelTime.model";
+
 export interface TourDTO {
   id: number;
   name: string;
@@ -6,9 +11,10 @@ export interface TourDTO {
   tags: string[];
   status: number; // Pretpostavka: status je broj koji predstavlja enum vrednost sa backend-a
   price?: number;
-  lengthInKm: number; // Dodatno polje za dužinu ture u kilometrima
-  publishedDate: string; // ISO string format za datume
-  archivedDate: string;  // ISO string format za datume
-  equipmentIds?: number[]; // Lista ID-ova opreme
-  tourCheckpointIds?: number[]; // Lista ID-ova tačaka ture
+  lengthInKm?: number;
+  publishedDate?: Date;
+  archivedDate?: Date;
+  equipments?: EquipmentDTO[];
+  tourCheckpoints?: CheckpointDTO[];
+  travelTimes?: TravelTimeDTO[];
 }
