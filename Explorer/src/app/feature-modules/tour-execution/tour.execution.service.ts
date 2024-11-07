@@ -8,6 +8,7 @@ import { Equipment } from './model/my-equipment.model';
 import { TouristEquipment } from './model/tourist-equipment.model';
 import { TourDTO } from "../tour-authoring/model/tour.model";
 import {TourExecution} from "./model/tour-execution.model";
+import {TourReview} from "./model/review.model";
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model/tourist-position.model';
 
@@ -65,10 +66,31 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
     abandonTourExecution(executionId: number): Observable<void> {
       return this.http.post<void>(`${environment.apiHost}tourist/tour-executions/${executionId}/abandon`, {});
     }
+  // Prikaz svih recenzija za turu
+  getAllReviews(tourId: number, page: number, pageSize: number): Observable<PagedResults<TourReview>> {
+    return this.http.get<PagedResults<TourReview>>(`${environment.apiHost}author/tours/${tourId}/reviews?page=${page}&pageSize=${pageSize}`);
+  }
+
+  // Dodavanje nove recenzije za turu
+  addReview(tourId: number, review: TourReview): Observable<TourReview> {
+    return this.http.post<TourReview>(`${environment.apiHost}author/tours/${tourId}/reviews`, review);
+  }
+
+  // Ažuriranje postojeće recenzije
+  updateReview(reviewId: number, review: TourReview): Observable<TourReview> {
+    return this.http.put<TourReview>(`${environment.apiHost}author/tours/reviews/${reviewId}`, review);
+  }
+
+  // Brisanje recenzije
+  deleteReview(reviewId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
+  }
     checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
     }
   getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
+
   }
+}

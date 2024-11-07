@@ -1,33 +1,34 @@
 <div class="tour-list-container">
-    <h2 *ngIf="!activeTourExecution">Available Tours</h2>
-    <h2 *ngIf="activeTourExecution">Active Tour Execution</h2>
+  <h2 *ngIf="!activeTourExecution">Available Tours</h2>
+  <h2 *ngIf="activeTourExecution">Active Tour Execution</h2>
 
-    <table *ngIf="!activeTourExecution" class="table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let tour of tours">
-            <td>{{ tour.id }}</td>
-            <td>{{ tour.name }}</td>
-            <td>{{ tour.description }}</td>
-            <td>
-                <button (click)="startTour(tour.id)" class="btn btn-primary">Start Tour</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+  <table *ngIf="!activeTourExecution" class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let tour of tours">
+      <td>{{ tour.id }}</td>
+      <td>{{ tour.name }}</td>
+      <td>{{ tour.description }}</td>
+      <td>
+        <button (click)="startTour(tour.id)" class="btn btn-primary">Start Tour</button>
+        <button type="button" (click)="showReviews(tour.id)" class="btn btn-secondary">Show Reviews</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
-    <div *ngIf="activeTourExecution" class="active-tour-info">
-        <p><strong>Tour ID:</strong> {{ activeTourExecution.tourId }}</p>
-        <p><strong>Status:</strong> {{ activeTourExecution.status }}</p>
-        <p><strong>Start Time:</strong> {{ activeTourExecution.startTime | date:'short' }}</p>
-        <p *ngIf="activeTourExecution.endTime"><strong>End Time:</strong> {{ activeTourExecution.endTime | date:'short' }}</p>
+  <div *ngIf="activeTourExecution" class="active-tour-info">
+    <p><strong>Tour ID:</strong> {{ activeTourExecution.tourId }}</p>
+    <p><strong>Status:</strong> {{ activeTourExecution.status }}</p>
+    <p><strong>Start Time:</strong> {{ activeTourExecution.startTime | date:'short' }}</p>
+    <p *ngIf="activeTourExecution.endTime"><strong>End Time:</strong> {{ activeTourExecution.endTime | date:'short' }}</p>
 
         <button (click)="completeTour()" class="btn btn-success">Complete Tour</button>
         <button (click)="abandonTour()" class="btn btn-danger">Abandon Tour</button>
@@ -50,8 +51,50 @@
         </table>
     </div>
 
+  <!-- Review form -->
+  <div *ngIf="true" class="review-form">
+    <h3>Leave a Review</h3>
+    <form (ngSubmit)="submitReview()">
+      <div class="form-group">
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" [(ngModel)]="review.rating" name="rating" min="1" max="5" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea id="comment" [(ngModel)]="review.comment" name="comment" class="form-control" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+  </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger mt-2">
-        {{ errorMessage }}
+  <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+    {{ errorMessage }}
+  </div>
+</div>
+
+
+<div class="review-list" *ngIf="!activeTourExecution && showReviewForTour">
+  <h3>Tour Reviews</h3>
+  <ul>
+    <li *ngFor="let review of reviews">
+      <strong>Rating:</strong> {{ review.rating }} | <strong>Comment:</strong> {{ review.comment }}
+      <button *ngIf="canEditReview(review)" (click)="editReview(review)" class="btn btn-warning btn-sm">Edit</button>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="editingReview" class="review-form">
+  <h3>Edit Review</h3>
+  <form (ngSubmit)="submitEditedReview()">
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <input type="number" id="ratingg" [(ngModel)]="reviewToEdit.rating" name="rating" min="1" max="5" class="form-control" required />
     </div>
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="text" [(ngModel)]="reviewToEdit.comment" name="comment" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Confirm Edit</button>
+  </form>
+  <button (click)="cancelEdit()" class="btn btn-secondary">Cancel</button>
 </div>
