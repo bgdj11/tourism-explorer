@@ -92,5 +92,5 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
 
-  }
+  
 }
