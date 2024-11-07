@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService } from '../blog.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
-import { Blog, Markdown, Vote } from '../model/blog.model';
+import { Blog, Markdown, Status, Vote } from '../model/blog.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { map, switchMap } from 'rxjs';
+import { Comment } from '../model/comment.model';
 
 @Component({
   selector: 'xp-blog',
@@ -120,6 +122,8 @@ export class BlogComponent implements OnInit{
           this.updateVotesInDatabase(blogId, newVote, 'upvote');
         }
       }
+
+      this.updateBlogStatus(blog);
     }
     
   }
@@ -151,6 +155,7 @@ export class BlogComponent implements OnInit{
           this.updateVotesInDatabase(blogId, newVote, 'downvote');
         }
       }
+      this.updateBlogStatus(blog);
     }
 
     
@@ -188,6 +193,42 @@ hasUpvoted(blog: Blog): boolean {
 
 hasDownvoted(blog: Blog): boolean {
   return blog.votes.some(vote => vote.userId === this.user?.id && vote.mark === Markdown.Downvote);
+}
+
+updateBlogStatus(blog: Blog): void{
+  const totalVotes = this.calculateTotalVotes(blog.votes);
+
+  if (!blog.id) {
+    console.error("Blog ID is undefined, cannot update status.");
+    return;
+  }
+
+  this.service.getComments(blog.id).pipe(
+    map((pageResult: PagedResults<Comment>) => pageResult.totalCount),
+    switchMap(commentCount => {
+      if(totalVotes < -10){
+        blog.blogStatus = Status.ReadOnly;
+      }
+      else if(totalVotes>100 && commentCount>10){
+        blog.blogStatus = Status.Active;
+      }
+      else if(totalVotes>0 && commentCount>2) {
+        blog.blogStatus = Status.Famous;
+      }
+      console.log('Broj total votes = , a comment = ', totalVotes, commentCount);
+
+      if(this.isAuthor){
+        return this.service.updateBlogAuthor(blog);
+      }
+
+      return this.service.updateBlogTourist(blog);
+    })
+  ).subscribe({
+    next: updatedBlog => {
+      console.log("Blog status updated: ", updatedBlog)
+    },
+    error: err => console.log("Error occured while updating status: ", err)
+  });
 }
 
 
