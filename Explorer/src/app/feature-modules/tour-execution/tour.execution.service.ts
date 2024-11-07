@@ -66,7 +66,6 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
     abandonTourExecution(executionId: number): Observable<void> {
       return this.http.post<void>(`${environment.apiHost}tourist/tour-executions/${executionId}/abandon`, {});
     }
-
   // Prikaz svih recenzija za turu
   getAllReviews(tourId: number, page: number, pageSize: number): Observable<PagedResults<TourReview>> {
     return this.http.get<PagedResults<TourReview>>(`${environment.apiHost}author/tours/${tourId}/reviews?page=${page}&pageSize=${pageSize}`);
@@ -86,7 +85,12 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
   deleteReview(reviewId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
   }
-  checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
-    return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
+    checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
+      return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
+    }
+  getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
+    return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
+  }
+
   }
 }

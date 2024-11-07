@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
+import {VisitedCheckpointsDTO} from "../model/visitedCheckpoints.model";
 
 
 @Component({
@@ -15,9 +16,12 @@ import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-lo
     templateUrl: './start-tour.component.html',
     styleUrls: ['./start-tour.component.css']
 })
-export class StartTourComponent implements OnInit {
-  private executionId: number | null = null;
-  @ViewChild('tourIdInput') tourIdInput!: ElementRef;
+
+export class StartTourComponent implements OnInit, OnDestroy {
+    visitedCheckpoints: VisitedCheckpointsDTO[] = [];
+    private executionId: number | null = null;
+    private checkIntervalSubscription!: Subscription;
+    currentLocation: MapLocation | null = null;
 
   errorMessage: string | null = null;
   tours: TourDTO[] = [];
@@ -49,6 +53,9 @@ export class StartTourComponent implements OnInit {
 
   editingReview: boolean = false; // Dodato za praćenje izmene recenzije
   reviewToEdit: TourReview = {... this.review}; // Dodato za čuvanje recenzije koja se menja
+
+
+
 
   constructor(
     private tourExecutionService: TourExecutionService,
@@ -177,11 +184,13 @@ export class StartTourComponent implements OnInit {
 
         if (savedExecution) {
             const execution = JSON.parse(savedExecution) as TourExecution;
-
+            console.log(execution);
             this.tourExecutionService.getTourExecutionStatus(execution.tourId, execution.userId).subscribe(
                 (existingExecution) => {
                     this.activeTourExecution = existingExecution;
+                    this.executionId = existingExecution.id;
                     this.tours = this.tours.filter(tour => tour.id === this.activeTourExecution?.tourId);
+
                 },
                 (error) => {
                     console.warn('Tour execution not found on server, clearing local storage.');
@@ -324,7 +333,6 @@ export class StartTourComponent implements OnInit {
       }
     );
   }
-
 
   // Dodato: Provera mogućnosti slanja recenzije
   checkReviewEligibility(): void {
