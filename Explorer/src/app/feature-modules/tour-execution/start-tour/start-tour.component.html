@@ -31,6 +31,23 @@
 
         <button (click)="completeTour()" class="btn btn-success">Complete Tour</button>
         <button (click)="abandonTour()" class="btn btn-danger">Abandon Tour</button>
+
+        <!-- Tabela za otključane tajne -->
+        <h3>Unlocked Secrets</h3>
+        <table *ngIf="activeTourExecution.visitedCheckpoints.length > 0" class="table">
+            <thead>
+            <tr>
+                <th>Checkpoint ID</th>
+                <th>Secret</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let visited of activeTourExecution.visitedCheckpoints">
+                <td>{{ visited.checkpointId }}</td>
+                <td>{{ visited.secret }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
 
