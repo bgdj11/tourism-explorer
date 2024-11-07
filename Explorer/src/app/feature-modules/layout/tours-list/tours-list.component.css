@@ -1,0 +1,95 @@
+/* tours-list.component.css */
+
+/* Container for the whole list and pagination */
+.tours-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  /* Pagination Buttons */
+  .pagination-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 120px;
+    margin: 10px;
+  }
+  
+  .pagination-button[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-button:hover:not([disabled]) {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* Tours List Container */
+  .tours-list {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .tour-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .tour-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .tour-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .tour-card p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Pagination Status (Page number and total count) */
+  .pagination-status {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .pagination-button {
+      width: 100px;
+      font-size: 14px;
+    }
+  
+    .tours-list {
+      grid-template-columns: 1fr; /* Stacks cards on smaller screens */
+    }
+  
+    .pagination-status {
+      font-size: 1rem;
+    }
+  }
+  
