@@ -63,7 +63,8 @@ export class BlogFormComponent implements OnChanges {
       images: this.blogForm.value.images || [],
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
-      votes: []
+      votes: [],
+      voteStatus: 0
     };
   
     if (this.user?.role === 'author') {
@@ -103,7 +104,8 @@ export class BlogFormComponent implements OnChanges {
       images: this.blogForm.value.images || [],
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
-      votes: this.blog.votes || []
+      votes: this.blog.votes || [],
+      voteStatus: 0
     };
     blog.id = this.blog.id;
   

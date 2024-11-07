@@ -190,5 +190,20 @@ hasDownvoted(blog: Blog): boolean {
   return blog.votes.some(vote => vote.userId === this.user?.id && vote.mark === Markdown.Downvote);
 }
 
+filterActive():void {
+  
+  this.blogs = this.blogs.filter(blog => blog.status === 2);
+  this.blogs.forEach(blog => console.log(blog));
+  
+}
+filterFamous(): void {
+  this.blogs = this.blogs.filter(blog => {
+    const x = blog.status as number; // Pomoćna promenljiva koja čuva vrednost statusa
+    return x === 3; // Filtrira blogove koji imaju status 3 (Famous)
+  });
+  this.blogs.forEach(blog => console.log(blog));
+  
+}
+
 
 }
