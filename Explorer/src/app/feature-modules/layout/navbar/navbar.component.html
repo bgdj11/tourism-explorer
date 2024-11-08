@@ -20,7 +20,7 @@
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['my-equipment']">My equipment</button>
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['location-simulator']">Location Simulator</button>
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['allclubs']">Club</button>
-
+            <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['start-tour']">Start tour</button>
         </div>
     </div>
 </mat-toolbar>

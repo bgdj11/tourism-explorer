@@ -9,7 +9,7 @@ export interface TourDTO {
   description: string;
   weight: string;
   tags: string[];
-  status: number;
+  status: number; // Pretpostavka: status je broj koji predstavlja enum vrednost sa backend-a
   price?: number;
   lengthInKm?: number;
   publishedDate?: Date;
