@@ -19,11 +19,8 @@ export class LayoutService {
       return this.http.post<AppRating>(environment.apiHost + 'ratings/appRating', rating);
     }
 
-    getAllTours(page: number, pageSize: number): Observable<PagedResults<TourDTO>> {
-      let params = new HttpParams()
-        .set('page', page.toString())
-        .set('pageSize', pageSize.toString());
-  
-      return this.http.get<PagedResults<TourDTO>>(environment.apiHost + 'author/tours', { params });
+    getAllTours(): Observable<TourDTO[]> {
+      return this.http.get<TourDTO[]>(environment.apiHost + 'tourist/tours');
     }
+    
 }

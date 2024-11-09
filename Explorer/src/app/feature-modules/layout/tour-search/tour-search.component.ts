@@ -26,13 +26,9 @@ export class TourSearchComponent {
         `Searching from point: ${this.selectedPoint.lat}, ${this.selectedPoint.lng} with distance: ${this.distance} km`
       );
   
-      const page = 1;
-      const pageSize = 20;
-  
-      this.layoutService.getAllTours(page, pageSize).subscribe({
+      this.layoutService.getAllTours().subscribe({
         next: (pagedResults) => {
-          //console.log('Paged results:', pagedResults);
-          const filteredTours = this.filterToursByDistance(pagedResults.results);
+          const filteredTours = this.filterToursByDistance(pagedResults);
           this.tours = filteredTours;
           console.log('Filtered tours:', this.tours);
         },
@@ -64,7 +60,7 @@ export class TourSearchComponent {
       for (let checkpoint of tour.tourCheckpoints || []) {
         if (checkpoint.latitude !== undefined && checkpoint.longitude !== undefined) {
           const distanceToCheckpoint = this.haversine(
-            this.selectedPoint!.lat, 
+            this.selectedPoint!.lat,       
             this.selectedPoint!.lng, 
             checkpoint.latitude, 
             checkpoint.longitude
@@ -79,5 +75,4 @@ export class TourSearchComponent {
     });
   }
   
-
 }
