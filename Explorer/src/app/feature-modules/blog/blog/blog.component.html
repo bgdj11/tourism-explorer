@@ -11,6 +11,7 @@
                         <th>Created Date</th>
                         <th>Images</th>
                         <th>Status</th>
+                        <th>Blog Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,31 +30,34 @@
                             </ng-container>
                         </td>
                         <td>{{ getStatusString(blog.status) }}</td> 
-                        <td>
+                        <td >
                             <!-- Upvote i Downvote dugmad -->
-                            <button 
+                            <button *ngIf="blog.blogStatus !== 1 && (isAuthor || isTourist)"
                             (click)="upvote(blog.id || 0)" 
                             [ngClass]="{'red-button': hasUpvoted(blog)}">
                             +
                           </button>
                           <span>{{ calculateTotalVotes(blog.votes) }}</span>
-                          <button 
+                          <button *ngIf="blog.blogStatus !== 1 && (isAuthor || isTourist)" 
                             (click)="downvote(blog.id || 0)" 
                             [ngClass]="{'red-button': hasDownvoted(blog)}">
                             -
                           </button>
-                        </td>                        
+                        </td>   
+                        <td>
+                            {{getBlogStatusString(blog.blogStatus)}}
+                        </td>                     
                         <td>
                             <!-- Prikazivanje dugmadi samo ako je prijavljen korisnik i njegov ID odgovara ID-u autora bloga -->
-                            <button *ngIf="user?.id === blog.userId" color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
+                            <button *ngIf="user?.id === blog.userId && blog.blogStatus !== 1" color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
                                 <mat-icon>delete</mat-icon>
                             </button>
-                            <button *ngIf="user?.id === blog.userId" color="primary" (click)="onEditClicked(blog)" mat-icon-button>
+                            <button *ngIf="user?.id === blog.userId && blog.blogStatus !== 1" color="primary" (click)="onEditClicked(blog)" mat-icon-button>
                                 <mat-icon>edit</mat-icon>
                             </button>
                         </td>  
                         <td>
-                            <xp-comment *ngIf="blog.id" [blogId]="blog.id"></xp-comment>
+                            <xp-comment *ngIf="blog.id" [blogId]="blog.id" [isBlogReadOnly]="blog.blogStatus === 1"></xp-comment>
                         </td>                      
                     </tr>
                     <tr *ngIf="isAuthor || isTourist">

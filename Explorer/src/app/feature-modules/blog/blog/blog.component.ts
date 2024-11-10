@@ -4,7 +4,7 @@ import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Blog, Markdown, Status, Vote } from '../model/blog.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
-import { map, switchMap } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 import { Comment } from '../model/comment.model';
 
 @Component({
@@ -45,8 +45,15 @@ export class BlogComponent implements OnInit{
   getBlogs(): void {
     this.service.getBlogs().subscribe({
       next: (result : PagedResults<Blog>) => {
-        console.log(result);
         this.blogs = result.results;
+        
+        Promise.all(this.blogs.map(blog => this.updateBlogStatus(blog)))
+        .then(() => {
+          console.log("All blogs have been updated.")
+        })
+        .catch(error => {
+          console.log("Error occured during updating blogs: ", error)
+        })
       },
       error: (err: any) => {
         console.log(err);
@@ -64,6 +71,21 @@ export class BlogComponent implements OnInit{
         return 'Closed';
       default:
         return 'Unknown';
+    }
+  }
+
+  getBlogStatusString(status: number): string {
+    switch (status) {
+      case 0:
+        return 'None';
+      case 1:
+        return 'Read-Only';
+      case 2:
+        return 'Active';
+      case 3:
+        return 'Famous';
+      default:
+        return 'None';
     }
   }
 
@@ -122,8 +144,6 @@ export class BlogComponent implements OnInit{
           this.updateVotesInDatabase(blogId, newVote, 'upvote');
         }
       }
-
-      this.updateBlogStatus(blog);
     }
     
   }
@@ -155,7 +175,6 @@ export class BlogComponent implements OnInit{
           this.updateVotesInDatabase(blogId, newVote, 'downvote');
         }
       }
-      this.updateBlogStatus(blog);
     }
 
     
@@ -195,7 +214,7 @@ hasDownvoted(blog: Blog): boolean {
   return blog.votes.some(vote => vote.userId === this.user?.id && vote.mark === Markdown.Downvote);
 }
 
-updateBlogStatus(blog: Blog): void{
+updateBlogStatus(blog: Blog): void {
   const totalVotes = this.calculateTotalVotes(blog.votes);
 
   if (!blog.id) {
@@ -203,33 +222,48 @@ updateBlogStatus(blog: Blog): void{
     return;
   }
 
+  // Proverite da li ulazi u deo kada su glasovi < -10
+  if (totalVotes < -1) {
+    blog.blogStatus = Status.ReadOnly;
+    const updateMethod = this.isAuthor ? this.service.updateBlogAuthor.bind(this.service) : this.service.updateBlogTourist.bind(this.service);
+
+    updateMethod(blog).subscribe({
+      next: updatedBlog => {
+        console.log("Blog status updated to Read-Only: ", updatedBlog);
+      },
+      error: err => console.log("Error occurred while updating status: ", err)
+    });
+    return;
+  }
+
+  // Dodajte log da proverite vrednost `blog.id` pre poziva `getComments`
+  console.log(`Fetching comments for blog ID: ${blog.id}`);
+
   this.service.getComments(blog.id).pipe(
-    map((pageResult: PagedResults<Comment>) => pageResult.totalCount),
+    map((pageResult: PagedResults<Comment>) => {
+      console.log("Number of comments retrieved: ", pageResult.totalCount);
+      return pageResult.totalCount;
+    }),
     switchMap(commentCount => {
-      if(totalVotes < -10){
-        blog.blogStatus = Status.ReadOnly;
-      }
-      else if(totalVotes>100 && commentCount>10){
+      console.log("Total votes: ", totalVotes, " Comment count: ", commentCount);
+
+      if (totalVotes === 0 && commentCount > 2) {
         blog.blogStatus = Status.Active;
-      }
-      else if(totalVotes>0 && commentCount>2) {
+      } else if (totalVotes > 0 && commentCount > 2) {
         blog.blogStatus = Status.Famous;
-      }
-      console.log('Broj total votes = , a comment = ', totalVotes, commentCount);
-
-      if(this.isAuthor){
-        return this.service.updateBlogAuthor(blog);
+      } else {
+        blog.blogStatus = Status.None; // Ako uslovi nisu ispunjeni, vrati `blog` kao što jeste
       }
 
-      return this.service.updateBlogTourist(blog);
+      const updateMethod = this.isAuthor ? this.service.updateBlogAuthor.bind(this.service) : this.service.updateBlogTourist.bind(this.service);
+      return updateMethod(blog);
+
     })
   ).subscribe({
     next: updatedBlog => {
-      console.log("Blog status updated: ", updatedBlog)
+      console.log("Blog status updated: ", updatedBlog);
     },
-    error: err => console.log("Error occured while updating status: ", err)
+    error: err => console.log("Error occurred while updating status: ", err)
   });
 }
-
-
 }
