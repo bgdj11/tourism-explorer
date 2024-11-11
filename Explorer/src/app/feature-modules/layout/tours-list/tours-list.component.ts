@@ -17,6 +17,7 @@ export class ToursListComponent implements OnInit {
   constructor(private tourService: TourManagementService) {}
 
   ngOnInit(): void {
+    console.log("Tours list")
     this.loadTours();  // Load the first page of tours on initialization
   }
 
@@ -24,8 +25,8 @@ export class ToursListComponent implements OnInit {
   loadTours(): void {
     this.tourService.getTours(this.currentPage, this.pageSize).subscribe(
       (data) => {
-        this.tours = data.results;  // The array of tours for the current page
-        this.totalCount = data.totalCount;  // Total number of tours available
+        this.tours = data.results.filter(t => t.status === 1);  // The array of tours for the current page
+        this.totalCount = this.tours.length;  // Total number of tours available
         
         // Now, fetch checkpoints for all the tours and update the tours with those checkpoints
         this.loadCheckpointsForAllTours();
