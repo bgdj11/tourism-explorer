@@ -14,7 +14,7 @@
             <p> {{ comment.text }} </p>
         </div>
 
-        <div class="comment-action" *ngIf="isAuthor || isTourist">
+        <div class="comment-action" *ngIf="(isAuthor || isTourist) && !isBlogReadOnly">
             <button *ngIf="user?.id == comment.userId" (click)="deleteComment(comment)" color="accent" mat-icon-button>
                 <mat-icon>delete</mat-icon>
             </button>
@@ -23,7 +23,7 @@
             </button>
         </div>
     </div>
-    <div *ngIf="isAuthor || isTourist">
+    <div *ngIf="(isAuthor || isTourist) && !isBlogReadOnly">
        <xp-comment-form  [blogId]="blogId" (commentUpdated)="onCommentUpdated()" [comment]="selectedComment" [shouldEdit]="shouldEdit" ></xp-comment-form>
     </div>
 </div>
