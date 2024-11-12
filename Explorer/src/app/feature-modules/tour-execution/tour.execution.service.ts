@@ -11,6 +11,7 @@ import {TourExecution} from "./model/tour-execution.model";
 import {TourReview} from "./model/review.model";
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model/tourist-position.model';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart.model';
 
 @Injectable({
     providedIn: 'root'
@@ -91,6 +92,31 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
   getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
+
+  getToursPublished(): Observable<PagedResults<TourDTO>> {
+    return this.http.get<PagedResults<TourDTO>>(environment.apiHost + 'tourist/pubishledtourss')
+  }
+
+getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
+return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
+}
+
+addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
+return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
+}
+
+
+removeTourFromCart(touristId: number, tourId: number): Observable<any> {
+return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
+}
+
+checkout(touristId: number): Observable<any> {
+return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
+}
+
+getPurchasedTours(touristId: number): Observable<TourDTO[]> {
+return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
+}
 
   
 }
