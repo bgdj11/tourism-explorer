@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/env/environment';
-import {Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Problem } from './model/problem.model';
 import { Equipment } from './model/my-equipment.model';
@@ -12,13 +11,19 @@ import {TourReview} from "./model/review.model";
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model/tourist-position.model';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart.model';
+import { SendMessageRequest } from './model/message-request';
+import { NotificationDto } from './model/notifications';
+import { UserDto } from './model/all-tourists';
+import { FollowersDto } from './model/followers';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
   })
   export class TourExecutionService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private authService: AuthService) { }
 
     getProblem(): Observable<PagedResults<Problem>> {
       return this.http.get<PagedResults<Problem>>(environment.apiHost + 'tourist/problems')
@@ -116,6 +121,79 @@ return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/
 
 getPurchasedTours(touristId: number): Observable<TourDTO[]> {
 return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
+}
+
+getAllTourists(): Observable<UserDto[]> {
+  return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists`);
+}
+
+
+getFollowedTourists(page: number, pageSize: number): Observable<PagedResults<FollowersDto>> {
+const currentUserId = this.authService.user$.value.id; 
+return this.http.get<PagedResults<FollowersDto>>(`${environment.apiHost}followers/follower/${currentUserId}?page=${page}&pageSize=${pageSize}`);
+}
+
+getNonFollowedTourists(): Observable<UserDto[]> {
+const currentUserId = this.authService.user$.value.id; 
+return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/nonFollowed/${currentUserId}`);
+}
+
+createFollower(followDto: FollowersDto): Observable<FollowersDto> {
+const currentUserId = this.authService.user$.value.id; // Uzmi ID trenutnog korisnika
+followDto.followerId = currentUserId; // Postavi ID pratioca
+
+return this.http.post<FollowersDto>(`${environment.apiHost}followers`, followDto); // Pozovi API endpoint
+}
+
+
+
+getFollowedUsers(): Observable<UserDto[]> {
+const currentUserId = this.authService.user$.value.id; 
+return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/followed/${currentUserId}`);
+}
+
+deleteFollowerByFollowingId(followingId: number): Observable<void> {
+const currentUserId = this.authService.user$.value.id;
+
+return this.http.delete<void>(`${environment.apiHost}followers/following/${followingId}`).pipe(
+catchError(error => {
+  console.error('Error while deleting follower by followingId:', error);
+  return of(void 0); // Vraća prazan rezultat u slučaju greške
+})
+);
+}
+
+
+deleteFollower(id: number): Observable<void> {
+return this.http.delete<void>(`${environment.apiHost}followers/${id}`).pipe(
+catchError(error => {
+    console.error('Greška prilikom uklanjanja pratioca:', error);
+    return of(void 0); 
+})
+);
+}
+
+
+deleteFollowerByFollowerAndFollowingIds(followerId: number, followingId: number): Observable<void> {
+return this.http.delete<void>(`${environment.apiHost}followers/follower/${followerId}/following/${followingId}`).pipe(
+catchError(error => {
+    console.error('Greška prilikom uklanjanja pratioca:', error);
+    return of(void 0); // Vraća prazan rezultat u slučaju greške
+})
+);
+}
+
+
+sendMessageToFollower(request: SendMessageRequest): Observable<any> {
+return this.http.post<any>(`${environment.apiHost}notifications/send`, request);
+}
+
+markNotificationAsRead(notificationId: number): Observable<any> {
+return this.http.put<any>(`${environment.apiHost}notifications/mark-as-read/${notificationId}`, {});
+}
+
+getNotificationsForUser(userId: number): Observable<NotificationDto[]> {
+return this.http.get<NotificationDto[]>(`${environment.apiHost}notifications/${userId}`);
 }
 
   

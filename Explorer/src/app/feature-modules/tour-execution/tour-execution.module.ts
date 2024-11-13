@@ -9,6 +9,7 @@ import { StartTourComponent } from './start-tour/start-tour.component';
 import { PublishedToursComponent } from './published-tours/published-tours.component';
 import { MyToursComponent } from './my-tours/my-tours.component';
 import { CardComponent } from './card/card.component';
+import { FollowersComponent } from './followers/followers.component';
 
 
 
@@ -20,7 +21,8 @@ import { CardComponent } from './card/card.component';
     StartTourComponent,
     PublishedToursComponent,
     MyToursComponent,
-    CardComponent
+    CardComponent,
+    FollowersComponent
   ],
     imports: [
         CommonModule,
@@ -33,7 +35,8 @@ import { CardComponent } from './card/card.component';
       MyEquipmentComponent,
       PublishedToursComponent,
       CardComponent,
-      MyToursComponent
+      MyToursComponent,
+      FollowersComponent
     ]
 
 })

@@ -24,6 +24,7 @@
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['publishedtours']">Tours published</button>
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['card']">Card</button>
             <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['mytours']">My tours</button>
+            <button *ngIf="user && user.role === 'tourist'"color="primary" mat-raised-button [routerLink]="['followers']">Followers</button>
 
 
         </div>
