@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     AppRatingComponent,
 
-    ToursListComponent
+    ToursListComponent,
 
     TourSearchComponent
   ],

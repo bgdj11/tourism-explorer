@@ -23,6 +23,7 @@ import { StartTourComponent } from 'src/app/feature-modules/tour-execution/start
 import { PublishedToursComponent } from 'src/app/feature-modules/tour-execution/published-tours/published-tours.component';
 import { CardComponent } from 'src/app/feature-modules/tour-execution/card/card.component';
 import { MyToursComponent } from 'src/app/feature-modules/tour-execution/my-tours/my-tours.component';
+import { FollowersComponent } from 'src/app/feature-modules/tour-execution/followers/followers.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -48,7 +49,8 @@ const routes: Routes = [
   {path: 'start-tour', component: StartTourComponent, canActivate: [AuthGuard], },
   {path: 'publishedtours', component: PublishedToursComponent, canActivate: [AuthGuard],},
   {path: 'card', component: CardComponent, canActivate: [AuthGuard],},
-  {path: 'mytours', component: MyToursComponent, canActivate: [AuthGuard],}
+  {path: 'mytours', component: MyToursComponent, canActivate: [AuthGuard],},
+  {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
 ];
 
 @NgModule({
