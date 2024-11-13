@@ -8,6 +8,7 @@ import { CheckpointDTO } from './model/checkpoint.model';
 import {Equipment} from "../administration/model/equipment.model";
 import { ClubDTO } from './model/club.model';
 import { TransportType, TravelTimeDTO } from './model/travelTime.model';
+import { TourReviewDTO } from './model/tourReview.model';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,9 @@ export class TourManagementService {
         return throwError(() => new Error(errorMessage));
       })
     );
+  }
+  getTourReviews(tourId: number): Observable<PagedResults<TourReviewDTO>> {
+    return this.http.get<PagedResults<TourReviewDTO>>(this.apiUrl + '/'+ tourId + '/reviews');
   }
 
   

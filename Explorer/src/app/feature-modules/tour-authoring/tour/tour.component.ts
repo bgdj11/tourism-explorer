@@ -283,7 +283,7 @@ export class TourComponent implements OnInit {
     if (confirm('Da li ste sigurni da želite da aktivirate ovu turu? ')) {
       this.tourService.publishTour(tourId).subscribe({
         next: () => {
-
+          this.loadTours();
           alert('Tour Published succesfully.');
         },
         error: (error) => {

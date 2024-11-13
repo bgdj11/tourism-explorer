@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TourDTO } from "../../tour-authoring/model/tour.model";
 import { TourManagementService } from "../../tour-authoring/tour-management.service";
 import { forkJoin, map, switchMap } from 'rxjs';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MapComponent } from 'src/app/shared/map/map.component';
+import { TourReviewDTO } from '../../tour-authoring/model/tourReview.model';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'xp-tours-list',  // Your selector remains the same
@@ -14,7 +18,17 @@ export class ToursListComponent implements OnInit {
   pageSize: number = 3;  // Number of tours per page
   currentPage: number = 1;  // Current page (1-based index)
   hasActiveTours: boolean = false;
-  constructor(private tourService: TourManagementService) {}
+  selectedTour: TourDTO;
+  isModalOpen: boolean = false;
+  tourReviews: TourReviewDTO[] = [];
+  rateCount: number = 0;
+
+  @ViewChild('reviewsModal') reviewsModal!: TemplateRef<any>;
+  
+
+  private modalRef!: NgbModalRef;
+
+  constructor(private tourService: TourManagementService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     console.log("Tours list")
@@ -103,5 +117,29 @@ export class ToursListComponent implements OnInit {
   }
   get totalPages(): number {
     return Math.ceil(this.totalCount / this.pageSize);
+  }
+
+  openModal(tour: TourDTO): void {
+    this.rateCount = 0;
+    this.tourService.getTourReviews(tour.id).subscribe(
+      (data) => {
+        this.tourReviews = data.results;
+        this.tourReviews.forEach(element => {
+          console.log("Tour review: " + element.comment)
+          this.rateCount += element.rating;
+        });
+        
+        this.modalRef = this.modalService.open(this.reviewsModal);
+      }
+    )
+    
+
+    this.selectedTour = tour;
+    this.isModalOpen = true;
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    //this.selectedTour = null;
   }
 }
