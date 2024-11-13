@@ -92,9 +92,11 @@ import { catchError, map, of, switchMap } from 'rxjs';
   deleteReview(reviewId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
   }
+
     checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
     }
+
   getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
@@ -106,7 +108,6 @@ import { catchError, map, of, switchMap } from 'rxjs';
   getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
   return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
   }
-
 
   addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
   return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
@@ -197,6 +198,5 @@ import { catchError, map, of, switchMap } from 'rxjs';
   getNotificationsForUser(userId: number): Observable<NotificationDto[]> {
   return this.http.get<NotificationDto[]>(`${environment.apiHost}notifications/${userId}`);
   }
-
 
 }
