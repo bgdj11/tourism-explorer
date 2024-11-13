@@ -58,6 +58,10 @@
             </xp-comment>
         </div>
     </div>
-
+    <div>
+        <button (click)="filterActive()">Filter Active</button>
+        <button (click)="filterFamous()">Filter Famous</button>
+    </div>
+        
     <xp-blog-form (blogUpdated)="getBlogs()" *ngIf="shouldRenderBlogForm" [blog]="selectedBlog" [shouldEdit]="shouldEdit"></xp-blog-form>
 </div>

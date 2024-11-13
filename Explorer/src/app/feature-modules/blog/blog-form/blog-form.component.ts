@@ -64,6 +64,7 @@ export class BlogFormComponent implements OnChanges {
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
       votes: [],
+      voteStatus: 0,
       blogStatus: Status.None
     };
   
@@ -105,6 +106,7 @@ export class BlogFormComponent implements OnChanges {
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
       votes: this.blog.votes || [],
+      voteStatus: 0,
       blogStatus: this.blog.blogStatus
     };
     blog.id = this.blog.id;

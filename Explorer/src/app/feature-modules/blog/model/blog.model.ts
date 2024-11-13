@@ -6,6 +6,8 @@ export interface Blog{
     createdDate? : string,
     images: string[],
     status : BlogStatus,
+    votes : Vote[],
+    voteStatus: VoteStatus,
     blogStatus: Status,
     votes : Vote[]
 }
@@ -27,6 +29,13 @@ export enum Status {
 export enum Markdown {
     Upvote = 0,
     Downvote = 1
+}
+
+export enum VoteStatus {
+    None = 0,
+    ReadOnly = 1,
+    Active = 2,
+    Famous = 3
 }
 
 export interface Vote {
