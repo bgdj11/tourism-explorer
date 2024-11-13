@@ -48,6 +48,8 @@ export class BlogService {
       endpoint = `author/blog/${blogId}/comment`;
     } else if (userRole === 'tourist') {
       endpoint = `tourist/blog/${blogId}/comment`;
+    }else{
+      endpoint = `author/blog/${blogId}/comment`;
     }
   
     return this.http.get<PagedResults<Comment>>(`${environment.apiHost}${endpoint}`);
@@ -135,5 +137,6 @@ export class BlogService {
   removeVote(vote: Vote): Observable<Vote> {
     return this.http.delete<Vote>(environment.apiHost + 'tourist/blogs/' + vote);
   }
+
   
 }
