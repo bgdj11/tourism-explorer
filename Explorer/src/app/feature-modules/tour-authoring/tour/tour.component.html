@@ -173,13 +173,13 @@
     <div class="modal-body">
       <form #checkpointForm="ngForm" (ngSubmit)="addTravelTime()">
         <div class="form-group">
-          <label for="longitude">Longituda</label>
+          <label for="longitude">Tip prevoza</label>
           <select class="form-control" id="transportType" [(ngModel)]="newTravelTime.transportType" name="transportType" required>
             <option [ngValue]="TransportType.Walk">Walk</option>
             <option [ngValue]="TransportType.Car">Car</option>
             <option [ngValue]="TransportType.Bike">Bike</option>
           </select>
-          <label for="longitude">Longituda</label>
+          <label for="longitude">Procenjeno vreme</label>
           <input type="number" class="form-control" id="latitude" [(ngModel)]="newTravelTime.time" name="time" required>
         </div>
         <button type="submit" class="btn btn-primary">Sačuvaj</button>    
@@ -267,7 +267,7 @@
             <th>Naziv</th>
             <th>Opis</th>
             <th>Akcije</th> <!-- Dodana kolona za akcije -->
-            <button class="btn btn-primary" disabled="selectedTour.status != DRAFT" (click)="openEquipmentModal()">
+            <button class="btn btn-primary"  (click)="openEquipmentModal()">
               <fa-icon [icon]="faPlus"></fa-icon> Dodaj opremu
             </button>
           </tr>
