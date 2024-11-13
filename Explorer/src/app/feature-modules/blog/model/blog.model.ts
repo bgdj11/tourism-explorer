@@ -6,7 +6,7 @@ export interface Blog{
     createdDate? : string,
     images: string[],
     status : BlogStatus,
-    blogStatus?: Status,
+    blogStatus: Status,
     votes : Vote[]
 }
 

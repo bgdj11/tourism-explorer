@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 export class CommentComponent implements OnInit{
 
   @Input() blogId: number;
-  
+  @Input() isBlogReadOnly: boolean = false;
 
   comments: Comment[] = [];
   selectedComment: Comment;
@@ -25,7 +25,7 @@ export class CommentComponent implements OnInit{
   constructor(private service: BlogService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.getComments()
+    this.getComments();
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
@@ -68,5 +68,6 @@ export class CommentComponent implements OnInit{
       }
     })
   }
+
 
 }
