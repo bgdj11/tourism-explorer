@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BlogService } from '../blog.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
-import { Blog, Markdown, Vote } from '../model/blog.model';
+import { Blog, Markdown, Status, Vote } from '../model/blog.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { map, of, switchMap } from 'rxjs';
+import { Comment } from '../model/comment.model';
 
 @Component({
   selector: 'xp-blog',
@@ -19,8 +21,28 @@ export class BlogComponent implements OnInit{
   user: User | undefined;
   isTourist : boolean = false;
   isAuthor : boolean = false;
+  allBlogs: Blog[] = []; // Čuva sve blogove
+
+
+  private visibleComments = new Set<number>();
+
 
   constructor(private service: BlogService,private authService: AuthService) { }
+
+  toggleComments(blogId: number | undefined): void {
+    if (blogId === undefined) return;
+    if (this.visibleComments.has(blogId)) {
+      this.visibleComments.delete(blogId);
+    } else {
+      this.visibleComments.add(blogId);
+    }
+  }
+
+  // Funkcija za proveru da li su komentari vidljivi za određeni blog
+  isCommentsVisible(blogId: number | undefined): boolean {
+    if (blogId === undefined) return false;
+    return this.visibleComments.has(blogId);
+  }
 
   ngOnInit(): void {
     this.getBlogs();
@@ -43,8 +65,16 @@ export class BlogComponent implements OnInit{
   getBlogs(): void {
     this.service.getBlogs().subscribe({
       next: (result : PagedResults<Blog>) => {
-        console.log(result);
-        this.blogs = result.results;
+        this.allBlogs = result.results; // Svi blogovi se čuvaju u `allBlogs`
+        this.blogs = [...this.allBlogs]; // Kopira sve blogove u `blogs`
+        
+        Promise.all(this.blogs.map(blog => this.updateBlogStatus(blog)))
+        .then(() => {
+          console.log("All blogs have been updated.")
+        })
+        .catch(error => {
+          console.log("Error occured during updating blogs: ", error)
+        })
       },
       error: (err: any) => {
         console.log(err);
@@ -65,10 +95,26 @@ export class BlogComponent implements OnInit{
     }
   }
 
+  getBlogStatusString(status: number): string {
+    switch (status) {
+      case 0:
+        return 'None';
+      case 1:
+        return 'Read-Only';
+      case 2:
+        return 'Active';
+      case 3:
+        return 'Famous';
+      default:
+        return 'None';
+    }
+  }
+
   onAddClicked(): void {
     this.shouldRenderBlogForm = true;
     this.shouldEdit = false;
   }
+  
 
   onEditClicked(blog: Blog): void {
     this.selectedBlog = blog;
@@ -190,5 +236,69 @@ hasDownvoted(blog: Blog): boolean {
   return blog.votes.some(vote => vote.userId === this.user?.id && vote.mark === Markdown.Downvote);
 }
 
+filterActive():void {
+  
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 2); // Filtrira na osnovu `allBlogs`
+  this.blogs.forEach(blog => console.log(blog));
+  
+}
 
+filterFamous(): void {
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 3); // Filtrira na osnovu `allBlogs`
+    this.blogs.forEach(blog => console.log(blog));
+
+}
+
+updateBlogStatus(blog: Blog): void {
+  const totalVotes = this.calculateTotalVotes(blog.votes);
+
+  if (!blog.id) {
+    console.error("Blog ID is undefined, cannot update status.");
+    return;
+  }
+
+  // Proverite da li ulazi u deo kada su glasovi < -10
+  if (totalVotes < -1) {
+    blog.blogStatus = Status.ReadOnly;
+    const updateMethod = this.isAuthor ? this.service.updateBlogAuthor.bind(this.service) : this.service.updateBlogTourist.bind(this.service);
+
+    updateMethod(blog).subscribe({
+      next: updatedBlog => {
+        console.log("Blog status updated to Read-Only: ", updatedBlog);
+      },
+      error: err => console.log("Error occurred while updating status: ", err)
+    });
+    return;
+  }
+
+  // Dodajte log da proverite vrednost `blog.id` pre poziva `getComments`
+  console.log(`Fetching comments for blog ID: ${blog.id}`);
+
+  this.service.getComments(blog.id).pipe(
+    map((pageResult: PagedResults<Comment>) => {
+      console.log("Number of comments retrieved: ", pageResult.totalCount);
+      return pageResult.totalCount;
+    }),
+    switchMap(commentCount => {
+      console.log("Total votes: ", totalVotes, " Comment count: ", commentCount);
+
+      if (totalVotes === 0 && commentCount > 2) {
+        blog.blogStatus = Status.Active;
+      } else if (totalVotes > 0 && commentCount > 2) {
+        blog.blogStatus = Status.Famous;
+      } else {
+        blog.blogStatus = Status.None; // Ako uslovi nisu ispunjeni, vrati `blog` kao što jeste
+      }
+
+      const updateMethod = this.isAuthor ? this.service.updateBlogAuthor.bind(this.service) : this.service.updateBlogTourist.bind(this.service);
+      return updateMethod(blog);
+
+    })
+  ).subscribe({
+    next: updatedBlog => {
+      console.log("Blog status updated: ", updatedBlog);
+    },
+    error: err => console.log("Error occurred while updating status: ", err)
+  });
+}
 }
