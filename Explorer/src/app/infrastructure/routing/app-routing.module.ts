@@ -18,10 +18,12 @@ import { MyEquipmentComponent } from 'src/app/feature-modules/tour-execution/my-
 import { ObjectComponent } from 'src/app/feature-modules/tour-authoring/object/object.component';
 import { LocationSimulatorComponent} from "../../shared/location-simulator/location-simulator.component";
 import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
+import { TourSearchComponent } from 'src/app/feature-modules/layout/tour-search/tour-search.component';
 import { StartTourComponent } from 'src/app/feature-modules/tour-execution/start-tour/start-tour.component';
 import { PublishedToursComponent } from 'src/app/feature-modules/tour-execution/published-tours/published-tours.component';
 import { CardComponent } from 'src/app/feature-modules/tour-execution/card/card.component';
 import { MyToursComponent } from 'src/app/feature-modules/tour-execution/my-tours/my-tours.component';
+
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: '', component: HomeComponent },
@@ -42,6 +44,7 @@ const routes: Routes = [
   {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]},
   {path: 'editUserAccount',component: UserAccountComponent},
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
+  {path: 'tour-search', component: TourSearchComponent},
   {path: 'start-tour', component: StartTourComponent, canActivate: [AuthGuard], },
   {path: 'publishedtours', component: PublishedToursComponent, canActivate: [AuthGuard],},
   {path: 'card', component: CardComponent, canActivate: [AuthGuard],},
