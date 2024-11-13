@@ -1,49 +1,55 @@
-<form [formGroup]="blogForm">
-    <div>
-      <mat-form-field>
-        <mat-label>Title</mat-label>
-        <input matInput formControlName="title" type="text">
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Description (Markdown supported)</mat-label>
-        <textarea matInput formControlName="description"></textarea>
-      </mat-form-field>
-  
-      <div>
-        <h3>Preview:</h3>
-        <markdown [data]="blogForm.get('description')?.value"></markdown>
-      </div>
-  
-      <div formArrayName="images">
-        <div *ngFor="let image of images.controls; let i = index">
-          <mat-form-field>
-            <mat-label>Image URL</mat-label>
-            <input matInput [formControlName]="i" type="text">
-          </mat-form-field>
-          <button mat-button color="warn" (click)="removeImageField(i)">Remove</button>
-        </div>
-        <button mat-button color="primary" (click)="addImageField()">Add Image</button>
-      </div>
-  
-      <div>
-        <h3>Uploaded Images:</h3>
-        <div *ngFor="let image of images.controls">
-          <img *ngIf="image.value" [src]="image.value" alt="Image" style="max-width: 200px; margin: 10px; border: 1px solid #ccc;">
-        </div>
-      </div>
-  
-      <mat-form-field>
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-            <mat-option [value]="0">Draft</mat-option>
-            <mat-option [value]="1">Published</mat-option>
-            <mat-option [value]="2">Closed</mat-option>
-          </mat-select>          
-      </mat-form-field>
-  
-      <button *ngIf="!shouldEdit" mat-raised-button type="submit" color="primary" (click)="addBlog()">Submit</button>
-      <button  *ngIf="shouldEdit" mat-raised-button type="submit" color="primary" (click)="updateBlog()">Submit</button>
+<form [formGroup]="blogForm" class="blog-form">
+  <div class="form-container">
+    <!-- Title -->
+    <mat-form-field class="form-field">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" type="text" class="input-field">
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field class="form-field">
+      <mat-label>Description (Markdown supported)</mat-label>
+      <textarea matInput formControlName="description" class="input-field"></textarea>
+    </mat-form-field>
+
+    <!-- Preview -->
+    <div class="preview">
+      <h3>Preview:</h3>
+      <markdown [data]="blogForm.get('description')?.value"></markdown>
     </div>
-  </form>
-  
+
+    <!-- Image URLs -->
+    <div formArrayName="images" class="image-container">
+      <div *ngFor="let image of images.controls; let i = index" class="image-field">
+        <mat-form-field class="form-field">
+          <mat-label>Image URL</mat-label>
+          <input matInput [formControlName]="i" type="text" class="input-field">
+        </mat-form-field>
+        <button mat-button color="warn" (click)="removeImageField(i)">Remove</button>
+      </div>
+      <button mat-button color="primary" (click)="addImageField()">Add Image</button>
+    </div>
+
+    <!-- Uploaded Images -->
+    <div class="uploaded-images">
+      <h3>Uploaded Images:</h3>
+      <div *ngFor="let image of images.controls" class="image-preview">
+        <img *ngIf="image.value" [src]="image.value" alt="Image" class="image-thumbnail">
+      </div>
+    </div>
+
+    <!-- Status -->
+    <mat-form-field class="form-field">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" class="input-field">
+        <mat-option [value]="0">Draft</mat-option>
+        <mat-option [value]="1">Published</mat-option>
+        <mat-option [value]="2">Closed</mat-option>
+      </mat-select>  
+    </mat-form-field>
+
+    <!-- Submit Button -->
+    <button *ngIf="!shouldEdit" mat-raised-button type="submit" color="primary" (click)="addBlog()">Submit</button>
+    <button *ngIf="shouldEdit" mat-raised-button type="submit" color="primary" (click)="updateBlog()">Submit</button>
+  </div>
+</form>

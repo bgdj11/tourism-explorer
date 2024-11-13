@@ -22,7 +22,25 @@ export class BlogComponent implements OnInit{
   isTourist : boolean = false;
   isAuthor : boolean = false;
 
+  private visibleComments = new Set<number>();
+
+
   constructor(private service: BlogService,private authService: AuthService) { }
+
+  toggleComments(blogId: number | undefined): void {
+    if (blogId === undefined) return;
+    if (this.visibleComments.has(blogId)) {
+      this.visibleComments.delete(blogId);
+    } else {
+      this.visibleComments.add(blogId);
+    }
+  }
+
+  // Funkcija za proveru da li su komentari vidljivi za određeni blog
+  isCommentsVisible(blogId: number | undefined): boolean {
+    if (blogId === undefined) return false;
+    return this.visibleComments.has(blogId);
+  }
 
   ngOnInit(): void {
     this.getBlogs();
@@ -93,6 +111,7 @@ export class BlogComponent implements OnInit{
     this.shouldRenderBlogForm = true;
     this.shouldEdit = false;
   }
+  
 
   onEditClicked(blog: Blog): void {
     this.selectedBlog = blog;
