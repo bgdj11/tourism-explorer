@@ -21,6 +21,8 @@ export class BlogComponent implements OnInit{
   user: User | undefined;
   isTourist : boolean = false;
   isAuthor : boolean = false;
+  allBlogs: Blog[] = []; // Čuva sve blogove
+
 
   private visibleComments = new Set<number>();
 
@@ -63,7 +65,8 @@ export class BlogComponent implements OnInit{
   getBlogs(): void {
     this.service.getBlogs().subscribe({
       next: (result : PagedResults<Blog>) => {
-        this.blogs = result.results;
+        this.allBlogs = result.results; // Svi blogovi se čuvaju u `allBlogs`
+        this.blogs = [...this.allBlogs]; // Kopira sve blogove u `blogs`
         
         Promise.all(this.blogs.map(blog => this.updateBlogStatus(blog)))
         .then(() => {
@@ -235,17 +238,15 @@ hasDownvoted(blog: Blog): boolean {
 
 filterActive():void {
   
-  this.blogs = this.blogs.filter(blog => blog.status === 2);
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 2); // Filtrira na osnovu `allBlogs`
   this.blogs.forEach(blog => console.log(blog));
   
 }
+
 filterFamous(): void {
-  this.blogs = this.blogs.filter(blog => {
-    const x = blog.status as number; // Pomoćna promenljiva koja čuva vrednost statusa
-    return x === 3; // Filtrira blogove koji imaju status 3 (Famous)
-  });
-  this.blogs.forEach(blog => console.log(blog));
-  
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 3); // Filtrira na osnovu `allBlogs`
+    this.blogs.forEach(blog => console.log(blog));
+
 }
 
 updateBlogStatus(blog: Blog): void {

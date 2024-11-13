@@ -9,7 +9,6 @@ export interface Blog{
     votes : Vote[],
     voteStatus: VoteStatus,
     blogStatus: Status,
-    votes : Vote[]
 }
 
 export enum BlogStatus {
@@ -19,10 +18,10 @@ export enum BlogStatus {
   }
 
 export enum Status {
-    None,
-    ReadOnly,
-    Active,
-    Famous
+    None = 0,
+    ReadOnly = 1,
+    Active = 2,
+    Famous = 3
 }
 
   
