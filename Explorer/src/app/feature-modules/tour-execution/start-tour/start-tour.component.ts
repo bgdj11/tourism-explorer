@@ -74,21 +74,11 @@ export class StartTourComponent implements OnInit, OnDestroy {
       this.startCheckingVisitedCheckpoints(userId);
     }
   }
-  
+
   ngOnDestroy(): void {
       if (this.checkIntervalSubscription) {
           this.checkIntervalSubscription.unsubscribe();
       }
-  }
-
-  checkActiveTour(): void {
-    const savedExecution = localStorage.getItem('activeTourExecution');
-    if (savedExecution) {
-      this.activeTourExecution = JSON.parse(savedExecution) as TourExecution;
-      this.tours = this.tours.filter(tour => tour.id === this.activeTourExecution?.tourId);
-    } else {
-      this.loadTours();
-    }
   }
 
 
@@ -177,7 +167,7 @@ export class StartTourComponent implements OnInit, OnDestroy {
     };
   }
 
-   
+
     // Provera stanja pokrenute ture pri učitavanju komponente
     checkActiveTour(): void {
         const savedExecution = localStorage.getItem('activeTourExecution');

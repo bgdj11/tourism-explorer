@@ -85,12 +85,13 @@ import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model
   deleteReview(reviewId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
   }
+
     checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
     }
+
   getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
 
-  }
 }
