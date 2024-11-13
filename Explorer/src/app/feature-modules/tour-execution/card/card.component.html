@@ -1,0 +1,54 @@
+<div class="shopping-cart" *ngIf="shoppingCart">
+    <h2>Shopping Cart</h2>
+  
+    <!-- Prikazujemo grešku učitavanja ako postoji -->
+    <div *ngIf="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+  
+    <!-- Proveravamo da li postoje stavke u korpi -->
+    <div *ngIf="shoppingCart.shopingItems.length > 0; else emptyCart">
+      <ul>
+        <!-- Iteriramo kroz shopingItems i prikazujemo ih -->
+        <li *ngFor="let item of shoppingCart.shopingItems">
+          <div class="cart-item">
+            <span class="tour-name">{{ item.tourName }}</span>
+            <span class="tour-price">{{ item.tourPrice | currency }}</span>
+  
+            <!-- Dugme za brisanje stavke -->
+            <button (click)="removeTour(item.tourId)">Remove</button>
+          </div>
+        </li>
+      </ul>
+  
+      <!-- Ukupna cena -->
+      <div class="total-price">
+        <p><strong>Total Price:</strong> {{ shoppingCart.totalPrice | currency }}</p>
+      </div>
+    </div>
+
+    <div>
+      <button *ngIf="shoppingCart && shoppingCart.shopingItems.length > 0" (click)="checkout()">Checkout</button>
+    </div>
+  
+    <!-- Poruka kada je korpa prazna -->
+    <ng-template #emptyCart>
+      <p>Your shopping cart is empty.</p>
+    </ng-template>
+  </div>
+  
+  <!-- Prikazujemo grešku brisanja ako postoji -->
+  <div *ngIf="removeErrorMessage" class="error-message">
+    <p>{{ removeErrorMessage }}</p>
+  </div>
+  
+  <!-- Poruka kada shopping kartica nije učitana -->
+  <div *ngIf="!shoppingCart && !errorMessage">
+    <p>Loading your shopping cart...</p>
+  </div>
+  
+  <!-- Poruka kada korisnik nije ulogovan -->
+  <div *ngIf="!touristId && !shoppingCart">
+    <p>You must be logged in to view your shopping cart.</p>
+  </div>
+  

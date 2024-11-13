@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BlogService } from '../blog.service';
-import { Blog, BlogStatus } from '../model/blog.model';
+import { Blog, BlogStatus, Status } from '../model/blog.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 
@@ -64,7 +64,8 @@ export class BlogFormComponent implements OnChanges {
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
       votes: [],
-      voteStatus: 0
+      voteStatus: 0,
+      blogStatus: Status.None
     };
   
     if (this.user?.role === 'author') {
@@ -105,7 +106,8 @@ export class BlogFormComponent implements OnChanges {
       status: this.blogForm.value.status as BlogStatus,
       userId: this.user?.id || 0,
       votes: this.blog.votes || [],
-      voteStatus: 0
+      voteStatus: 0,
+      blogStatus: this.blog.blogStatus
     };
     blog.id = this.blog.id;
   

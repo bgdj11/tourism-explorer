@@ -13,6 +13,7 @@ export class MapComponent implements AfterViewInit {
   map: any;
   private markers: L.Marker[] = [];
   private userMarker: L.Marker | null = null;
+  private currentLengthInKm: number;
   private currentLocation: { lat: number, lng: number } | null = null;
   singleMarker: L.Marker | null = null;
   private routeControl: any;
@@ -96,43 +97,48 @@ export class MapComponent implements AfterViewInit {
     });
   }
   // prima niz lat,long [lat,long] ,
-  setRoute(waypoints: { lat: number, lng: number }[]): void {
+  setRoute(waypoints: { lat: number, lng: number }[]): Promise<number> {
     const latLngPoints = waypoints.map(point => L.latLng(point.lat, point.lng));
 
-    //Brisanje markera po ponovnom pritisku na turu
+    // Clear markers and route control if it exists
     this.markers.forEach(marker => this.map.removeLayer(marker));
     this.markers = [];
-    //Brisanje leafleta po ponovnom pritisku na turu
     if (this.routeControl) {
-      this.map.removeControl(this.routeControl); 
+      this.map.removeControl(this.routeControl);
       this.routeControl = null;
     }
 
+    // Set up the route control
     this.routeControl = L.Routing.control({
       waypoints: latLngPoints,
       routeWhileDragging: false,
-      lineOptions: { addWaypoints: false, extendToWaypoints: false, missingRouteTolerance: 0},
+      lineOptions: { addWaypoints: false, extendToWaypoints: false, missingRouteTolerance: 0 },
       router: L.Routing.mapbox('pk.eyJ1IjoiYmdkajExIiwiYSI6ImNtMmtrZHpyZzAyZWoycXM5enphbXZia2UifQ.54XDMPHRsMN86I6gUbbOcQ', { profile: 'mapbox/walking' })
     }).addTo(this.map);
 
-    
-    this.routeControl.on('routesfound', function (e: { routes: any; }) {
-      const routes = e.routes;
-      const summary = routes[0].summary;
-      alert(
-        'Total distance is ' +
-        (summary.totalDistance / 1000).toFixed(2) +
-        ' km and total time is ' +
-        Math.round((summary.totalTime % 3600) / 60) +
-        ' minutes'
-      );
-    });
-    waypoints.forEach(waypoint => {
-      const marker = L.marker([waypoint.lat, waypoint.lng], { draggable: false }).addTo(this.map);
-      this.markers.push(marker);
-    });
-  }
+    // Return a promise that resolves with the route length in km
+    return new Promise((resolve) => {
+      this.routeControl.on('routesfound', (e: { routes: any; }) => {
+        const routes = e.routes;
+        const summary = routes[0].summary;
+        const lengthInKm = summary.totalDistance / 1000;
 
+        alert(
+          'Total distance is ' +
+          lengthInKm.toFixed(2) +
+          ' km and total time is ' +
+          Math.round((summary.totalTime % 3600) / 60) +
+          ' minutes'
+        );
+
+        console.log('Length in km:', lengthInKm);
+
+        // Resolve the promise with the calculated distance
+        resolve(lengthInKm);
+      });
+    });
+}
+  
   private touristIcon = L.icon({
     iconUrl: 'assets/tourist.png',
     iconSize: [32, 32],

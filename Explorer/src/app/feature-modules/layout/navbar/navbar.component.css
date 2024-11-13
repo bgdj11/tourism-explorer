@@ -47,3 +47,8 @@
 .custom-button:hover{
     background-color: #bbe6e4 !important; 
 }
+
+#buttons {
+    width: auto;
+    margin-left: auto;
+}

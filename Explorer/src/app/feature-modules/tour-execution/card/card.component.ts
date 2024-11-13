@@ -1,0 +1,94 @@
+import { Component, OnInit } from '@angular/core';
+import { TourExecutionService } from '../tour.execution.service';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
+
+@Component({
+  selector: 'xp-card',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.css']
+})
+export class CardComponent implements OnInit {
+  shoppingCart: ShoppingCartDTO | null = null;  // Shopping cart podaci
+  touristId: number | null = null;  // ID korisnika (turista)
+  user: User | undefined;  // Ulogovani korisnik
+  errorMessage: string | null = null;  // Greška pri učitavanju
+  removeErrorMessage: string | null = null;  // Greška pri brisanju ture
+
+  constructor(private tourExecutionService: TourExecutionService, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    // Učitavanje podataka o ulogovanom korisniku
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+      if (user) {
+        this.touristId = user.id;  // Koristimo ID korisnika iz ulogovanog korisnika
+        this.loadShoppingCart();  // Ako je korisnik ulogovan, učitavamo shopping karticu
+      }
+    });
+  }
+
+  // Metoda za učitavanje shopping kartice
+  loadShoppingCart(): void {
+    if (this.touristId === null) {
+      this.errorMessage = 'User not logged in';
+      return;
+    }
+
+    this.tourExecutionService.getShoppingCart(this.touristId).subscribe({
+      next: (cart) => {
+        this.shoppingCart = cart;
+        this.errorMessage = null;  // Resetujemo grešku ako je učitavanje uspešno
+      },
+      error: (err) => {
+        console.error('Error loading shopping cart', err);
+        this.shoppingCart = null;  // Resetujemo shopping cart u slučaju greške
+        this.errorMessage = 'There was an error loading your shopping cart. Please try again later.';
+      }
+    });
+  }
+
+  // Metoda za brisanje ture iz shopping kartice
+  removeTour(tourId: number): void {
+    if (!this.touristId) {
+      this.removeErrorMessage = 'User not logged in';
+      return;
+    }
+
+    this.tourExecutionService.removeTourFromCart(this.touristId, tourId).subscribe({
+      next: () => {
+        this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
+        this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
+      },
+      error: (err) => {
+        console.error('Error removing tour from cart', err);
+        this.removeErrorMessage = 'There was an error removing the tour from your cart. Please try again later.';
+      }
+    });
+  }
+
+  checkout(): void {
+    if (this.touristId === null) {
+      this.errorMessage = 'User not logged in';
+      return;
+    }
+
+    const confirmed = window.confirm("Are you sure you want to proceed with the checkout?");
+    if (!confirmed) {
+      return; 
+    }
+  
+    this.tourExecutionService.checkout(this.touristId).subscribe({
+      next: () => {
+        this.errorMessage = null;
+        this.shoppingCart = null; 
+        alert('Checkout completed successfully!');
+      },
+      error: (err) => {
+        console.error('Error during checkout', err);
+        this.errorMessage = 'There was an error processing your checkout. Please try again later.';
+      }
+    });
+  }
+}

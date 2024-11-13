@@ -1,76 +1,67 @@
-<div id="blog">
-    <p>Blog</p>
-    <hr>
-    <div id="blog-details">
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Created Date</th>
-                        <th>Images</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let blog of blogs">
-                        <td>{{ blog.title }}</td>
-                        <td><markdown [data]="blog.description"></markdown></td>
-                        <td>{{ blog.createdDate | date:'short' }}</td>
-                        <td>
-                            <ng-container *ngIf="blog.images && blog.images.length > 0">
-                                <div *ngFor="let imageUrl of blog.images">
-                                    <img [src]="imageUrl" alt="Blog Image" style="max-width: 100px; max-height: 100px; margin: 5px;" />
-                                </div>
-                            </ng-container>
-                            <ng-container *ngIf="!blog.images || blog.images.length === 0">
-                                No images available
-                            </ng-container>
-                        </td>
-                        <td>{{ getStatusString(blog.status) }}</td> 
-                        <td>
-                            <!-- Upvote i Downvote dugmad -->
-                            <button 
-                            (click)="upvote(blog.id || 0)" 
-                            [ngClass]="{'red-button': hasUpvoted(blog)}">
-                            +
-                          </button>
-                          <span>{{ calculateTotalVotes(blog.votes) }}</span>
-                          <button 
-                            (click)="downvote(blog.id || 0)" 
-                            [ngClass]="{'red-button': hasDownvoted(blog)}">
-                            -
-                          </button>
-                        </td>                        
-                        <td>
-                            <!-- Prikazivanje dugmadi samo ako je prijavljen korisnik i njegov ID odgovara ID-u autora bloga -->
-                            <button *ngIf="user?.id === blog.userId" color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                            <button *ngIf="user?.id === blog.userId" color="primary" (click)="onEditClicked(blog)" mat-icon-button>
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </td>  
-                        <td>
-                            <xp-comment *ngIf="blog.id" [blogId]="blog.id"></xp-comment>
-                        </td>                      
-                    </tr>
-                    <tr *ngIf="isAuthor || isTourist">
-                        <button color="primary" (click)="onAddClicked()" mat-icon-button>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </tr>                    
-                </tbody>
-            </table>
-        </div>
+<div id="blog" class="blog-container">    
+    <!-- "Add" Button -->
+     <div>
+        <div class="add-button-container">
+        <button *ngIf="isAuthor || isTourist" color="primary" (click)="onAddClicked()" mat-icon-button class="add-button">
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
-    <div>
-        <xp-blog-form (blogUpdated)="getBlogs()" *ngIf="shouldRenderBlogForm" [blog]="selectedBlog" [shouldEdit]="shouldEdit"></xp-blog-form>
+     </div>
+    
+    <div> nista</div>
+
+    <div class="blog-cards">
+        <div *ngFor="let blog of blogs" class="blog-card">
+            <h2>{{ blog.title }}</h2>
+            <p><markdown [data]="blog.description"></markdown></p>
+            <p><strong>Created Date:</strong> {{ blog.createdDate | date:'short' }}</p>
+            <div class="blog-images">
+                <ng-container *ngIf="blog.images && blog.images.length > 0">
+                    <div *ngFor="let imageUrl of blog.images">
+                        <img [src]="imageUrl" alt="Blog Image" class="blog-image" />
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!blog.images || blog.images.length === 0">
+                    <p>No images available</p>
+                </ng-container>
+            </div>
+            <p><strong>Status:</strong> {{ getStatusString(blog.status) }}</p>
+            <p><strong>Blog Status:</strong> {{ getBlogStatusString(blog.blogStatus) }}</p>
+            <div class="voting">
+                <button *ngIf="blog.blogStatus !== 1 && (isAuthor || isTourist)"
+                        (click)="upvote(blog.id || 0)" 
+                        [ngClass]="{'active-upvote': hasUpvoted(blog)}">+</button>
+                <span>{{ calculateTotalVotes(blog.votes) }}</span>
+                <button *ngIf="blog.blogStatus !== 1 && (isAuthor || isTourist)"
+                        (click)="downvote(blog.id || 0)" 
+                        [ngClass]="{'active-downvote': hasDownvoted(blog)}">-</button>
+            </div>
+            <div class="blog-actions" *ngIf="user?.id === blog.userId && blog.blogStatus !== 1">
+                <button color="accent" (click)="deleteBlog(blog.id || 0)" mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button color="primary" (click)="onEditClicked(blog)" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+            <button 
+                *ngIf="isAuthor || isTourist" 
+                color="primary" 
+                (click)="toggleComments(blog.id)" 
+                mat-button>
+                {{ isCommentsVisible(blog.id) ? 'Hide Comments' : 'Show Comments' }}
+            </button>
+            <xp-comment 
+                *ngIf="isCommentsVisible(blog.id) && blog.id" 
+                [blogId]="blog.id" 
+                [isBlogReadOnly]="blog.blogStatus === 1">
+            </xp-comment>
+        </div>
     </div>
     <div>
         <button (click)="filterActive()">Filter Active</button>
         <button (click)="filterFamous()">Filter Famous</button>
     </div>
         
+    <xp-blog-form (blogUpdated)="getBlogs()" *ngIf="shouldRenderBlogForm" [blog]="selectedBlog" [shouldEdit]="shouldEdit"></xp-blog-form>
 </div>
