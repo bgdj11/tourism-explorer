@@ -6,6 +6,7 @@ import { MaterialModule } from 'src/app/infrastructure/material/material.module'
 import { RouterModule } from '@angular/router';
 import { AppRatingComponent } from './app-rating/app-rating.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToursListComponent } from './tours-list/tours-list.component';
 import { TourSearchComponent } from './tour-search/tour-search.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +16,9 @@ import { FormsModule } from '@angular/forms';
     HomeComponent,
     NavbarComponent,
     AppRatingComponent,
+
+    ToursListComponent
+
     TourSearchComponent
   ],
   imports: [
@@ -29,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     HomeComponent,
     AppRatingComponent,
+    ToursListComponent,
     TourSearchComponent
   ]
 })
