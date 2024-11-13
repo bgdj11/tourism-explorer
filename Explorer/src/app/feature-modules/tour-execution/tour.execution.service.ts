@@ -91,9 +91,11 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
   deleteReview(reviewId: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiHost}author/tours/reviews/${reviewId}`);
   }
+
     checkVisitedCheckpoint(executionId: number, location: MapLocation): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/tour-executions/${executionId}/check-visited-checkpoint`, location);
     }
+
   getCheckpointSecret(executionId: number, checkpointId: number): Observable<string> {
     return this.http.get<string>(`${environment.apiHost}tourist/tour-executions/${executionId}/checkpoint/${checkpointId}/secret`);
   }
@@ -102,99 +104,98 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
     return this.http.get<PagedResults<TourDTO>>(environment.apiHost + 'tourist/pubishledtourss')
   }
 
-getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
-return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
-}
+  getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
+  return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
+  }
 
-addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
-return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
-}
-
-
-removeTourFromCart(touristId: number, tourId: number): Observable<any> {
-return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
-}
-
-checkout(touristId: number): Observable<any> {
-return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
-}
-
-getPurchasedTours(touristId: number): Observable<TourDTO[]> {
-return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
-}
-
-getAllTourists(): Observable<UserDto[]> {
-  return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists`);
-}
+  addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
+  return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
+  }
 
 
-getFollowedTourists(page: number, pageSize: number): Observable<PagedResults<FollowersDto>> {
-const currentUserId = this.authService.user$.value.id; 
-return this.http.get<PagedResults<FollowersDto>>(`${environment.apiHost}followers/follower/${currentUserId}?page=${page}&pageSize=${pageSize}`);
-}
+  removeTourFromCart(touristId: number, tourId: number): Observable<any> {
+  return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
+  }
 
-getNonFollowedTourists(): Observable<UserDto[]> {
-const currentUserId = this.authService.user$.value.id; 
-return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/nonFollowed/${currentUserId}`);
-}
+  checkout(touristId: number): Observable<any> {
+  return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
+  }
 
-createFollower(followDto: FollowersDto): Observable<FollowersDto> {
-const currentUserId = this.authService.user$.value.id; // Uzmi ID trenutnog korisnika
-followDto.followerId = currentUserId; // Postavi ID pratioca
+  getPurchasedTours(touristId: number): Observable<TourDTO[]> {
+  return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
+  }
 
-return this.http.post<FollowersDto>(`${environment.apiHost}followers`, followDto); // Pozovi API endpoint
-}
-
+  getAllTourists(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists`);
+  }
 
 
-getFollowedUsers(): Observable<UserDto[]> {
-const currentUserId = this.authService.user$.value.id; 
-return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/followed/${currentUserId}`);
-}
+  getFollowedTourists(page: number, pageSize: number): Observable<PagedResults<FollowersDto>> {
+  const currentUserId = this.authService.user$.value.id; 
+  return this.http.get<PagedResults<FollowersDto>>(`${environment.apiHost}followers/follower/${currentUserId}?page=${page}&pageSize=${pageSize}`);
+  }
 
-deleteFollowerByFollowingId(followingId: number): Observable<void> {
-const currentUserId = this.authService.user$.value.id;
+  getNonFollowedTourists(): Observable<UserDto[]> {
+  const currentUserId = this.authService.user$.value.id; 
+  return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/nonFollowed/${currentUserId}`);
+  }
 
-return this.http.delete<void>(`${environment.apiHost}followers/following/${followingId}`).pipe(
-catchError(error => {
-  console.error('Error while deleting follower by followingId:', error);
-  return of(void 0); // Vraća prazan rezultat u slučaju greške
-})
-);
-}
+  createFollower(followDto: FollowersDto): Observable<FollowersDto> {
+  const currentUserId = this.authService.user$.value.id; // Uzmi ID trenutnog korisnika
+  followDto.followerId = currentUserId; // Postavi ID pratioca
 
-
-deleteFollower(id: number): Observable<void> {
-return this.http.delete<void>(`${environment.apiHost}followers/${id}`).pipe(
-catchError(error => {
-    console.error('Greška prilikom uklanjanja pratioca:', error);
-    return of(void 0); 
-})
-);
-}
+  return this.http.post<FollowersDto>(`${environment.apiHost}followers`, followDto); // Pozovi API endpoint
+  }
 
 
-deleteFollowerByFollowerAndFollowingIds(followerId: number, followingId: number): Observable<void> {
-return this.http.delete<void>(`${environment.apiHost}followers/follower/${followerId}/following/${followingId}`).pipe(
-catchError(error => {
-    console.error('Greška prilikom uklanjanja pratioca:', error);
+
+  getFollowedUsers(): Observable<UserDto[]> {
+  const currentUserId = this.authService.user$.value.id; 
+  return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/followed/${currentUserId}`);
+  }
+
+  deleteFollowerByFollowingId(followingId: number): Observable<void> {
+  const currentUserId = this.authService.user$.value.id;
+
+  return this.http.delete<void>(`${environment.apiHost}followers/following/${followingId}`).pipe(
+  catchError(error => {
+    console.error('Error while deleting follower by followingId:', error);
     return of(void 0); // Vraća prazan rezultat u slučaju greške
-})
-);
-}
+  })
+  );
+  }
 
 
-sendMessageToFollower(request: SendMessageRequest): Observable<any> {
-return this.http.post<any>(`${environment.apiHost}notifications/send`, request);
-}
+  deleteFollower(id: number): Observable<void> {
+  return this.http.delete<void>(`${environment.apiHost}followers/${id}`).pipe(
+  catchError(error => {
+      console.error('Greška prilikom uklanjanja pratioca:', error);
+      return of(void 0); 
+  })
+  );
+  }
 
-markNotificationAsRead(notificationId: number): Observable<any> {
-return this.http.put<any>(`${environment.apiHost}notifications/mark-as-read/${notificationId}`, {});
-}
 
-getNotificationsForUser(userId: number): Observable<NotificationDto[]> {
-return this.http.get<NotificationDto[]>(`${environment.apiHost}notifications/${userId}`);
-}
+  deleteFollowerByFollowerAndFollowingIds(followerId: number, followingId: number): Observable<void> {
+  return this.http.delete<void>(`${environment.apiHost}followers/follower/${followerId}/following/${followingId}`).pipe(
+  catchError(error => {
+      console.error('Greška prilikom uklanjanja pratioca:', error);
+      return of(void 0); // Vraća prazan rezultat u slučaju greške
+  })
+  );
+  }
 
-  
+
+  sendMessageToFollower(request: SendMessageRequest): Observable<any> {
+  return this.http.post<any>(`${environment.apiHost}notifications/send`, request);
+  }
+
+  markNotificationAsRead(notificationId: number): Observable<any> {
+  return this.http.put<any>(`${environment.apiHost}notifications/mark-as-read/${notificationId}`, {});
+  }
+
+  getNotificationsForUser(userId: number): Observable<NotificationDto[]> {
+  return this.http.get<NotificationDto[]>(`${environment.apiHost}notifications/${userId}`);
+  }
+
 }
