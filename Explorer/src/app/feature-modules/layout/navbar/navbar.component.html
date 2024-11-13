@@ -3,6 +3,7 @@
        <img src="../../../../assets/bck.jpg" alt="logo" class="logo" />
        <button mat-button class="custom-button" routerLink="/home">Home</button>
     </div>
+
 <div class="navbar-right">
     <button *ngIf="user && user.username === ''" mat-button class="custom-button" [routerLink]="['login']">Login</button>
     <button *ngIf="user && user.username !== ''" mat-button class="custom-button" (click)="onLogout()">Logout</button>
@@ -25,6 +26,6 @@
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['publishedtours']">Tours published</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['card']">Card</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['mytours']">My tours</button>
-
+    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['followers']">Followers</button>
  </div>
 </mat-toolbar>

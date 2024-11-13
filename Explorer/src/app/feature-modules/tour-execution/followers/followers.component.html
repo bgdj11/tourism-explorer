@@ -1,0 +1,65 @@
+<div class="followers-container">
+
+<!-- Notifikacije -->
+<div class="notifications-container" *ngIf="notifications && notifications.length > 0">
+    <h3>Notifikacije</h3>
+    <ul>
+      <li *ngFor="let notification of notifications">
+        <div class="notification-item">
+          <!-- Prikazivanje sadržaja poruke -->
+          <p><strong>{{ notification.message.content }}</strong></p>
+
+          <p *ngIf="notification.message?.resourceUrl">
+            <a [href]="notification.message.resourceUrl" target="_blank">Pogledajte resurs</a>
+          </p>
+
+          <p>Status: {{ notification.isRead ? 'Pročitano' : 'Nepročitano' }}</p>
+          
+          <!-- Dugme za označavanje notifikacije kao pročitan -->
+          <button *ngIf="!notification.isRead" (click)="markAsRead(notification.id)">
+            Označi kao pročitan
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+    <h2>Korisnici koje ne pratite</h2>
+    <ul class="tourist-list">
+        <li *ngFor="let tourist of nonFollowedTourists" class="tourist-item">
+            <strong>Korisničko ime:</strong> {{ tourist.username }}<br>
+            <strong>Uloga:</strong> {{ tourist.role }}<br>
+            <strong>Aktivan:</strong> {{ tourist.isActive ? 'Da' : 'Ne' }}
+            <button *ngIf="tourist.id !== undefined" (click)="createFollower(tourist.id)">Zapratite</button>
+        </li>
+    </ul>
+
+    <h2>Svi Pratioci</h2>
+    <ul class="follower-list">
+        <li *ngFor="let follower of followedTourists" class="follower-item">
+            <strong>ID pratioca:</strong> {{ follower.id }}<br>
+            <strong>Korisničko ime:</strong> {{ follower.username }}<br>
+            <strong>Uloga:</strong> {{ follower.role }}<br>
+            <strong>Aktivan:</strong> {{ follower.isActive ? 'Da' : 'Ne' }}
+            
+            <button *ngIf="follower.id" (click)="openMessageForm(follower.id)" class="message-button">Pošaljite poruku</button>
+            <button (click)="deleteFollowerByFollowerAndFollowingIds(currentUserId, follower.id!)" class="message-button">Otprati</button>
+
+            <!-- Forma za slanje poruke u istom redu -->
+            <div *ngIf="showMessageForm && selectedFollowerId === follower.id" class="message-form" style="display: inline-block; margin-left: 10px;">
+                <label for="messageSubject">Naslov:</label>
+                <input type="text" id="messageSubject" [(ngModel)]="messageSubject" placeholder="Unesite naslov poruke" /><br/>
+
+                <label for="messageBody">Poruka:</label>
+                <input type="text" placeholder="Unesite sadržaj poruke" [(ngModel)]="messageBody" /><br/>
+                <label>Url:</label>
+                <input type="text" placeholder="Unesite URL resursa" [(ngModel)]="resourceUrl" /><br/>
+                
+
+                <button (click)="sendMessage()">Pošaljite</button>
+                <button (click)="showMessageForm = false">Odustani</button>
+            </div>
+        </li>
+    </ul>
+</div>

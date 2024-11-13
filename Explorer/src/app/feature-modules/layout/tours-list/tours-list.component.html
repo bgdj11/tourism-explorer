@@ -1,0 +1,77 @@
+<!-- tours-list.component.html -->
+<div class="container mt-4">
+<div class="tours-container" *ngIf="hasActiveTours">
+    <!-- Left Button (Previous) -->
+    <button class="pagination-button" (click)="showPrevious()" [disabled]="currentPage <= 1">
+        &lt; Prev
+    </button>
+    <!-- Tours Display -->
+    <div class="tours-list" >
+        <div *ngFor="let tour of tours" class="tour-card">
+            <div *ngIf="tour.status === 1">
+                <h3>{{ tour.name }}</h3>
+                <p><strong>Description:</strong> {{ tour.description }}</p>
+                <p><strong>Difficulty:</strong> {{ tour.weight }}</p>
+                <p><strong>Price:</strong> {{ tour.price | currency }}</p>
+                <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
+                <div *ngIf="tour.tourCheckpoints && tour.tourCheckpoints.length > 0">
+                    <h4>First Checkpoint:</h4>
+                    <p><strong>Name:</strong> {{ tour.tourCheckpoints[0].checkpointName }}</p>
+                    <p><strong>Description:</strong> {{ tour.tourCheckpoints[0].checkpointDescription || 'No description
+                        available' }}</p>
+                    <p><strong>Location:</strong> {{ tour.tourCheckpoints[0].latitude }}, {{
+                        tour.tourCheckpoints[0].longitude }}</p>
+                </div>
+            </div>
+            <button (click)="openModal(tour)">View More</button>
+        </div>
+    </div>
+    <!-- Right Button (Next) -->
+    <button class="pagination-button" (click)="showNext()" [disabled]="currentPage * pageSize >= totalCount">
+        Next &gt;
+    </button>
+    
+</div>
+<!-- Pagination Status (Optional, shows current page and total count) -->
+<div class="pagination-status" *ngIf="hasActiveTours">
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+</div>
+
+
+<ng-template #reviewsModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ selectedTour.name }} - Reviews</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+       
+        <p>Average rate for this tour: {{rateCount / tourReviews.length}}</p>
+      <div *ngIf="tourReviews && tourReviews.length > 0; else noReviews">
+        <div *ngFor="let tourReview of tourReviews" class="review-item" style="margin-bottom: 20px;">
+          <!-- User Info -->
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div class="profile-picture">
+              <img src="assets/tourist.png" width="30" height="30" alt="User Profile Picture" />
+            </div>
+            <p class="user-name" style="margin: 0; font-weight: bold;">
+              {{ tourReview.personn.name }} {{ tourReview.personn.surname }}
+            </p>
+          </div>
+  
+          <!-- Comment Section -->
+          <div class="comment-section" style="margin-left: 50px;">
+            <p style="font-weight: bold; margin: 0;">Comment</p>
+            <p style="margin: 5px 0; color: #555;">{{ tourReview.comment }}</p>
+            <p style="margin: 5px 0; color: #555;">{{ tourReview.rating }}</p>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Fallback if no reviews are available -->
+      <ng-template #noReviews>
+        <p>No reviews available for this tour.</p>
+      </ng-template>
+    </div>
+  </ng-template>
+
+</div>
