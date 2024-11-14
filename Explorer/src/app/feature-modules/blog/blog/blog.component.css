@@ -1,50 +1,101 @@
-#blog {
-    margin-top: 20px;
-    margin-left: 20px;
+.blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-#blog-details {
+.blog-cards {
     display: flex;
-    flex-direction: row;
-    gap: 50px;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-p {
-    font-size: 20px;
+.blog-card {
+    width: calc(33.333% - 20px);
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
-table {
-    border-collapse: collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 300px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+.blog-card h2 {
+    margin-top: 0;
 }
 
-thead tr {
-    background-color: #004D3B;
-    color: #ffffff;
-    text-align: left;
+.blog-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
 }
 
-th, td {
-    padding: 12px 15px;
+.blog-image {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
-tbody tr {
-    border-bottom: 1px solid #dddddd;
+.voting {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+.voting button {
+    font-size: 1.5rem;
 }
 
-tbody tr:last-of-type {
-    border-bottom: 2px solid #3f51b5;
+.red-button {
+    color: red;
 }
 
-tbody tr.active-row {
-    font-weight: bold;
-    color: #3f51b5;
+.blog-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.active-upvote {
+    background-color: #4CAF50; /* Zelena boja za glasanje gore */
+    color: white;
+}
+
+.active-downvote {
+    background-color: #F44336; /* Crvena boja za glasanje dole */
+    color: white;
+}
+
+.blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative; /* Allows absolute positioning within this container */
+}
+
+.add-button-container {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* Move button to the right side */
+}
+
+.add-button {
+    font-size: 2rem; /* Increase button size */
+    width: 60px; /* Increase button width */
+    height: 60px; /* Increase button height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Makes it a circular button */
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover {
+    background-color: #0056b3;
 }

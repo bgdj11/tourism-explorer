@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {catchError, Observable, throwError} from "rxjs";
 import {PagedResults} from "../../shared/model/paged-results.model";
 import {TourDTO} from "./model/tour.model";
 import {environment} from "../../../env/environment";
 import { CheckpointDTO } from './model/checkpoint.model';
 import {Equipment} from "../administration/model/equipment.model";
 import { ClubDTO } from './model/club.model';
+import { TransportType, TravelTimeDTO } from './model/travelTime.model';
+import { TourReviewDTO } from './model/tourReview.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,9 +56,40 @@ export class TourManagementService {
   deleteTour(tourId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${tourId}`);
   }
-  createCheckpoint(checkpoint: CheckpointDTO): Observable<CheckpointDTO> {
-    return this.http.post<CheckpointDTO>(`${this.apiUrl}/tour-checkpoints`, checkpoint);
+
+  addNewTravelTime(newTravelTime: TravelTimeDTO, tourId: number): Observable<TravelTimeDTO> {
+    console.log(newTravelTime)
+    console.log(this.apiUrl + '/' + tourId + '/time');
+    return this.http.post<TravelTimeDTO>(this.apiUrl + '/' + tourId + '/addNewTravelTime', newTravelTime);
   }
+
+  createCheckpoint(checkpoint: CheckpointDTO, tourId: number): Observable<CheckpointDTO> {
+    console.log(checkpoint)
+    return this.http.post<CheckpointDTO>(`${this.apiUrl}/${tourId}/checkpoint`,checkpoint);
+  }
+  archiveTour(tourId: number): Observable<void>{
+    return this.http.post<void>(`${this.apiUrl}/${tourId}/archive`,{});
+  }
+
+  publishTour(tourId: number): Observable<any>{
+    return this.http.post<void>(`${this.apiUrl}/${tourId}/publish`,{}).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'An unknown error occurred';
+  
+        // Extract the error details from the response
+        if (error.error && error.error.detail) {
+          errorMessage = error.error.detail; // Get the `detail` field from the ProblemDetails object
+        }
+  
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
+  getTourReviews(tourId: number): Observable<PagedResults<TourReviewDTO>> {
+    return this.http.get<PagedResults<TourReviewDTO>>(this.apiUrl + '/'+ tourId + '/reviews');
+  }
+
+  
 
   getCheckpointIdsByTourId(tourId: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/${tourId}/checkpoint-ids`);

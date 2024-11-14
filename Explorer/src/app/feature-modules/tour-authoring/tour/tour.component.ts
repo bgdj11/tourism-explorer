@@ -8,6 +8,7 @@ import { Equipment } from "../../administration/model/equipment.model";
 import { CheckpointDTO } from "../model/checkpoint.model"; // Import Router
 import { MapComponent } from "../../../shared/map/map.component";
 import { forkJoin } from 'rxjs';
+import { TransportType, TravelTimeDTO } from '../model/travelTime.model';
 
 @Component({
   selector: 'xp-tour',
@@ -15,12 +16,15 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./tour.component.css']
 })
 export class TourComponent implements OnInit {
+  TransportType = TransportType;
   tours: TourDTO[] = [];
   selectedTourCheckpoints: CheckpointDTO[] = [];
   selectedTourEquipment: Equipment[] = [];
   availableEquipment: Equipment[] = [];
   selectedEquipmentIds: number[] = [];
+  selectedTourTravelTimes: TravelTimeDTO[] = [];
   selectedTour: any = null;
+  lengthInKm: number;
   totalCount: number = 0;
   totalEquipmentCount: number = 0;
   currentPage: number = 1;
@@ -32,9 +36,14 @@ export class TourComponent implements OnInit {
     description: '',
     weight: '',
     tags: [],
+    status: 0,
     price: undefined,
-    equipmentIds: [],
-    tourCheckpointIds: []
+    lengthInKm: 0, // Podrazumevana vrednost za dužinu ture
+    publishedDate: undefined, // Prazan string za datum objave
+    archivedDate: undefined,
+    equipments: [],
+    tourCheckpoints: [],
+    travelTimes: []
   };
   newCheckpoint: CheckpointDTO = {
     id: 0,
@@ -44,12 +53,17 @@ export class TourComponent implements OnInit {
     longitude: undefined,
     image: ''
   };
+  newTravelTime: TravelTimeDTO = {
+    time: 0,
+    transportType: 0
+  }
 
   @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
 
   @ViewChild('tourModal') tourModal!: TemplateRef<any>;
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
+  @ViewChild('travelTimeModal') travelTimeModal!: TemplateRef<any>;
   @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
 
@@ -66,6 +80,7 @@ export class TourComponent implements OnInit {
 
   selectTour(tour: any): void {
     this.selectedTour = tour;
+    this.selectedTourCheckpoints = tour.tourCheckpoints;
     this.getCheckpointsByTourId(tour.id);
     this.getEquipmentByTourId(tour.id);
   }
@@ -78,6 +93,7 @@ export class TourComponent implements OnInit {
     this.tourService.getTours(this.currentPage, this.pageSize).subscribe(
       (data) => {
         this.tours = data.results;
+
         this.totalCount = data.totalCount;
       },
       (error) => {
@@ -108,9 +124,14 @@ export class TourComponent implements OnInit {
         description: '',
         weight: '',
         tags: [],
+        status: 0,
         price: undefined,
-        equipmentIds: [],
-        tourCheckpointIds: []
+        lengthInKm: 0, // Podrazumevana vrednost za dužinu ture
+        publishedDate: undefined, // Prazan string za datum objave
+        archivedDate: undefined,
+        equipments: [],
+        tourCheckpoints: [],
+        travelTimes: []
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }
@@ -130,6 +151,9 @@ export class TourComponent implements OnInit {
 
   openEquipmentModal(): void {
     this.modalRef = this.modalService.open(this.equipmentModal);
+  }
+  openTravelTimeModal(): void {
+    this.modalRef = this.modalService.open(this.travelTimeModal);
   }
 
   onMapClick(event: { lat: number, lng: number }) {
@@ -152,6 +176,7 @@ export class TourComponent implements OnInit {
   }
 
   addCheckpoint(): void {
+    console.log('NAME:' + this.newCheckpoint.checkpointName);
     // Ako postoji ID, onda se radi o uređivanju postojećeg checkpointa
     if (this.newCheckpoint.id) {
       this.tourService.updateCheckpoint(this.newCheckpoint).subscribe(
@@ -163,7 +188,7 @@ export class TourComponent implements OnInit {
           }
           this.closeModal();
           //kada se izmeni checkpoint treba da izmeni mapu
-          if (this.selectedTour.tourCheckpointIds.length >= 2) {
+          if (this.selectedTour.tourCheckpoints.length >= 2) {
             this.getCheckpointsByTourId(this.selectedTour.id);
           }
         },
@@ -173,25 +198,16 @@ export class TourComponent implements OnInit {
       );
     } else {
       // Ako nema ID, onda se radi o dodavanju novog checkpointa
-      this.tourService.createCheckpoint(this.newCheckpoint).subscribe(
+
+      this.tourService.createCheckpoint(this.newCheckpoint, this.selectedTour.id).subscribe(
         (response) => {
           // Ažuriraj listu checkpointova ture
           this.selectedTourCheckpoints.push(response);
+          this.selectedTour.tourCheckpoints.push(response);
 
-          if (this.selectedTour) {
-            this.tourService.updateTourCheckpointIds(this.selectedTour.id, response.id).subscribe(
-              () => {
-                console.log('Checkpoint ID uspešno dodat u turu.');
-                this.selectedTour.tourCheckpointIds.push(response.id);
-                //Ako dodamo drugi checkpoint treba odmah da izracuna duzinu, kao i za svaki naredni
-                if (this.selectedTour.tourCheckpointIds.length >= 2)
-                  this.getCheckpointsByTourId(this.selectedTour.id);
-              },
-              (error) => {
-                console.error('Greška prilikom ažuriranja ID-eva checkpointa na serveru', error);
-              }
-            );
-          }
+          //Ako dodamo drugi checkpoint treba odmah da izracuna duzinu, kao i za svaki naredni
+          if (this.selectedTour.tourCheckpoints.length >= 2)
+            this.getCheckpointsByTourId(this.selectedTour.id);
           this.closeModal();
         },
         (error) => {
@@ -256,6 +272,33 @@ export class TourComponent implements OnInit {
     }
   }
 
+  archiveTour(tourId: number): void {
+    if (confirm('Da li ste sigurni da želite da arhivirate ovu turu? ')) {
+      this.tourService.archiveTour(tourId).subscribe(
+        (response) => {
+          this.loadTours();
+        },
+        (error) => {
+          console.error('Greska prilikom arhiviranja ture')
+        }
+      );
+    }
+  }
+
+  publishTour(tourId: number): void {
+    if (confirm('Da li ste sigurni da želite da aktivirate ovu turu? ')) {
+      this.tourService.publishTour(tourId).subscribe({
+        next: () => {
+          this.loadTours();
+          alert('Tour Published succesfully.');
+        },
+        error: (error) => {
+          alert(error.message); // Displays the error message from the backend
+        }
+      });
+    }
+  }
+
   getCheckpointsByTourId(tourId: number): void {
     this.selectedTourCheckpoints = [];
     this.tourService.getCheckpointIdsByTourId(tourId).subscribe(checkpointIds => {
@@ -282,7 +325,26 @@ export class TourComponent implements OnInit {
             lng: cp.longitude!
           }));
 
-        this.mapa.setRoute(routePoints);
+        this.mapa.setRoute(routePoints).then((distance) => {
+          console.log("Route length in km:", distance);
+
+          // Set the length on the selectedTour object
+          this.selectedTour.lengthInKm = Math.floor(distance);
+          console.log("Selected Tour length set to:", this.selectedTour.lengthInKm);
+
+          // Now call updateTour after setting the length
+          this.tourService.updateTour(this.selectedTour).subscribe(
+            response => {
+              console.log("Tour updated successfully:", response);
+            },
+            error => {
+              console.error("Error updating tour:", error);
+            }
+          );
+        }).catch((error) => {
+          console.error("Error calculating route length:", error);
+        });
+
       });
     });
   }
@@ -297,7 +359,12 @@ export class TourComponent implements OnInit {
       });
     });
   }
-
+  addTravelTime(): void {
+    console.log("ADDTRAVELTIME")
+    this.tourService.addNewTravelTime(this.newTravelTime, this.selectedTour.id).subscribe(
+      t => this.selectedTour.travelTimes.push(t)
+    );
+  }
   addSelectedEquipment(): void {
     if (this.selectedTour) {
       this.selectedEquipmentIds.forEach(equipmentId => {

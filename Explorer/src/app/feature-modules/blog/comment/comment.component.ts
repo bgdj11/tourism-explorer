@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BlogService } from '../blog.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Comment } from '../model/comment.model';
@@ -12,6 +12,9 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 })
 export class CommentComponent implements OnInit{
 
+  @Input() blogId: number;
+  @Input() isBlogReadOnly: boolean = false;
+
   comments: Comment[] = [];
   selectedComment: Comment;
   shouldEdit: boolean; 
@@ -22,7 +25,7 @@ export class CommentComponent implements OnInit{
   constructor(private service: BlogService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.getComments()
+    this.getComments();
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
@@ -35,7 +38,7 @@ export class CommentComponent implements OnInit{
   }
 
   getComments(): void {
-    this.service.getComments().subscribe({
+    this.service.getComments(this.blogId).subscribe({
       next: (result: PagedResults<Comment>) => {
         this.comments = result.results
       },
@@ -65,5 +68,6 @@ export class CommentComponent implements OnInit{
       }
     })
   }
+
 
 }
