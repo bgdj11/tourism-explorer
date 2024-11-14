@@ -17,4 +17,5 @@ export interface TourDTO {
   equipments?: EquipmentDTO[];
   tourCheckpoints?: CheckpointDTO[];
   travelTimes?: TravelTimeDTO[];
+  authorId: number;
 }

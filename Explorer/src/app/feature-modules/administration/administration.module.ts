@@ -8,6 +8,7 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { AllProblemsComponent } from './all-problems/all-problems.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { UserAccountFormComponent } from './user-account-form/user-account-form.component';
+import { TourProblemsComponent } from './tour-problems/tour-problems.component';
 
 
 
@@ -18,7 +19,8 @@ import { UserAccountFormComponent } from './user-account-form/user-account-form.
     AccountsComponent,
     AllProblemsComponent,
     UserAccountComponent,
-    UserAccountFormComponent
+    UserAccountFormComponent,
+    TourProblemsComponent
   ],
   imports: [
     CommonModule,
