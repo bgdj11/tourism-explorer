@@ -21,8 +21,28 @@ export class BlogComponent implements OnInit{
   user: User | undefined;
   isTourist : boolean = false;
   isAuthor : boolean = false;
+  allBlogs: Blog[] = []; // Čuva sve blogove
+
+
+  private visibleComments = new Set<number>();
+
 
   constructor(private service: BlogService,private authService: AuthService) { }
+
+  toggleComments(blogId: number | undefined): void {
+    if (blogId === undefined) return;
+    if (this.visibleComments.has(blogId)) {
+      this.visibleComments.delete(blogId);
+    } else {
+      this.visibleComments.add(blogId);
+    }
+  }
+
+  // Funkcija za proveru da li su komentari vidljivi za određeni blog
+  isCommentsVisible(blogId: number | undefined): boolean {
+    if (blogId === undefined) return false;
+    return this.visibleComments.has(blogId);
+  }
 
   ngOnInit(): void {
     this.getBlogs();
@@ -45,7 +65,8 @@ export class BlogComponent implements OnInit{
   getBlogs(): void {
     this.service.getBlogs().subscribe({
       next: (result : PagedResults<Blog>) => {
-        this.blogs = result.results;
+        this.allBlogs = result.results; // Svi blogovi se čuvaju u `allBlogs`
+        this.blogs = [...this.allBlogs]; // Kopira sve blogove u `blogs`
         
         Promise.all(this.blogs.map(blog => this.updateBlogStatus(blog)))
         .then(() => {
@@ -93,6 +114,7 @@ export class BlogComponent implements OnInit{
     this.shouldRenderBlogForm = true;
     this.shouldEdit = false;
   }
+  
 
   onEditClicked(blog: Blog): void {
     this.selectedBlog = blog;
@@ -212,6 +234,19 @@ hasUpvoted(blog: Blog): boolean {
 
 hasDownvoted(blog: Blog): boolean {
   return blog.votes.some(vote => vote.userId === this.user?.id && vote.mark === Markdown.Downvote);
+}
+
+filterActive():void {
+  
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 2); // Filtrira na osnovu `allBlogs`
+  this.blogs.forEach(blog => console.log(blog));
+  
+}
+
+filterFamous(): void {
+  this.blogs = this.allBlogs.filter(blog => blog.blogStatus === 3); // Filtrira na osnovu `allBlogs`
+    this.blogs.forEach(blog => console.log(blog));
+
 }
 
 updateBlogStatus(blog: Blog): void {

@@ -32,15 +32,22 @@ export class ToursListComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Tours list")
+    this.tourService.getTours(this.currentPage, 1000).subscribe(
+      (data) => {
+        this.tours = data.results.filter(t => t.status === 1);  // The array of tours for the current page
+        
+        this.totalCount = this.tours.length; });
     this.loadTours();  // Load the first page of tours on initialization
   }
 
   // Load the tours for the current page
   loadTours(): void {
+    
     this.tourService.getTours(this.currentPage, this.pageSize).subscribe(
       (data) => {
         this.tours = data.results.filter(t => t.status === 1);  // The array of tours for the current page
-        this.totalCount = this.tours.length;  // Total number of tours available
+        
+          // Total number of tours available
         
         // Now, fetch checkpoints for all the tours and update the tours with those checkpoints
         this.loadCheckpointsForAllTours();
@@ -116,6 +123,7 @@ export class ToursListComponent implements OnInit {
     }
   }
   get totalPages(): number {
+    console.log("Total count/pagesize: " + this.totalCount);
     return Math.ceil(this.totalCount / this.pageSize);
   }
 

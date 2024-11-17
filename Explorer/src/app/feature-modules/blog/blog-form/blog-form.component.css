@@ -1,10 +1,64 @@
-div {
-    width: 400px;
-    display:flex;
-    gap: 20px;
+.blog-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-container {
+    display: flex;
     flex-direction: column;
-}
-
-.mat-icon {
-    vertical-align: middle;
-}
+    gap: 20px;
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+  
+  .input-field {
+    width: 100%;
+  }
+  
+  .preview {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .image-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .uploaded-images {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .image-thumbnail {
+    max-width: 200px;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  button {
+    width: auto;
+    max-width: 200px;
+  }
+  
+  button + button {
+    margin-top: 10px;
+  }
+  
