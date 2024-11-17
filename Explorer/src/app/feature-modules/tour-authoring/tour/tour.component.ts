@@ -54,7 +54,7 @@ export class TourComponent implements OnInit {
     checkpointDescription: '',
     latitude: undefined,
     longitude: undefined,
-    image: ''
+    image: undefined,
   };
   newTravelTime: TravelTimeDTO = {
     time: 0,
@@ -89,6 +89,18 @@ export class TourComponent implements OnInit {
     this.getEquipmentByTourId(tour.id);
   }
 
+  onImageSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+  
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+  
+      // Directly store the Blob in the newCheckpoint.image property
+      this.newCheckpoint.image = file;
+  
+      console.log("Selected file as Blob:", file);
+    }
+  }
   ngOnInit(): void {
     this.loadTours();
     this.authService.user$.subscribe(user => {
@@ -149,7 +161,7 @@ export class TourComponent implements OnInit {
       this.newCheckpoint = { ...checkpoint };
     } else {
       // Resetujemo podatke za novi checkpoint
-      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
+      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: undefined };
     }
 
     // Otvaranje modalnog dijaloga

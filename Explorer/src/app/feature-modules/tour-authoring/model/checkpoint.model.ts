@@ -4,5 +4,5 @@ export interface CheckpointDTO {
   longitude?: number;
   checkpointName?: string;
   checkpointDescription?: string;
-  image?: string;
+  image?: File;
 }

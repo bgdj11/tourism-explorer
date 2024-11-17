@@ -141,7 +141,12 @@
         </div>
         <div class="form-group">
           <label for="image">Slika</label>
-          <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
+          <input
+            type="file"
+            class="form-control"
+            id="image"
+            (change)="onImageSelected($event)"
+          />
         </div>
         
       
