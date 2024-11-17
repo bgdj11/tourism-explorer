@@ -9,6 +9,7 @@ import { CheckpointDTO } from "../model/checkpoint.model"; // Import Router
 import { MapComponent } from "../../../shared/map/map.component";
 import { forkJoin } from 'rxjs';
 import { TransportType, TravelTimeDTO } from '../model/travelTime.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'xp-tour',
@@ -30,6 +31,7 @@ export class TourComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 10;
   modalTitle: string = '';
+  userId: number =0;
   tour: TourDTO = {
     id: 0,
     name: '',
@@ -43,7 +45,8 @@ export class TourComponent implements OnInit {
     archivedDate: undefined,
     equipments: [],
     tourCheckpoints: [],
-    travelTimes: []
+    travelTimes: [],
+    authorId: 0
   };
   newCheckpoint: CheckpointDTO = {
     id: 0,
@@ -73,7 +76,8 @@ export class TourComponent implements OnInit {
   constructor(
     private tourService: TourManagementService,
     private modalService: NgbModal,
-    private router: Router // Inject Router
+    private router: Router, // Inject Router
+    private authService: AuthService
   ) {
     this.loadAvailableEquipment();
   }
@@ -87,6 +91,8 @@ export class TourComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTours();
+    this.authService.user$.subscribe(user => {
+      this.userId = user.id;});
   }
 
   loadTours(): void {
@@ -131,7 +137,8 @@ export class TourComponent implements OnInit {
         archivedDate: undefined,
         equipments: [],
         tourCheckpoints: [],
-        travelTimes: []
+        travelTimes: [],
+        authorId: this.userId
       };
     this.modalRef = this.modalService.open(this.tourModal);
   }

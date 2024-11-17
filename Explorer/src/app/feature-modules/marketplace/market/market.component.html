@@ -1,0 +1,59 @@
+<div class="tour-container">
+    <div *ngFor="let tour of tours" class="tour-card">
+      <h3 class="tour-name">{{ tour.name }}</h3>
+      <p class="tour-description">{{ tour.description }}</p>
+      <p class="tour-length">
+        <strong>Length:</strong> {{ tour.lengthInKm || 'N/A' }} km
+      </p>
+      <p class="tour-checkpoint">
+        <strong>Start point:</strong> {{ checkpointNames[tour.id] || 'Nema CheckPoint' }}
+      </p>
+      
+      <div class="tour-card-footer">
+        <button class="report-button" (click)="toggleReportForm(tour.id)">Report a Problem</button>
+        <button class="buy-button">Add to cart</button>
+        
+      </div>
+  
+      <div *ngIf="reportFormVisible[tour.id]" class="report-form">
+        <div class="form-header">
+          <h4>Report a Problem</h4>
+          <button class="close-button" (click)="toggleReportForm(tour.id)" mat-icon-button>
+            <mat-icon>close</mat-icon></button>
+        </div>
+        <div class="form-body">
+          <label for="category">Category:</label>
+          <select id="category" [value]="reportData[tour.id].category" (change)="onCategoryChange($event, tour.id)">
+            <option value="" disabled>Select a category</option>
+            <option value="Safety">Safety</option>
+            <option value="Navigation">Navigation</option>
+            <option value="Accessibility">Accessibility</option>
+          </select>
+            
+          <label for="priority">Priority:</label>
+          <select id="priority" [value]="reportData[tour.id].priority" (change)="onPriorityChange($event, tour.id)">
+            <option value="" disabled>Select a priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+            
+          <label for="description">Description:</label>
+          <textarea id="description" [value]="reportData[tour.id].description" (input)="onDescriptionChange($event, tour.id)"></textarea>
+  
+          <button *ngIf="!reportSubmitted[tour.id]" class="submit-report-button" (click)="submitReport(tour.id)" 
+                  [disabled]="!reportData[tour.id].category || !reportData[tour.id].priority || !reportData[tour.id].description">
+            Report
+          </button>
+          <span *ngIf="reportSubmitted[tour.id]" color="primary" class="check-icon" mat-icon><mat-icon>check_circle</mat-icon></span>
+
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <div class="shopping-cart-button">
+    <button class="cart-button" color="primary" mat-icon-button>
+        <mat-icon>shopping_cart</mat-icon>
+    </button>
+  </div>

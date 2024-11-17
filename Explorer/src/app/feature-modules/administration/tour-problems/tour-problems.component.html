@@ -1,0 +1,55 @@
+<div class="tour-problems-container" *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="tourProblems.length > 0; else noProblems">
+      <div *ngFor="let problem of tourProblems" class="tour-problem-card">
+        <h3 class="problem-title">about Tour: {{ problem.tourName || 'Loading...' }}
+            <button
+        *ngIf="loggedInUserRole === 'tourist' && !problem.resolved"
+        class="resolve-button"
+        (click)="markAsResolved(problem)">
+        Mark as resolved
+      </button>
+      <span *ngIf="problem.resolved" class="resolved-text"><mat-icon>check_circle</mat-icon>Resolved</span>
+        </h3>
+        <p class="tourist-info" style="font-size: small; color: gray; font-style: italic;">
+            by tourist {{ problem.touristUsername || 'Loading...' }} on {{problem.reportedAt | date:'short' }}
+        </p>
+        <p class="problem-category"><strong>Category:</strong> {{ problem.category }}</p>
+        <p class="problem-priority"><strong>Priority:</strong> {{ problem.priority }}</p>
+        <p class="problem-description"><strong>Description:</strong> {{ problem.description }}</p>
+        <div *ngIf="problem.problemComments.length > 0">
+            <p class="comment-comment">Comments:</p>
+            <div *ngFor="let comment of problemComments" class="comment-section">             
+              <p class="comment-date" style=" color: gray;  font-style: italic;">{{ comment.commentedAt | date:'short' }}</p>
+              <p class="comment-meta" style=" color: gray; font-style: italic;">
+                {{ comment.userRole || 'Loading...' }}
+                {{ comment.username || 'Loading...' }}:
+              </p>
+               <p class="comment-text">{{ comment.text }}</p>
+               <p class="line">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+            </div>
+          </div>
+          <div *ngIf="!problem.resolved">
+            <div class="comment-section">
+                <textarea class="comment-section-text"
+                  id="comment"
+                  placeholder="Leave a comment..."
+                  [value]="commentText"
+                  (input)="onCommentChange($event)">
+                  </textarea>
+                <button class="comment-section-button"
+                  [disabled]="!commentText"
+                  (click)="submitComment(problem.id!)">
+                  Submit
+                </button>
+              </div>
+          </div>
+        </div>
+    </ng-container>
+    <ng-template #noProblems>
+      <p class="no-problems-message">No tour problem exists.</p>
+    </ng-template>
+  </div>
+  
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>

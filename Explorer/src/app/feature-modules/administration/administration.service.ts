@@ -7,6 +7,9 @@ import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Account } from './model/account.model';
 import { Problem } from './model/problem.model';
 import { UserAccount } from './model/user-account.model';
+import {TourProblem, ProblemComment} from "../marketplace/model/tour-problem";
+import {TourDTO} from "../tour-authoring/model/tour.model";
+import { User } from '../../infrastructure/auth/model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +50,28 @@ export class AdministrationService {
   }
   updateUserAccount(account: UserAccount): Observable<UserAccount> {
     return this.http.put<UserAccount>(environment.apiHost + 'EditAccount/' + account.id, account);
+  }
+
+  getTourProblems(userId: number): Observable<TourProblem[]>{
+    return this.http.get<TourProblem[]>(`${environment.apiHost}tourProblem/forUser/${userId}`);
+  }
+
+  getTour(tourId: number): Observable<TourDTO>{
+    return this.http.get<TourDTO>(`${environment.apiHost}tourProblem/tourForTourProblem/${tourId}`);
+  }
+
+  getUser(userId: number): Observable<User>{
+    return this.http.get<User>(`${environment.apiHost}tourProblem/findUser/${userId}`);
+  }
+
+  updateProblem(problem: TourProblem): Observable<TourProblem> {
+    return this.http.post<TourProblem>(environment.apiHost + 'tourProblem/update', problem);
+  }
+
+  addProblemComment(problemId: number, problemComment: ProblemComment): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourProblem/${problemId}/comments`, 
+      problemComment
+    );
   }
 
 }
