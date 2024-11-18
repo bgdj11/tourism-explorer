@@ -4,6 +4,7 @@ import { MarketplaceService } from '../marketplace.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { TourProblem } from "../model/tour-problem";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 
 @Component({
   selector: 'xp-market',
@@ -114,6 +115,33 @@ export class MarketComponent implements OnInit {
       }
     );
   }
+
+  addTourToCart(tour: TourDTO): void {
+  
+    const touristId = this.userId;  // Koristimo ID iz ulogovanog korisnika
+  
+    // Kreiramo objekat za stavku korpe
+    const shoppingCartItem: ShoppingCartItemDTO = {
+      tourId: tour.id,
+      tourName: tour.name,
+      tourPrice: tour.price ?? 0  
+    };
+  
+    // Pozivamo servis za dodavanje ture u korpu
+    this.service.addTourToCart(touristId, shoppingCartItem).subscribe({
+      next: () => {
+        alert('Tour added to cart successfully!');
+      },
+      error: (error) => {
+        // Ovde ispisujemo detalje greške ako dođe do nje
+        if (error.status && error.message) {
+          alert(`Error adding tour to cart. Status: ${error.status}, Message: ${error.message}`);
+        } else {
+          alert('Error adding tour to cart');
+        }
+      }
+    });
+    }
 
   onCategoryChange(event: Event, tourId: number): void {
     const value = (event.target as HTMLSelectElement).value;

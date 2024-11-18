@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { TourExecutionService } from '../tour.execution.service';
-import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart.model';
+import { MarketplaceService } from '../marketplace.service';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 
 @Component({
-  selector: 'xp-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.css']
+  selector: 'xp-shopping-cart',
+  templateUrl: './shopping-cart.component.html',
+  styleUrls: ['./shopping-cart.component.css']
 })
-export class CardComponent implements OnInit {
+export class ShoppingCartComponent implements OnInit {
   shoppingCart: ShoppingCartDTO | null = null;  // Shopping cart podaci
   touristId: number | null = null;  // ID korisnika (turista)
   user: User | undefined;  // Ulogovani korisnik
   errorMessage: string | null = null;  // Greška pri učitavanju
   removeErrorMessage: string | null = null;  // Greška pri brisanju ture
 
-  constructor(private tourExecutionService: TourExecutionService, private authService: AuthService) {}
+  constructor(private service: MarketplaceService, private authService: AuthService) {}
 
   ngOnInit(): void {
     // Učitavanje podataka o ulogovanom korisniku
@@ -36,7 +36,7 @@ export class CardComponent implements OnInit {
       return;
     }
 
-    this.tourExecutionService.getShoppingCart(this.touristId).subscribe({
+    this.service.getShoppingCart(this.touristId).subscribe({
       next: (cart) => {
         this.shoppingCart = cart;
         this.errorMessage = null;  // Resetujemo grešku ako je učitavanje uspešno
@@ -56,7 +56,7 @@ export class CardComponent implements OnInit {
       return;
     }
 
-    this.tourExecutionService.removeTourFromCart(this.touristId, tourId).subscribe({
+    this.service.removeTourFromCart(this.touristId, tourId).subscribe({
       next: () => {
         this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
         this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
@@ -79,7 +79,7 @@ export class CardComponent implements OnInit {
       return; 
     }
   
-    this.tourExecutionService.checkout(this.touristId).subscribe({
+    this.service.checkout(this.touristId).subscribe({
       next: () => {
         this.errorMessage = null;
         this.shoppingCart = null; 
@@ -92,3 +92,4 @@ export class CardComponent implements OnInit {
     });
   }
 }
+

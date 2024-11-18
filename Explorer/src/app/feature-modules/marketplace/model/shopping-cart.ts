@@ -12,4 +12,3 @@ export interface ShoppingCartDTO {
     tourName: string;
     tourPrice: number;
   }
-  
