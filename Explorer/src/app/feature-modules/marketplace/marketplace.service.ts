@@ -7,6 +7,7 @@ import { environment } from 'src/env/environment';
 import {TourDTO} from "../tour-authoring/model/tour.model";
 import {CheckpointDTO} from "../tour-authoring/model/checkpoint.model";
 import { TourProblem } from './model/tour-problem';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +57,21 @@ export class MarketplaceService {
   getTour(tourId: number): Observable<TourDTO>{
     return this.http.get<TourDTO>(`${environment.apiHost}tourProblem/tourForTourProblem/${tourId}`);
   }
+
+  addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
+    }
+
+  getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
+      return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
+      }
+
+  removeTourFromCart(touristId: number, tourId: number): Observable<any> {
+    return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
+    }
+  
+  checkout(touristId: number): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
+    }
 
 }

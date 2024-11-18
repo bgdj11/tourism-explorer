@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/env/environment';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
-import { Problem } from './model/problem.model';
 import { Equipment } from './model/my-equipment.model';
 import { TouristEquipment } from './model/tourist-equipment.model';
 import { TourDTO } from "../tour-authoring/model/tour.model";
@@ -10,7 +9,6 @@ import {TourExecution} from "./model/tour-execution.model";
 import {TourReview} from "./model/review.model";
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 import { TouristPositionDto } from 'src/app/feature-modules/tour-execution/model/tourist-position.model';
-import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart.model';
 import { SendMessageRequest } from './model/message-request';
 import { NotificationDto } from './model/notifications';
 import { UserDto } from './model/all-tourists';
@@ -25,17 +23,10 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    getProblem(): Observable<PagedResults<Problem>> {
-      return this.http.get<PagedResults<Problem>>(environment.apiHost + 'tourist/problems')
-    }
 
   getPosition(touristId: number): Observable<TouristPositionDto> {
     return this.http.get<TouristPositionDto>(`${environment.apiHost}tourist/position/${touristId}`);
   }
-
-    addProblem(problem: Problem): Observable<Problem> {
-        return this.http.post<Problem>(environment.apiHost + 'tourist/problems', problem);
-      }
 
     getEquipment(): Observable<PagedResults<Equipment>> {
         return this.http.get<PagedResults<Equipment>>(environment.apiHost + 'tourist/touristEquipment')
@@ -104,22 +95,6 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
     return this.http.get<PagedResults<TourDTO>>(environment.apiHost + 'tourist/pubishledtourss')
   }
 
-  getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
-  return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
-  }
-
-  addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
-  return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
-  }
-
-
-  removeTourFromCart(touristId: number, tourId: number): Observable<any> {
-  return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
-  }
-
-  checkout(touristId: number): Observable<any> {
-  return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
-  }
 
   getPurchasedTours(touristId: number): Observable<TourDTO[]> {
   return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
