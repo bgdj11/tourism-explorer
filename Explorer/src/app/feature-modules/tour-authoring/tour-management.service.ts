@@ -9,6 +9,7 @@ import {Equipment} from "../administration/model/equipment.model";
 import { ClubDTO } from './model/club.model';
 import { TransportType, TravelTimeDTO } from './model/travelTime.model';
 import { TourReviewDTO } from './model/tourReview.model';
+import { DailyAgendaDTO } from './model/DailyAgendaDTO.model';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +63,9 @@ export class TourManagementService {
     console.log(this.apiUrl + '/' + tourId + '/time');
     return this.http.post<TravelTimeDTO>(this.apiUrl + '/' + tourId + '/addNewTravelTime', newTravelTime);
   }
-
+  addNewDailyAgenda(newDailyAgenda: DailyAgendaDTO, tourId: number): Observable<DailyAgendaDTO> {
+    return this.http.post<DailyAgendaDTO>(this.apiUrl + '/' + tourId + '/addNewDailyAgenda', newDailyAgenda);
+  }
   createCheckpoint(checkpoint: CheckpointDTO, tourId: number): Observable<CheckpointDTO> {
     console.log(checkpoint)
     return this.http.post<CheckpointDTO>(`${this.apiUrl}/${tourId}/checkpoint`,checkpoint);
