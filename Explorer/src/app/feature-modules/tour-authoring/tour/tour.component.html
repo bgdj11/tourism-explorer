@@ -192,7 +192,65 @@
     </div>
    
   </ng-template>
-        
+  
+  <ng-template #dailyAgendaModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Dodaj Dnevnu Agendu</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #checkpointForm="ngForm" (ngSubmit)="addDailyAgenda()">
+        <div class="form-group">
+          <label for="day">Redni broj dana</label>
+          <input type="number" class="form-control" id="day" [(ngModel)]="newDailyAgenda.day" name="day" required>
+          
+          <label for="day">Polazna destinacija</label>
+          <input type="text" class="form-control" id="startDestination" [(ngModel)]="newDailyAgenda.startDestination" name="startDestination" required>
+          
+          <label for="day">Krajnja destinacija</label>
+          <input type="text" class="form-control" id="endDestination" [(ngModel)]="newDailyAgenda.endDestination" name="endDestination" required>
+          <label for="day">Opis</label>
+          <input type="text" class="form-control" id="description" [(ngModel)]="newDailyAgenda.description" name="description" required>
+          
+          <label for="betweenDestination">Destinacija izmedju</label>
+        <div class="mb-2">
+          <input
+            type="text"
+            class="form-control"
+            id="betweenDestination"
+            [(ngModel)]="newBetweenDestination"
+            name="newBetweenDestination"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            (click)="addBetweenDestination()"
+          >
+            Dodaj destinaciju
+          </button>
+        </div>
+
+        <!-- Display the added destinations -->
+        <ul>
+          <li *ngFor="let destination of newDailyAgenda.betweenDestinations; let i = index">
+            {{ destination }}
+            <button
+              type="button"
+              class="btn btn-danger btn-sm ms-2"
+              (click)="removeBetweenDestination(i)"
+            >
+              Ukloni
+            </button>
+          </li>
+        </ul>
+          </div>
+        <button type="submit" class="btn btn-primary">Sačuvaj</button>    
+      </form>
+    </div>
+   
+  </ng-template>
       
     
   
@@ -234,12 +292,21 @@
           <thead class="table-dark text-center">
           <tr>
             <th>#</th>
+<<<<<<< HEAD
             <th>Name</th>
             <th>Description</th>
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Actions</th>
             <button class="btn btn-primary"  (click)="openCheckpointModal()">
+=======
+            <th>Naziv</th>
+            <th>Opis</th>
+            <th>Latituda</th>
+            <th>Longituda</th>
+            <th>Akcije</th>
+            <button class="btn btn-primary" [disabled]="selectedTour.status == 1" (click)="openCheckpointModal()">
+>>>>>>> development
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>
@@ -283,7 +350,7 @@
             <td>{{ equipment.name }}</td>
             <td>{{ equipment.description }}</td>
             <td class="text-center">
-              <button class="btn btn-danger btn-sm mx-1" disabled="selectedTour.status != DRAFT" (click)="equipment.id ? removeEquipment(equipment.id) : null">
+              <button class="btn btn-danger btn-sm mx-1" [disabled]="selectedTour.status == 1" (click)="equipment.id ? removeEquipment(equipment.id) : null">
                 <fa-icon [icon]="faTrash"></fa-icon>
               </button>
             </td>
@@ -300,9 +367,15 @@
           <thead class="table-dark text-center">
           <tr>
             <th>#</th>
+<<<<<<< HEAD
             <th>Type</th>
             <th>Time in minutes</th>
             <button class="btn btn-primary" (click)="openTravelTimeModal()">
+=======
+            <th>Tip</th>
+            <th>Vreme u minutima</th>
+            <button class="btn btn-primary" [disabled]="selectedTour.status == 1" (click)="openTravelTimeModal()">
+>>>>>>> development
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>
@@ -322,6 +395,46 @@
         </table>
       </div>
     </div>
+
+    <div class="col-md-6">
+      <h4 class="text-center">Dnevne agende za {{ selectedTour.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+          <tr>
+            <th>#</th>
+            <th>Dan</th>
+            <th>Pocetna destinacija</th>
+            <th>Destinacije izmedju</th>
+            <th>Krajnja destinacija</th>
+            <th>Opis</th>
+            <button class="btn btn-primary" [disabled]="selectedTour.status == 1" (click)="openDailyAgendaModal()">
+              <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
+            </button>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dailyAgenda of selectedTour.dailyAgendas; let j = index">
+            <td>{{ j + 1 }}</td>
+            <td>{{ dailyAgenda.day }}</td>
+            <td>{{ dailyAgenda.startDestination }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let destination of dailyAgenda.betweenDestinations; let i = index">
+                  {{ destination }}
+                  
+                </li>
+              </ul>
+            </td>
+            <td>{{ dailyAgenda.endDestination }}</td>
+            <td>{{ dailyAgenda.description }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
   </div>
   <div>
     <xp-map #mapa></xp-map>

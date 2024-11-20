@@ -10,6 +10,7 @@ import { MapComponent } from "../../../shared/map/map.component";
 import { forkJoin } from 'rxjs';
 import { TransportType, TravelTimeDTO } from '../model/travelTime.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { DailyAgendaDTO } from '../model/DailyAgendaDTO.model';
 
 @Component({
   selector: 'xp-tour',
@@ -24,6 +25,7 @@ export class TourComponent implements OnInit {
   availableEquipment: Equipment[] = [];
   selectedEquipmentIds: number[] = [];
   selectedTourTravelTimes: TravelTimeDTO[] = [];
+  selectedTourDailyAgendas: DailyAgendaDTO[] = [];
   selectedTour: any = null;
   lengthInKm: number;
   totalCount: number = 0;
@@ -32,6 +34,7 @@ export class TourComponent implements OnInit {
   pageSize: number = 10;
   modalTitle: string = '';
   userId: number =0;
+  newBetweenDestination: string = '';
   tour: TourDTO = {
     id: 0,
     name: '',
@@ -60,6 +63,13 @@ export class TourComponent implements OnInit {
     time: 0,
     transportType: 0
   }
+  newDailyAgenda: DailyAgendaDTO = {
+    day: 0,
+    startDestination: '',
+    betweenDestinations: [] as string[],
+    endDestination: '',
+    description: ''
+  }
 
   @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
 
@@ -67,6 +77,7 @@ export class TourComponent implements OnInit {
   @ViewChild('checkpointModal') checkpointModal!: TemplateRef<any>;
   @ViewChild('equipmentModal') equipmentModal!: TemplateRef<any>;
   @ViewChild('travelTimeModal') travelTimeModal!: TemplateRef<any>;
+  @ViewChild('dailyAgendaModal') dailyAgendaModal!: TemplateRef<any>;
   @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
 
@@ -81,9 +92,21 @@ export class TourComponent implements OnInit {
   ) {
     this.loadAvailableEquipment();
   }
+  
+  addBetweenDestination() {
+    if (this.newBetweenDestination.trim()) {
+      this.newDailyAgenda.betweenDestinations.push(this.newBetweenDestination);
+      this.newBetweenDestination = ''; // Clear the input
+    }
+  }
 
+  // Method to remove a destination from the list
+  removeBetweenDestination(index: number) {
+    this.newDailyAgenda.betweenDestinations.splice(index, 1);
+  }
   selectTour(tour: any): void {
     this.selectedTour = tour;
+    console.log("Selected tour status: " + this.selectedTour.status)
     this.selectedTourCheckpoints = tour.tourCheckpoints;
     this.getCheckpointsByTourId(tour.id);
     this.getEquipmentByTourId(tour.id);
@@ -124,7 +147,7 @@ export class TourComponent implements OnInit {
     this.tourService.getTours(this.currentPage, this.pageSize).subscribe(
       (data) => {
         this.tours = data.results;
-
+        console.log(data)
         this.totalCount = data.totalCount;
       },
       (error) => {
@@ -187,7 +210,9 @@ export class TourComponent implements OnInit {
   openTravelTimeModal(): void {
     this.modalRef = this.modalService.open(this.travelTimeModal);
   }
-
+  openDailyAgendaModal(): void {
+    this.modalRef = this.modalService.open(this.dailyAgendaModal);
+  }
   onMapClick(event: { lat: number, lng: number }) {
     this.newCheckpoint.latitude = event.lat;
     this.newCheckpoint.longitude = event.lng;
@@ -395,6 +420,12 @@ export class TourComponent implements OnInit {
     console.log("ADDTRAVELTIME")
     this.tourService.addNewTravelTime(this.newTravelTime, this.selectedTour.id).subscribe(
       t => this.selectedTour.travelTimes.push(t)
+    );
+  }
+  addDailyAgenda(): void {
+    
+    this.tourService.addNewDailyAgenda(this.newDailyAgenda, this.selectedTour.id).subscribe(
+      t => this.selectedTour.dailyAgendas.push(t)
     );
   }
   addSelectedEquipment(): void {

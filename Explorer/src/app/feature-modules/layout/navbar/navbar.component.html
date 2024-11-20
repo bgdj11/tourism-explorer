@@ -13,8 +13,6 @@
     <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['accounts']">Manage accounts</button>
     <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['app-rating']">Ratings</button>
     <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['app-rating']">Rate Us</button>
-    <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['allproblems']">All problems</button>
-    <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['addproblem']">Add Problem</button>
     <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tour-preferences']">Set Tour Preferences</button>
     <button  mat-button class="custom-button" [routerLink] = "['blog']">Blogs</button>
     <button *ngIf="user" mat-button class="custom-button" [routerLink]="['editUserAccount']">Edit User Account</button>
@@ -22,8 +20,6 @@
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['location-simulator']">Location Simulator</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['allclubs']">Club</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['start-tour']">Start tour</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['publishedtours']">Tours published</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['card']">Card</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['mytours']">My tours</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['followers']">Followers</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['market']">Tours market</button>

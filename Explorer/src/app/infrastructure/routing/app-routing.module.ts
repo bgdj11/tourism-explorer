@@ -8,8 +8,6 @@ import { RegistrationComponent } from '../auth/registration/registration.compone
 import { AccountsComponent } from 'src/app/feature-modules/administration/accounts/accounts.component';
 import { CommentComponent } from 'src/app/feature-modules/blog/comment/comment.component';
 import { AppRatingComponent } from 'src/app/feature-modules/layout/app-rating/app-rating.component';
-import { AllProblemsComponent } from 'src/app/feature-modules/administration/all-problems/all-problems.component';
-import { AddProblemComponent } from 'src/app/feature-modules/tour-execution/add-problem/add-problem.component';
 import { TourPreferencesComponent } from 'src/app/feature-modules/marketplace/tour-preferences/tour-preferences.component';
 import { BlogComponent } from 'src/app/feature-modules/blog/blog/blog.component';
 import { TourComponent } from "../../feature-modules/tour-authoring/tour/tour.component";
@@ -20,12 +18,11 @@ import { LocationSimulatorComponent} from "../../shared/location-simulator/locat
 import { ClubsComponent } from 'src/app/feature-modules/tour-authoring/club/club.component';
 import { TourSearchComponent } from 'src/app/feature-modules/layout/tour-search/tour-search.component';
 import { StartTourComponent } from 'src/app/feature-modules/tour-execution/start-tour/start-tour.component';
-import { PublishedToursComponent } from 'src/app/feature-modules/tour-execution/published-tours/published-tours.component';
-import { CardComponent } from 'src/app/feature-modules/tour-execution/card/card.component';
 import { MyToursComponent } from 'src/app/feature-modules/tour-execution/my-tours/my-tours.component';
 import { FollowersComponent } from 'src/app/feature-modules/tour-execution/followers/followers.component';
 import { MarketComponent } from 'src/app/feature-modules/marketplace/market/market.component';
 import { TourProblemsComponent } from 'src/app/feature-modules/administration/tour-problems/tour-problems.component';
+import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
 
 
 const routes: Routes = [
@@ -37,8 +34,6 @@ const routes: Routes = [
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard],},
   {path: 'comment', component: CommentComponent},
   {path: 'app-rating', component: AppRatingComponent},
-  {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
-  {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
@@ -50,12 +45,11 @@ const routes: Routes = [
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
   {path: 'tour-search', component: TourSearchComponent},
   {path: 'start-tour', component: StartTourComponent, canActivate: [AuthGuard], },
-  {path: 'publishedtours', component: PublishedToursComponent, canActivate: [AuthGuard],},
-  {path: 'card', component: CardComponent, canActivate: [AuthGuard],},
   {path: 'mytours', component: MyToursComponent, canActivate: [AuthGuard],},
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
-  {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],}
+  {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
   
 ];
 
