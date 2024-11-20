@@ -1,7 +1,7 @@
 <div>
     <!-- Input za distancu i dugme -->
     <div>
-        <label for="distance">Unesite distancu (u kilometrima):</label>
+        <label for="distance">Input distance (in km):</label>
         <input type="number" id="distance" min="0" [(ngModel)]="distance">
     </div>
     <button (click)="search()">Pretraži</button>
@@ -16,7 +16,7 @@
 
     <!-- Prikaz rezultata pretrage -->
     <div *ngIf="tours.length > 0">
-        <h3>Pronađene ture:</h3>
+        <h3>Tours found:</h3>
         <ul>
           <li *ngFor="let tour of tours">
             <strong>{{ tour.name }}</strong>: {{ tour.description }}
@@ -24,7 +24,7 @@
         </ul>
       </div>
       <div *ngIf="tours.length === 0">
-        <p>Nema dostupnih tura za prikaz.</p>
+        <p>No tours found</p>
       </div>
    
 </div>
