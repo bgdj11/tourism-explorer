@@ -1,0 +1,127 @@
+<div class="encounter-page">
+  <!-- Forma za kreiranje ili uređivanje Encounter-a -->
+  <div class="form-container">
+    <h2>{{ isEditing ? 'Edit Encounter' : 'Create New Encounter' }}</h2>
+    <form [formGroup]="encounterForm" (ngSubmit)="onSubmit()" class="form">
+
+      <!-- Name Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter encounter name" />
+      </mat-form-field>
+
+      <!-- Description Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter encounter description"></textarea>
+      </mat-form-field>
+
+      <!-- Location Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" placeholder="Enter encounter location" />
+      </mat-form-field>
+
+      <!-- XP Field -->
+      <mat-form-field class="full-width">
+        <mat-label>XP</mat-label>
+        <input matInput type="number" formControlName="xp" placeholder="Enter XP value" />
+      </mat-form-field>
+
+      <!-- Status Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Status</mat-label>
+        <input matInput formControlName="status" placeholder="Enter encounter status" />
+      </mat-form-field>
+
+      <!-- Type Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Type</mat-label>
+        <input matInput formControlName="type" placeholder="Enter encounter type" />
+      </mat-form-field>
+
+      <!-- Published Date Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Published Date</mat-label>
+        <input matInput type="date" formControlName="publishedDate" />
+      </mat-form-field>
+
+      <!-- Archived Date Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Archived Date</mat-label>
+        <input matInput type="date" formControlName="archivedDate" />
+      </mat-form-field>
+
+      <!-- Author ID Field -->
+      <mat-form-field class="full-width">
+        <mat-label>Author ID</mat-label>
+        <input matInput type="number" formControlName="authorId" placeholder="Enter author ID" />
+      </mat-form-field>
+
+      <!-- Submit and Cancel Buttons -->
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isEditing ? 'Update Encounter' : 'Create Encounter' }}
+        </button>
+        <button mat-button color="warn" type="button" (click)="resetForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabela za prikaz Encounter-a -->
+  <div class="list-container">
+    <h2>Encounter List</h2>
+    <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>Location</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.location }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="xp">
+        <th mat-header-cell *matHeaderCellDef>XP</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.xp }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.type }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="authorId">
+        <th mat-header-cell *matHeaderCellDef>Author ID</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.authorId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let encounter">
+          <button mat-icon-button (click)="editEncounter(encounter)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteEncounter(encounter.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="publishEncounter(encounter.id)">
+            <mat-icon>publish</mat-icon>
+          </button>
+          <button mat-icon-button (click)="archiveEncounter(encounter.id)">
+            <mat-icon>archive</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['name', 'description', 'location', 'xp', 'type', 'authorId', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'description', 'location', 'xp', 'type', 'authorId', 'actions']"></tr>
+    </table>
+  </div>
+</div>

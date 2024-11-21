@@ -1,0 +1,24 @@
+export interface Encounter {
+  id?: number; // ID može biti opcionalan jer možda ne postoji prilikom kreiranja novog Encounter-a
+  name: string; // Naziv Encounter-a
+  description: string; // Opis Encounter-a
+  location: string; // Lokacija Encounter-a
+  xp: number; // XP vrednost (Experience Points)
+  status: EncounterStatus; // Status Encounter-a
+  type: EncounterType; // Tip Encounter-a
+  publishedDate?: Date; // Datum objavljivanja (opcionalno jer možda nije objavljen odmah)
+  archivedDate?: Date; // Datum arhiviranja (opcionalno)
+  authorId: number; // ID autora koji je kreirao Encounter
+}
+
+export enum EncounterStatus {
+  DRAFT = 'DRAFT', // Encounter je u fazi draft-a
+  ACTIVE = 'ACTIVE', // Encounter je aktivan
+  ARCHIVED = 'ARCHIVED', // Encounter je arhiviran
+}
+
+export enum EncounterType {
+  SOCIAL = 'SOCIAL', // Društveni Encounter
+  LOCATION = 'LOCATION', // Lokacijski Encounter
+  MISC = 'MISC', // Ostalo
+}

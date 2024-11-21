@@ -24,6 +24,7 @@ import { PublishedToursComponent } from 'src/app/feature-modules/tour-execution/
 import { CardComponent } from 'src/app/feature-modules/tour-execution/card/card.component';
 import { MyToursComponent } from 'src/app/feature-modules/tour-execution/my-tours/my-tours.component';
 import { FollowersComponent } from 'src/app/feature-modules/tour-execution/followers/followers.component';
+import {EncounterComponent} from "../../feature-modules/administration/encounter/encounter.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -34,6 +35,7 @@ const routes: Routes = [
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard],},
   {path: 'comment', component: CommentComponent},
   {path: 'app-rating', component: AppRatingComponent},
+  {path: 'encounter', component: EncounterComponent},
   {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
   {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },

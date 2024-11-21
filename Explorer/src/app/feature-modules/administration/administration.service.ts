@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Equipment } from './model/equipment.model';
 import { environment } from 'src/env/environment';
@@ -7,6 +7,7 @@ import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Account } from './model/account.model';
 import { Problem } from './model/problem.model';
 import { UserAccount } from './model/user-account.model';
+import {Encounter} from "./model/encounter.model";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class AdministrationService {
 
   getAccounts(): Observable<PagedResults<Account>> {
     return this.http.get<PagedResults<Account>>(environment.apiHost + 'administration/accounts')
-  } 
+  }
   updateAccount(account: Account): Observable<Account> {
     return this.http.put<Account>(environment.apiHost + 'administration/accounts/' + account.id, account);
   }
@@ -48,5 +49,46 @@ export class AdministrationService {
   updateUserAccount(account: UserAccount): Observable<UserAccount> {
     return this.http.put<UserAccount>(environment.apiHost + 'EditAccount/' + account.id, account);
   }
+  getEncounters(page: number, pageSize: number): Observable<PagedResults<Encounter>> {
+    return this.http.get<PagedResults<Encounter>>(
+      `${environment.apiHost}administrator/encounters?page=${page}&pageSize=${pageSize}`,
+    );
+  }
 
+  getEncounterById(id: number): Observable<Encounter> {
+    return this.http.get<Encounter>(`${environment.apiHost}administrator/encounters/${id}`);
+  }
+
+  createEncounter(encounter: Encounter): Observable<Encounter> {
+    const url = `${environment.apiHost}administrator/encounters`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    console.log('Payload being sent to server:', encounter);
+
+    return this.http.post<Encounter>(url, encounter, { headers });
+  }
+
+  getToken(): string {
+    // Pretpostavka: Token je sačuvan u localStorage nakon prijave
+    return localStorage.getItem('authToken') || '';
+  }
+
+  updateEncounter(encounter: Encounter): Observable<Encounter> {
+    return this.http.put<Encounter>(`${environment.apiHost}administrator/encounters/${encounter.id}`, encounter);
+  }
+
+  deleteEncounter(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiHost}administrator/encounters/${id}`);
+  }
+
+  publishEncounter(id: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/publish`, {});
+  }
+
+  archiveEncounter(id: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/archive`, {});
+  }
 }
