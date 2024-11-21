@@ -1,29 +1,28 @@
 <mat-toolbar class="navbar">
     <div class="navbar-left">
        <img src="../../../../assets/bck.jpg" alt="logo" class="logo" />
-       <button mat-button class="custom-button" routerLink="/home">Home</button>
+       <button mat-button class="custom-button" routerLink="/home">{{ 'NAVBAR.HOME' | translate }}</button>
     </div>
 
-<div class="navbar-right">
-    <button *ngIf="user && user.username === ''" mat-button class="custom-button" [routerLink]="['login']">Login</button>
-    <button *ngIf="user && user.username !== ''" mat-button class="custom-button" (click)="onLogout()">Logout</button>
-    <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['author']">Manage tours</button>
-    <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['author-object']">Manage objects</button>
-    <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['equipment']">Manage equipment</button>
-    <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['accounts']">Manage accounts</button>
-    <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['app-rating']">Ratings</button>
-    <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['app-rating']">Rate Us</button>
-    <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tour-preferences']">Set Tour Preferences</button>
-    <button  mat-button class="custom-button" [routerLink] = "['blog']">Blogs</button>
-    <button *ngIf="user" mat-button class="custom-button" [routerLink]="['editUserAccount']">Edit User Account</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['my-equipment']">My equipment</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['location-simulator']">Location Simulator</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['allclubs']">Club</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['start-tour']">Start tour</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['mytours']">My tours</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['followers']">Followers</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['market']">Tours market</button>
-    <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">Tour problems</button>
-            
- </div>
+    <div class="navbar-right">
+        <button *ngIf="user && user.username === ''" mat-button class="custom-button" [routerLink]="['login']">{{ 'NAVBAR.LOGIN' | translate }}</button>
+        <button *ngIf="user && user.username !== ''" mat-button class="custom-button" (click)="onLogout()">{{ 'NAVBAR.LOGOUT' | translate }}</button>
+        <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['author']">{{ 'NAVBAR.MANAGE_TOURS' | translate }}</button>
+        <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['author-object']">{{ 'NAVBAR.MANAGE_OBJECTS' | translate }}</button>
+        <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['equipment']">{{ 'NAVBAR.MANAGE_EQUIPMENT' | translate }}</button>
+        <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['accounts']">{{ 'NAVBAR.MANAGE_ACCOUNTS' | translate }}</button>
+        <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['app-rating']">{{ 'NAVBAR.RATINGS' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['app-rating']">{{ 'NAVBAR.RATE_US' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tour-preferences']">{{ 'NAVBAR.SET_PREFERENCES' | translate }}</button>
+        <button mat-button class="custom-button" [routerLink]="['blog']">{{ 'NAVBAR.BLOGS' | translate }}</button>
+        <button *ngIf="user" mat-button class="custom-button" [routerLink]="['editUserAccount']">{{ 'NAVBAR.EDIT_ACCOUNT' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['my-equipment']">{{ 'NAVBAR.MY_EQUIPMENT' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['location-simulator']">{{ 'NAVBAR.LOCATION_SIMULATOR' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['allclubs']">{{ 'NAVBAR.CLUB' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['start-tour']">{{ 'NAVBAR.START_TOUR' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['mytours']">{{ 'NAVBAR.MY_TOURS' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['followers']">{{ 'NAVBAR.FOLLOWERS' | translate }}</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['market']">{{ 'NAVBAR.TOURS_MARKET' | translate }}</button>
+        <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">{{ 'NAVBAR.TOUR_PROBLEMS' | translate }}</button>
+    </div>
 </mat-toolbar>

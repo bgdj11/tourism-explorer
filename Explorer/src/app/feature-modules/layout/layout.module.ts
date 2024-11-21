@@ -10,6 +10,7 @@ import { ToursListComponent } from './tours-list/tours-list.component';
 import { TourSearchComponent } from './tour-search/tour-search.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     RouterModule,
     ReactiveFormsModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    TranslateModule
   ],
   exports: [
     NavbarComponent,

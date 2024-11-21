@@ -1,42 +1,40 @@
 <div id="rating" *ngIf="user && user.role === 'administrator'">
-<p>Ratings</p>
-<div id="ratings-details">
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Ocena</th>
-                    <th>Komentar</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let ar of appRatings">
-                    <td>{{ar.rating}}</td>
-                    <td>{{ar.comment}}</td>
-                </tr>                
-            </tbody>
-        </table>
-    </div>    
+    <p>{{ 'RATINGS.TITLE' | translate }}</p>
+    <div id="ratings-details">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ 'RATINGS.HEADER_RATING' | translate }}</th>
+                        <th>{{ 'RATINGS.HEADER_COMMENT' | translate }}</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ar of appRatings">
+                        <td>{{ar.rating}}</td>
+                        <td>{{ar.comment}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <div *ngIf="user && user.role === 'tourist'">
     <form [formGroup]="ratingForm">
         <div>
             <mat-form-field>
-                <mat-label>Rating</mat-label>
-                <input matInput formControlName="rating" type="number"/>
+                <mat-label>{{ 'RATINGS.LABEL_RATING' | translate }}</mat-label>
+                <input matInput formControlName="rating" type="number" />
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Comment</mat-label>
-              <textarea matInput
-              cdkTextareaAutosize
-              cdkAutosizeMinRows="1"
-              formControlName="comment"
-              cdkAutosizeMaxRows="5"></textarea>
+                <mat-label>{{ 'RATINGS.LABEL_COMMENT' | translate }}</mat-label>
+                <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="1" formControlName="comment"
+                    cdkAutosizeMaxRows="5"></textarea>
             </mat-form-field>
-        <button color="primary" type="submit" (click)="addRating()" [disabled]="ratingForm.invalid" mat-raised-button>Done</button>
+            <button color="primary" type="submit" (click)="addRating()" [disabled]="ratingForm.invalid"
+                mat-raised-button> {{ 'RATINGS.BUTTON_DONE' | translate }}</button>
         </div>
-    </form> 
+    </form>
 </div>
