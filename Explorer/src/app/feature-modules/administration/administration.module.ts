@@ -5,7 +5,6 @@ import { EquipmentComponent } from './equipment/equipment.component';
 import { MaterialModule } from 'src/app/infrastructure/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AccountsComponent } from './accounts/accounts.component';
-import { AllProblemsComponent } from './all-problems/all-problems.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { UserAccountFormComponent } from './user-account-form/user-account-form.component';
 import { EncounterComponent } from './encounter/encounter.component';
@@ -16,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { TourProblemsComponent } from './tour-problems/tour-problems.component';
 
 
 
@@ -24,10 +24,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     EquipmentFormComponent,
     EquipmentComponent,
     AccountsComponent,
-    AllProblemsComponent,
     UserAccountComponent,
     UserAccountFormComponent,
     EncounterComponent
+    TourProblemsComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +44,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   exports: [
     EquipmentComponent,
     EquipmentFormComponent,
-    AllProblemsComponent
-  ]
+]
 })
 export class AdministrationModule { }

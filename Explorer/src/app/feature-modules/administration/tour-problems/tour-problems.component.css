@@ -1,0 +1,94 @@
+.tour-problems-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    align-items: center;
+  }
+  
+  .tour-problem-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    width: 800px;
+    align-items: center;
+  }
+  
+  h3 {
+    font-size: 1.2em;
+    margin-bottom: 0px;
+  }
+  
+  .problem-category, .problem-priority, .problem-description {
+    margin: 5px 0;
+  }
+  
+  .no-problems-message {
+    color: #555;
+    text-align: center;
+  }
+
+  .resolve-button {
+    background-color: #5cb85c;
+    color: white;
+    margin-left: 450px ;
+    font-size: small;
+    height: max-content;
+  }
+
+  .resolved-text {
+    /* Styles for the resolved text */
+    color: #5cb85c;
+    font-size: medium;
+    margin-left: 450px ;
+  }
+
+  .comment-section-text{
+    margin-top: 28px;
+    width: 700px;
+    margin-left: 32px;
+  }
+
+  .comment-section-button{
+    margin-left: 650px;
+    color: white;
+    background-color: #3f51b5;
+  }
+
+  .comment-section-button :hover{
+    background-color: #007bff;
+  }
+
+  .comment-section-button:disabled {
+    background-color: #b0bec5;  /* Gray background for disabled state */
+    color: #90a4ae;  /* Lighter text color */
+    cursor: not-allowed;  /* Change cursor to indicate it's disabled */
+  }
+
+  .comment-comment{
+    margin-top: 30px;
+    margin-left: 70px;
+    color: darkgray;
+    
+  }
+
+  .comment-date{
+    margin-left: 600px;
+    margin-bottom: 0px;
+    font-size: 90%;
+
+  }
+
+  .comment-meta{
+    margin-left: 20px;
+    margin-top: 0px;
+  }
+
+  .comment-text{
+    margin-left: 90px;
+  }
+
+  .line{
+    margin-left: 20px;
+  }

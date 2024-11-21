@@ -1,9 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { TourPreferences } from './model/tour-preferences.model';
 import { environment } from 'src/env/environment';
+import {TourDTO} from "../tour-authoring/model/tour.model";
+import {CheckpointDTO} from "../tour-authoring/model/checkpoint.model";
+import { TourProblem } from './model/tour-problem';
+import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +31,47 @@ export class MarketplaceService {
   updateTourPreferences(tourPreferences: TourPreferences): Observable<TourPreferences> {
     return this.http.put<TourPreferences>(environment.apiHost + 'tourist/tourPreferences/' + tourPreferences.id, tourPreferences);
   }
+
+  private apiUrl = environment.apiHost + 'author/tours';
+  getTours(page: number, pageSize: number): Observable<PagedResults<TourDTO>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<PagedResults<TourDTO>>(this.apiUrl, { params });
+  }
+
+  getCheckpointIdsByTourId(tourId: number): Observable<number[]> {
+    return this.http.get<number[]>(`${this.apiUrl}/${tourId}/checkpoint-ids`);
+  }
+
+  private checkpointUrl = environment.apiHost + 'author/tours/tour-checkpoints';
+  getCheckpointById(checkpointId: number): Observable<CheckpointDTO> {
+    return this.http.get<CheckpointDTO>(`${this.checkpointUrl}/${checkpointId}`);
+  }
+
+  addProblem(problem: TourProblem): Observable<TourProblem> {
+    return this.http.post<TourProblem>(environment.apiHost + 'tourProblem', problem);
+  }
+
+  getTour(tourId: number): Observable<TourDTO>{
+    return this.http.get<TourDTO>(`${environment.apiHost}tourProblem/tourForTourProblem/${tourId}`);
+  }
+
+  addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
+    }
+
+  getShoppingCart(touristId: number): Observable<ShoppingCartDTO> {
+      return this.http.get<ShoppingCartDTO>(`${environment.apiHost}tourist/shoppingcart/${touristId}`);
+      }
+
+  removeTourFromCart(touristId: number, tourId: number): Observable<any> {
+    return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove/${touristId}/${tourId}`);
+    }
+  
+  checkout(touristId: number): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
+    }
+
 }
