@@ -197,6 +197,67 @@ export class ClubsComponent implements OnInit {
     console.log(`Adding tourist to club with ID: ${clubId}`);
     // Dodajte logiku za dodavanje turiste ovde
   }
+
+  isTouristInClub(touristId: number, clubId: number): boolean {
+    const requestsForClub = this.membershipRequests.filter(
+      (req) => req.clubId === clubId && req.status === MemRequestStatus.Accepted
+    );
+    return requestsForClub.some((req) => req.senderId === touristId);
+  }
+  
+  removeTouristFromClub(senderId: number,clubId: number): void {
+    this.service.getClubById(clubId).subscribe(
+      (club) => {
+        const ownerId = club.ownerId; // Pristupite ownerId kluba
+        
+        this.service.getMembershipRequests(clubId).subscribe(
+          (response: { results: MembershipRequest[]; totalCount: number }) => {
+            const requests = response.results; // Izdvojite niz zahteva
+            
+            const matchedRequest = requests.find(
+              (request) =>
+                request.ownerId === ownerId && // Poređenje sa vlasnikom kluba
+                request.senderId === senderId &&
+                request.status === 2 // Proverite da li status odgovara
+            );
+    
+            if (matchedRequest) {
+              console.log('Matched Request:', matchedRequest);
+              this.service.deleteMembershipRequest(clubId, matchedRequest.id || 0).subscribe({
+                next:(_) => {
+                  console.log('Matched Request:', matchedRequest.id);
+                },
+                error: (err) => {
+                  console.log('Error occured: ', err); 
+                }
+              }
+              );
+              alert('Membership request removed successfully.');
+              console.log('Membership request removed successfully.');
+              this.loadMembershipRequestsForClub(clubId);
+            } else {
+              console.warn('No matching request found.');
+            }
+          },
+          (error) => {
+            console.error('Error fetching membership requests:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error fetching club by ID:', error);
+      }
+    );    
+  }    
+  
+  isTouristPendingOrAcceptedOrRejected(touristId: number, clubId: number): boolean {
+    const requestsForClub = this.membershipRequests.filter(req => req.clubId === clubId);
+    return requestsForClub.some(req => 
+      req.senderId === touristId && 
+      (req.status === MemRequestStatus.Pending || req.status === MemRequestStatus.Accepted || req.status === MemRequestStatus.Rejected)
+    );
+  }
+  
   
 
 

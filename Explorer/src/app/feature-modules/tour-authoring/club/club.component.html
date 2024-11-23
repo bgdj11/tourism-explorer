@@ -82,6 +82,12 @@
                         <td>{{ tourist.username }}</td>
                         <td>
                           <button 
+                            *ngIf="isTouristInClub(tourist.id, cl.id || 0)" 
+                            (click)="removeTouristFromClub(tourist.id, cl.id || 0)">
+                            Remove
+                          </button>
+                          <button 
+                            *ngIf="!isTouristPendingOrAcceptedOrRejected(tourist.id, cl.id || 0)" 
                             (click)="inviteTourist(tourist, cl.id || 0)" 
                             [disabled]="cl.id && touristInvitedForClub[cl.id]?.[tourist.id]">
                             Invite

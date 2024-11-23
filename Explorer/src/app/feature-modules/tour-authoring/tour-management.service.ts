@@ -156,6 +156,11 @@ export class TourManagementService {
   isTouristInvited(clubId: number, touristId: number): Observable<boolean> {
     return this.http.get<boolean>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/is-tourist-invited/${touristId}`);
   }
+
+  deleteMembershipRequest(clubId: number, id: number): Observable<void> {
+    return this.http.delete<void>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${id}`);
+  }
+  
   
   
 
