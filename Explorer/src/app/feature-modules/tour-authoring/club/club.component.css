@@ -16,6 +16,13 @@ body {
     font-size: 16px; 
 }
 
+button:disabled {
+    background-color: #ccc; /* svetlo siva pozadina */
+    color: #777; /* svetlo siva boja teksta */
+    cursor: not-allowed; /* pokazivač miša kao "ne dozvoljeno" */
+  }
+  
+
 #clubs {
     max-width: 800px; 
     margin: 20px auto; 
