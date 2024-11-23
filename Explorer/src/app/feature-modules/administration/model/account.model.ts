@@ -4,4 +4,5 @@ export interface Account {
     email: string;
     role: number;
     isActive: boolean;
+    isInvited?: boolean; // Novo polje
 }
