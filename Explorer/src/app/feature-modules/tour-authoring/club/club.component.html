@@ -13,16 +13,22 @@
               </tr>
           </thead>
           <tbody>
-              <tr *ngFor="let cl of clubs">
-                  <td>{{cl.name}}</td>
-                  <td>{{cl.description}}</td>
-                  <td>{{cl.photo}}</td>
-                  <td>
-                      <button (click)="cl.id !== undefined ? deleteClub(cl.id) : null">Delete</button>
-                      <button *ngIf="cl.ownerId === currentUserId" (click)="editClub(cl)">Edit</button>
-                  </td>
-              </tr>               
-          </tbody>
+            <tr *ngFor="let cl of clubs">
+                <td>{{cl.name}}</td>
+                <td>{{cl.description}}</td>
+                <td>
+                    <img [src]="cl.photo" alt="{{cl.name}}" width="100" height="100">
+                </td>
+                <td>
+                  <button *ngIf="!isClubOwner(cl) && !isMember(cl)" (click)="joinClub(cl)">Join</button>
+                </td>
+                <td>
+                    <button (click)="cl.id !== undefined ? deleteClub(cl.id) : null">Delete</button>
+                    <button *ngIf="cl.ownerId === currentUserId" (click)="editClub(cl)">Edit</button>
+                </td>
+            </tr>               
+        </tbody>
+        
       </table>
   </div>
 

@@ -82,6 +82,17 @@ export class ClubsComponent implements OnInit {
     }
   }
   
+  isClubOwner(club: ClubDTO): boolean {
+    return club.ownerId === this.currentUserId;
+  }
+
+  isMember(club: ClubDTO): boolean{
+    return false;
+  }
+
+  joinClub(club: ClubDTO): void{
+    return;
+  }
 
 
 }
