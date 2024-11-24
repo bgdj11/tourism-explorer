@@ -36,8 +36,8 @@ const routes: Routes = [
   {path: 'comment', component: CommentComponent},
   {path: 'app-rating', component: AppRatingComponent},
   {path: 'encounter', component: EncounterComponent},
-  {path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
-  {path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
+  //{path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
+  //{path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
@@ -54,7 +54,7 @@ const routes: Routes = [
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
-  
+
 ];
 
 @NgModule({
