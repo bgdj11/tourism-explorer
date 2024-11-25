@@ -18,6 +18,7 @@ import { TourComponent } from './feature-modules/tour-authoring/tour/tour.compon
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import { ReactiveFormsModule } from '@angular/forms';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     FontAwesomeModule,
     HttpClientModule,
     BlogModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule
   ],
   providers: [
     {

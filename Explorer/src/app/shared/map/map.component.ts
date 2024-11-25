@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import {MapService} from "./map.service";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import {EncounterDTO} from "../model/encounter";
 
 @Component({
   selector: 'xp-map',
@@ -25,6 +26,7 @@ export class MapComponent implements AfterViewInit {
   @Input() uniqueId: string = '';
   @Input() isModalMap: boolean = false;
   @Input() initialCheckpoint: {lat?: number, lng?: number} = {};
+  @Input() encounters: EncounterDTO[] = [];
 
   @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
   @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
@@ -42,7 +44,7 @@ export class MapComponent implements AfterViewInit {
     this.map = L.map(mapElementId, {
       center: this.initialCenter,
       zoom: this.initialZoom,
-      
+
     });
 
     const tiles = L.tileLayer(
@@ -76,6 +78,15 @@ export class MapComponent implements AfterViewInit {
     }
 
   }
+
+  public showEncountersOnMap(encounters: EncounterDTO[]): void {
+    if (this.map) {
+      this.setEncounterMarkers(encounters);
+    } else {
+      console.error("Map is not initialized yet.");
+    }
+  }
+
 //string adresa, grad
   search(address: string): void {
     this.mapService.search(address).subscribe({
@@ -138,13 +149,38 @@ export class MapComponent implements AfterViewInit {
       });
     });
 }
-  
+
   private touristIcon = L.icon({
     iconUrl: 'assets/tourist.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
   });
+
+  public setEncounterMarkers(encounters: EncounterDTO[]): void {
+    const encounterIcon = L.icon({
+      iconUrl: 'assets/encounter.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+
+    this.markers.forEach(marker => this.map.removeLayer(marker));
+    this.markers = [];
+
+    encounters.forEach(encounter => {
+      const { location, name, description } = encounter;
+      if (location) {
+        const marker = L.marker([location.latitude, location.longitude], { icon: encounterIcon })
+          .addTo(this.map)
+          .bindPopup(`<strong>${name}</strong><br>${description}`);
+        this.markers.push(marker);
+      }
+    });
+  }
+
+
+
 
   public setUserLocation(lat: number, lng: number): void {
     if (this.userMarker) {
@@ -165,13 +201,13 @@ export class MapComponent implements AfterViewInit {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
-      
+
       if (this.user && this.user.role === 'tourist') {
         // Ako je korisnik turista, koristi `setUserLocation` za jedinstveni marker
         this.setUserLocation(lat, lng);
         this.locationSelected.emit({ lat, lng });
       } else {
-        
+
         // Ako je mapa u modalnom dijalogu, koristi jedinstveni marker
         if (this.isModalMap) {
           this.setUniqueMarker(lat, lng);

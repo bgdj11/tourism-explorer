@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/env/environment';
+import {Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Equipment } from './model/my-equipment.model';
 import { TouristEquipment } from './model/tourist-equipment.model';
@@ -14,7 +15,7 @@ import { NotificationDto } from './model/notifications';
 import { UserDto } from './model/all-tourists';
 import { FollowersDto } from './model/followers';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -106,12 +107,12 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 
   getFollowedTourists(page: number, pageSize: number): Observable<PagedResults<FollowersDto>> {
-  const currentUserId = this.authService.user$.value.id; 
+  const currentUserId = this.authService.user$.value.id;
   return this.http.get<PagedResults<FollowersDto>>(`${environment.apiHost}followers/follower/${currentUserId}?page=${page}&pageSize=${pageSize}`);
   }
 
   getNonFollowedTourists(): Observable<UserDto[]> {
-  const currentUserId = this.authService.user$.value.id; 
+  const currentUserId = this.authService.user$.value.id;
   return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/nonFollowed/${currentUserId}`);
   }
 
@@ -125,7 +126,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 
   getFollowedUsers(): Observable<UserDto[]> {
-  const currentUserId = this.authService.user$.value.id; 
+  const currentUserId = this.authService.user$.value.id;
   return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists/followed/${currentUserId}`);
   }
 
@@ -145,7 +146,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
   return this.http.delete<void>(`${environment.apiHost}followers/${id}`).pipe(
   catchError(error => {
       console.error('Greška prilikom uklanjanja pratioca:', error);
-      return of(void 0); 
+      return of(void 0);
   })
   );
   }
