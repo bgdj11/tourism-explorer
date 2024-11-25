@@ -127,4 +127,9 @@
       <button type="button" (click)="editingClub = null">Cancel</button>
     </form>
   </div>
+
+  <div id="available-clubs">
+    <h3>Available Clubs to Join </h3>
+    <xp-available-clubs [clubs]="availableClubs" [membershipRequests]="membershipRequests" ></xp-available-clubs>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ClubDTO } from '../model/club.model';
 import { TourManagementService } from '../tour-management.service'; 
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
@@ -13,6 +13,7 @@ import { MembershipRequest, MemRequestStatus } from '../model/membershipRequest.
 export class ClubsComponent implements OnInit {
 
   clubs: ClubDTO[] = [];
+  availableClubs: ClubDTO[] = []; //proslijedice se child komponenti
   currentUserId : number = 0;
   newClub: ClubDTO = { name: '', description: '', photo: '', ownerId: 0 };
   editingClub: ClubDTO | null = null;
@@ -24,6 +25,7 @@ export class ClubsComponent implements OnInit {
   filteredTourists: any[] = []; // Filtrirani turisti
   touristInvitedForClub: { [clubId: number]: { [touristId: number]: boolean } } = {};
 
+  requestAction = new EventEmitter<MembershipRequest>();
   
   constructor(private service: TourManagementService,
     private authService : AuthService,
@@ -137,9 +139,14 @@ export class ClubsComponent implements OnInit {
   getClubs(page: number, pageSize: number): void {
     this.service.getClubs(page, pageSize).subscribe(response => {
       this.clubs = response.results;
+      this.filterAvailableClubs(this.clubs);
       this.loadAllMembershipRequests();
 
     });
+  }
+
+  filterAvailableClubs(clubs: ClubDTO[]): void{
+    this.availableClubs = clubs.filter(club => club.ownerId !== this.currentUserId);
   }
 
     addClub(){
@@ -265,5 +272,11 @@ export class ClubsComponent implements OnInit {
       (req.status === MemRequestStatus.Pending || req.status === MemRequestStatus.Accepted || req.status === MemRequestStatus.Rejected)
     );
   }
+
+  
+
+
+  
+
 
 }  
