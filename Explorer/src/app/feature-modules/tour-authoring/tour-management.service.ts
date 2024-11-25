@@ -9,6 +9,7 @@ import {Equipment} from "../administration/model/equipment.model";
 import { ClubDTO } from './model/club.model';
 import { TransportType, TravelTimeDTO } from './model/travelTime.model';
 import { TourReviewDTO } from './model/tourReview.model';
+import { MembershipRequest } from './model/membershipRequest.model';
 import { DailyAgendaDTO } from './model/DailyAgendaDTO.model';
 
 @Injectable({
@@ -143,4 +144,28 @@ export class TourManagementService {
   deleteClub(id: number): Observable<void> {
     return this.http.delete<void>(`${this.clubUrl}/${id}`);
   }
+
+
+  createMembershipRequest(clubId: number, request: MembershipRequest): Observable<MembershipRequest> {
+    return this.http.post<MembershipRequest>(environment.apiHost + `tourist/club/${clubId}/memshiprequest`, request);
+  }
+
+  getMembershipRequests(clubId: number): Observable<{ results: MembershipRequest[], totalCount: number }> {
+    return this.http.get<{ results: MembershipRequest[], totalCount: number }>(
+      environment.apiHost + `tourist/club/${clubId}/memshiprequest`
+    );
+  }
+  
+  isTouristInvited(clubId: number, touristId: number): Observable<boolean> {
+    return this.http.get<boolean>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/is-tourist-invited/${touristId}`);
+  }
+
+  deleteMembershipRequest(clubId: number, id: number): Observable<void> {
+    return this.http.delete<void>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${id}`);
+  }
+  
+  
+  
+
+
 }

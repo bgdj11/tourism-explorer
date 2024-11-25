@@ -7,13 +7,15 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import { ObjectComponent } from './object/object.component';
 import {SharedModule} from "../../shared/shared.module";
 import { ClubsComponent } from './club/club.component';
+import { AvailableClubsComponent } from './available-clubs/available-clubs.component';
 
 
 @NgModule({
   declarations: [
     TourComponent,
     ObjectComponent,
-    ClubsComponent
+    ClubsComponent,
+    AvailableClubsComponent
 
   ],
   imports: [

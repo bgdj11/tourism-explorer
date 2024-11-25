@@ -1,0 +1,10 @@
+<div *ngFor="let club of clubs" class="club-card">
+    <h4>{{ club.name }}</h4>
+    <p>{{ club.description }}</p>
+    <img [src]="club.photo" alt="{{ club.name }}" width="100" height="100">
+    
+    <!-- Turisti mogu slati, prihvatiti ili odbiti zahteve -->
+    <button *ngIf="club.id && !hasRequestSent(club.id)" (click)="sendJoinRequest(club.id)">Send Request</button>
+    <button *ngIf="club.id && hasRequestSent(club.id)" (click)="withdrawMembershipRequest(club.id)">Withdraw Request</button>
+</div>
+  
