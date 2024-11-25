@@ -1,0 +1,51 @@
+.club-card {
+    background-color: #fff; /* Bela pozadina kartice */
+    border-radius: 8px; /* Zaobljeni uglovi */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Blaga senka */
+    padding: 20px; /* Razmak unutar kartice */
+    margin-bottom: 15px; /* Razmak između kartica */
+    transition: transform 0.3s ease; /* Efekat pri prelazu miša */
+}
+
+.club-card:hover {
+    transform: scale(1.05); /* Povećanje kartice na hover */
+}
+
+.club-card h4 {
+    color: var(--primary-color); /* Koristi boju primarnog dugmeta */
+    font-size: 1.2rem; /* Veličina naslova */
+    font-weight: 600; /* Debeli font */
+    margin-bottom: 10px; /* Razmak ispod naslova */
+}
+
+.club-card p {
+    font-size: 1rem; /* Veličina opisa */
+    color: var(--text-color); /* Koristi boju teksta iz root komponente */
+    margin-bottom: 15px; /* Razmak između opisa i dugmadi */
+}
+
+.club-card img {
+    border-radius: 8px; /* Zaobljeni uglovi slike */
+    margin-bottom: 10px; /* Razmak ispod slike */
+}
+
+.club-card button {
+    background-color: var(--primary-color); /* Pozadina dugmeta */
+    color: white; /* Tekst u beloj boji */
+    border: none; /* Bez ivica */
+    padding: 10px 15px; /* Razmak unutar dugmeta */
+    border-radius: 5px; /* Zaobljeni uglovi dugmeta */
+    cursor: pointer; /* Pokazivač miša kao dugme */
+    transition: background-color 0.3s ease; /* Efekat pri prelazu boje dugmeta */
+    font-size: 1rem; /* Veličina fonta */
+}
+
+.club-card button:hover {
+    background-color: #008768; /* Tamnija boja pri hover efektu */
+}
+
+.club-card button:disabled {
+    background-color: #ccc; /* Siva boja za onemogućeno dugme */
+    color: #777; /* Svetlo siva boja teksta */
+    cursor: not-allowed; /* Pokazivač kao "ne dozvoljeno" */
+}

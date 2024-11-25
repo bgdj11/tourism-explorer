@@ -5,7 +5,7 @@
     <button (click)="toggleAddClubForm()">+ Add Club</button>
   </div>
   <hr>
-
+  
   <!-- Forma za dodavanje novog kluba -->
   <div *ngIf="showAddClubForm" class="form-section">
     <h3>Add New Club</h3>
@@ -26,12 +26,12 @@
       </label>
       <br>
       <button type="submit">Add Club</button>
-      <button type="button" (click)="toggleAddClubForm()">Cancel</button>
-    </form>
-  </div>
+    </form>   
+    <button type="button" (click)="toggleAddClubForm()">Cancel</button>
+  
+</div>
 
   <hr>
-
   <!-- Lista klubova sa tabelom -->
   <div id="clubs-details">
     <div>
@@ -60,7 +60,6 @@
                 <button *ngIf="cl.ownerId === currentUserId && cl.id !== undefined" (click)="toggleTouristList(cl.id!)">Add Tourist</button>
               </td>
             </tr>
-
             <!-- Tourist list row (conditionally displayed) -->
             <tr *ngIf="showTouristListForClubId === cl?.id">
               <td colspan="4">
@@ -92,7 +91,6 @@
                             [disabled]="cl.id && touristInvitedForClub[cl.id]?.[tourist.id]">
                             Invite
                           </button>
-
                         </td>
                       </tr>
                     </tbody>
@@ -105,9 +103,7 @@
       </table>
     </div>
   </div>
-
   <hr>
-
   <!-- Forma za uređivanje kluba -->
   <div *ngIf="editingClub" class="form-section">
     <h3>Edit Club</h3>
@@ -130,5 +126,10 @@
       <button type="submit">Update Club</button>
       <button type="button" (click)="editingClub = null">Cancel</button>
     </form>
+  </div>
+
+  <div id="available-clubs">
+    <h3>Available Clubs to Join </h3>
+    <xp-available-clubs [clubs]="availableClubs" [membershipRequests]="membershipRequests" ></xp-available-clubs>
   </div>
 </div>
