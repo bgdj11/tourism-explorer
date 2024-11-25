@@ -68,7 +68,7 @@ export class AdministrationService {
 
     console.log('Payload being sent to server:', encounter);
 
-    return this.http.post<Encounter>(url, encounter, { headers });
+    return this.http.post<Encounter>(url, encounter);
   }
 
   getToken(): string {

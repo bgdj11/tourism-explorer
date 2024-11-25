@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AdministrationService } from '../administration.service';
-import { Encounter } from "../model/encounter.model";
+import {Encounter, EncounterStatus, EncounterType} from "../model/encounter.model";
+import {AuthService} from "../../../infrastructure/auth/auth.service";
+import {BehaviorSubject} from "rxjs";
+import {User} from "../../../infrastructure/auth/model/user.model";
 
 @Component({
   selector: 'app-encounter',
@@ -14,10 +17,22 @@ export class EncounterComponent implements OnInit {
   encounter: Encounter;
   isEditing = false;
   editingId: number | null = null;
+  user: BehaviorSubject<User>;
+  statuses = [
+    { label: 'Draft', value: EncounterStatus.DRAFT },
+    { label: 'Active', value: EncounterStatus.ACTIVE },
+    { label: 'Archived', value: EncounterStatus.ARCHIVED }
+  ];
 
-  constructor(private fb: FormBuilder, private adminService: AdministrationService) {}
+  types = [
+    { label: 'Social', value: EncounterType.SOCIAL },
+    { label: 'Location', value: EncounterType.LOCATION },
+    { label: 'Miscellaneous', value: EncounterType.MISC }
+  ];
+  constructor(private fb: FormBuilder, private adminService: AdministrationService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.user = this.authService.user$;
     this.initializeForm();
     this.loadEncounters();
   }
@@ -28,11 +43,11 @@ export class EncounterComponent implements OnInit {
       description: [''],
       location: [''],
       xp: [0],
-      status: ['DRAFT'], // Postavi podrazumevani status
-      type: ['SOCIAL'], // Postavi podrazumevani tip
+      status: [EncounterStatus.DRAFT], // Podrazumevani status
+      type: [EncounterType.SOCIAL], // Podrazumevani tip
       publishedDate: [null],
       archivedDate: [null],
-      authorId: [1], // Pretpostavimo da je ID autora "1"
+      authorId: [this.user.value.id],
     });
   }
 
@@ -47,7 +62,7 @@ export class EncounterComponent implements OnInit {
   onSubmit(): void {
     const payload = {
       ...this.encounterForm.value,
-      id: this.isEditing ? this.editingId : null, // Dodaj ID samo kod uređivanja
+      id: this.isEditing ? this.editingId : undefined, // Dodaj ID samo kod uređivanja
       publishedDate: this.encounterForm.value.publishedDate || null,
       archivedDate: this.encounterForm.value.archivedDate || null,
     };
@@ -89,7 +104,10 @@ export class EncounterComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.encounterForm.reset();
+    this.encounterForm.reset({
+      status: EncounterStatus.DRAFT,
+      type: EncounterType.SOCIAL,
+    });
     this.isEditing = false;
     this.editingId = null;
   }

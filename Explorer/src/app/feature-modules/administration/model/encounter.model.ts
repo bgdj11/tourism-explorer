@@ -4,8 +4,8 @@ export interface Encounter {
   description: string; // Opis Encounter-a
   location: string; // Lokacija Encounter-a
   xp: number; // XP vrednost (Experience Points)
-  status: EncounterStatus; // Status Encounter-a
-  type: EncounterType; // Tip Encounter-a
+  status: string; // Status Encounter-a
+  type: string; // Tip Encounter-a
   publishedDate?: Date; // Datum objavljivanja (opcionalno jer možda nije objavljen odmah)
   archivedDate?: Date; // Datum arhiviranja (opcionalno)
   authorId: number; // ID autora koji je kreirao Encounter
