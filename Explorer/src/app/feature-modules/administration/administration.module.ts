@@ -26,7 +26,7 @@ import { TourProblemsComponent } from './tour-problems/tour-problems.component';
     AccountsComponent,
     UserAccountComponent,
     UserAccountFormComponent,
-    EncounterComponent
+    EncounterComponent,
     TourProblemsComponent
   ],
   imports: [
