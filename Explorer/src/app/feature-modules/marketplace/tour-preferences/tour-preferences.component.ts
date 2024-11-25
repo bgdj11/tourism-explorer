@@ -2,6 +2,8 @@ import { Component,OnInit} from '@angular/core';
 import { TourPreferences } from '../model/tour-preferences.model';
 import { MarketplaceService } from '../marketplace.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
+import { TourDTO } from '../../tour-authoring/model/tour.model';
+import { TourManagementService } from '../../tour-authoring/tour-management.service';
 
 @Component({
   selector: 'xp-tour-preferences',
@@ -15,11 +17,29 @@ export class TourPreferencesComponent implements OnInit {
   selectedTourPreferences: TourPreferences;
   shouldRenderTourPreferencesForm: boolean = false;
   shouldEdit: boolean = false;
+  tours: TourDTO[] = [];
 
-  constructor(private service: MarketplaceService) { }
+  constructor(private service: MarketplaceService, private tourService: TourManagementService) { }
 
   ngOnInit(): void {
     this.getTourPreferences();
+    this.loadTours();
+  }
+
+  loadTours(): void {
+    this.tourService.getTours(1, 1000).subscribe(
+      (data) => {
+        this.tours = data.results.filter((t) => t.status === 1);
+      },
+      (error) => {
+        console.error('Error fetching tours:', error);
+      }
+    );
+  }
+
+  getTourImage(tour: TourDTO): string {
+    const firstCheckpoint = tour.tourCheckpoints?.[0];
+    return firstCheckpoint?.image || '../../../../assets/bck.jpg';
   }
 
   deleteTourPreferences(id: number): void {
