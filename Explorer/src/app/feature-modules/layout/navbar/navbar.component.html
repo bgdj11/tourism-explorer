@@ -24,9 +24,10 @@
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['location-simulator']">Location Simulator</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['allclubs']">Club</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['start-tour']">Start tour</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['publishedtours']">Tours published</button>
-    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['card']">Card</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['mytours']">My tours</button>
     <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['followers']">Followers</button>
+    <button *ngIf="user && user.role === 'tourist'"mat-button class="custom-button" [routerLink]="['market']">Tours market</button>
+    <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">Tour problems</button>
+            
  </div>
 </mat-toolbar>

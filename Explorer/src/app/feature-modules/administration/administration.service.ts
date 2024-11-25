@@ -5,9 +5,11 @@ import { environment } from 'src/env/environment';
 import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { Account } from './model/account.model';
-import { Problem } from './model/problem.model';
 import { UserAccount } from './model/user-account.model';
 import {Encounter} from "./model/encounter.model";
+import {TourProblem, ProblemComment} from "../marketplace/model/tour-problem";
+import {TourDTO} from "../tour-authoring/model/tour.model";
+import { User } from '../../infrastructure/auth/model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +20,6 @@ export class AdministrationService {
 
   getEquipment(): Observable<PagedResults<Equipment>> {
     return this.http.get<PagedResults<Equipment>>(environment.apiHost + 'administration/equipment')
-  }
-
-  getProblem(): Observable<PagedResults<Problem>> {
-    return this.http.get<PagedResults<Problem>>(environment.apiHost + 'administration/problems')
   }
 
   deleteEquipment(id: number): Observable<Equipment> {
@@ -91,4 +89,26 @@ export class AdministrationService {
   archiveEncounter(id: number): Observable<void> {
     return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/archive`, {});
   }
+  getTourProblems(userId: number): Observable<TourProblem[]>{
+    return this.http.get<TourProblem[]>(`${environment.apiHost}tourProblem/forUser/${userId}`);
+  }
+
+  getTour(tourId: number): Observable<TourDTO>{
+    return this.http.get<TourDTO>(`${environment.apiHost}tourProblem/tourForTourProblem/${tourId}`);
+  }
+
+  getUser(userId: number): Observable<User>{
+    return this.http.get<User>(`${environment.apiHost}tourProblem/findUser/${userId}`);
+  }
+
+  updateProblem(problem: TourProblem): Observable<TourProblem> {
+    return this.http.post<TourProblem>(environment.apiHost + 'tourProblem/update', problem);
+  }
+
+  addProblemComment(problemId: number, problemComment: ProblemComment): Observable<any> {
+    return this.http.post<any>(`${environment.apiHost}tourProblem/${problemId}/comments`, 
+      problemComment
+    );
+  }
+
 }
