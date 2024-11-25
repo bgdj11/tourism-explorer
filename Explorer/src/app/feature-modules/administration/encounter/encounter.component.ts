@@ -41,7 +41,10 @@ export class EncounterComponent implements OnInit {
     this.encounterForm = this.fb.group({
       name: [''],
       description: [''],
-      location: [''],
+      location: this.fb.group({ // Dodavanje grupe za lokaciju
+        latitude: [0], // Podrazumevana vrednost za latitude
+        longitude: [0], // Podrazumevana vrednost za longitude
+      }),
       xp: [0],
       status: [EncounterStatus.DRAFT], // Podrazumevani status
       type: [EncounterType.SOCIAL], // Podrazumevani tip
@@ -60,14 +63,20 @@ export class EncounterComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const formValue = this.encounterForm.value;
+
     const payload = {
-      ...this.encounterForm.value,
-      id: this.isEditing ? this.editingId : undefined, // Dodaj ID samo kod uređivanja
-      publishedDate: this.encounterForm.value.publishedDate || null,
-      archivedDate: this.encounterForm.value.archivedDate || null,
+      ...formValue,
+      id: this.isEditing ? this.editingId : undefined, // Izbaci ID kod kreiranja novog objekta
+      publishedDate: formValue.publishedDate || null,
+      archivedDate: formValue.archivedDate || null,
+      location: {
+        latitude: formValue.location.latitude,
+        longitude: formValue.location.longitude,
+      },
     };
 
-    console.log('Submitting:', payload);
+    console.log('Submitting payload:', payload);
 
     if (this.isEditing) {
       this.adminService.updateEncounter(payload).subscribe(() => {

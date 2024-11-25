@@ -2,7 +2,10 @@ export interface Encounter {
   id?: number; // ID može biti opcionalan jer možda ne postoji prilikom kreiranja novog Encounter-a
   name: string; // Naziv Encounter-a
   description: string; // Opis Encounter-a
-  location: string; // Lokacija Encounter-a
+  location: {
+    latitude: number;
+    longitude: number;
+  };
   xp: number; // XP vrednost (Experience Points)
   status: string; // Status Encounter-a
   type: string; // Tip Encounter-a
