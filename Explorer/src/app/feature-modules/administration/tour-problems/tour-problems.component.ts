@@ -84,6 +84,15 @@ export class TourProblemsComponent implements OnInit {
     );
   }
 
+  isOlderThanFiveDays(problem: TourProblem): boolean {
+    const reportedDate = new Date(problem.reportedAt); 
+    const currentDate = new Date(); 
+    const differenceInDays = Math.floor(
+      (currentDate.getTime() - reportedDate.getTime()) / (1000 * 3600 * 24)
+    );
+    return !problem.resolved && differenceInDays > 5; 
+  }
+
   markAsResolved(problem: TourProblem): void {
     problem.resolved = true;
     this.service.updateProblem(problem).subscribe(
