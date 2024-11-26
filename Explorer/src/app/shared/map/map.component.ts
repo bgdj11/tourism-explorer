@@ -4,6 +4,7 @@ import {MapService} from "./map.service";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import {EncounterDTO} from "../model/encounter";
+import { Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'xp-map',
@@ -33,7 +34,7 @@ export class MapComponent implements AfterViewInit {
 
   @Output() locationSelected = new EventEmitter<{ lat: number, lng: number }>();
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private renderer: Renderer2) {
   }
 
   private initMap(): void {
@@ -172,14 +173,68 @@ export class MapComponent implements AfterViewInit {
       const { location, name, description } = encounter;
       if (location) {
         const marker = L.marker([location.latitude, location.longitude], { icon: encounterIcon })
-          .addTo(this.map)
-          .bindPopup(`<strong>${name}</strong><br>${description}`);
+          .addTo(this.map);
+          marker.bindPopup('<div id="popup-content"></div>');
+          //marker.bindPopup(`<strong>${name}</strong><br>${description}<br>`);
+
+          marker.on('popupopen', () => {
+            const popupContent = document.getElementById('popup-content');
+            if (popupContent) {
+              // Add name and description
+              popupContent.innerHTML = `
+                <strong>${name}</strong><br>
+                ${description}
+              `;
+    
+              // Add the button conditionally
+              if (encounter.type === 'MISC') {
+                const button = this.renderer.createElement('button');
+                button.className = 'add-me-btn';
+                button.textContent = 'Set Completed';
+                if(this.currentLocation){
+                  
+                  if (this.calculateDistance({lat: encounter.location.latitude, lng: encounter.location.longitude},this.currentLocation)*1000 > 100) {
+                    this.renderer.setAttribute(button, 'disabled', 'true');
+                    console.log("Distance: " + this.calculateDistance({lat: encounter.location.latitude, lng: encounter.location.longitude},this.currentLocation)*1000)
+                
+                  }
+                }
+                this.renderer.listen(button, 'click', () => this.setCompleted(encounter)); // Add click listener
+                this.renderer.appendChild(popupContent, button);
+              }
+            }
+          });
+
         this.markers.push(marker);
       }
     });
   }
-
-
+  setCompleted(encounter: any) {
+    console.log(`Set Completed clicked for:`, encounter);
+    // Your logic here
+  }
+  private calculateDistance(location1: { lat: number; lng: number }, location2: { lat: number; lng: number }): number {
+    const R = 6371; // Earth's radius in kilometers
+    const lat1 = location1.lat;
+    const lng1 = location1.lng;
+    const lat2 = location2.lat;
+    const lng2 = location2.lng;
+  
+    const dLat = this.degreesToRadians(lat2 - lat1);
+    const dLng = this.degreesToRadians(lng2 - lng1);
+  
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.degreesToRadians(lat1)) * Math.cos(this.degreesToRadians(lat2)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in kilometers
+  }
+  
+  private degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
 
 
   public setUserLocation(lat: number, lng: number): void {
