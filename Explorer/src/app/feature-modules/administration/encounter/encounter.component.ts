@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AdministrationService } from '../administration.service';
-import {Encounter, EncounterStatus, EncounterType} from "../model/encounter.model";
-import {AuthService} from "../../../infrastructure/auth/auth.service";
-import {BehaviorSubject} from "rxjs";
-import {User} from "../../../infrastructure/auth/model/user.model";
+import { Encounter, EncounterStatus, EncounterType } from "../model/encounter.model";
+import { AuthService } from "../../../infrastructure/auth/auth.service";
+import { BehaviorSubject } from "rxjs";
+import { User } from "../../../infrastructure/auth/model/user.model";
 
 @Component({
   selector: 'app-encounter',
@@ -29,28 +29,36 @@ export class EncounterComponent implements OnInit {
     { label: 'Location', value: EncounterType.LOCATION },
     { label: 'Miscellaneous', value: EncounterType.MISC }
   ];
+  showImageForHiddenEncounter = false;  // Flag to show the additional input for 'Location' type
+  image: string | null = null; 
   constructor(private fb: FormBuilder, private adminService: AdministrationService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.user = this.authService.user$;
     this.initializeForm();
     this.loadEncounters();
+
+    // Watch for changes in the 'type' form control
+    this.encounterForm.get('type')?.valueChanges.subscribe((type: EncounterType) => {
+      this.showImageForHiddenEncounter = type === EncounterType.LOCATION; // Show location input if 'Location' type is selected
+    });
   }
 
   initializeForm(): void {
     this.encounterForm = this.fb.group({
       name: [''],
       description: [''],
-      location: this.fb.group({ // Dodavanje grupe za lokaciju
-        latitude: [0], // Podrazumevana vrednost za latitude
-        longitude: [0], // Podrazumevana vrednost za longitude
+      location: this.fb.group({
+        latitude: [0],
+        longitude: [0],
       }),
       xp: [0],
-      status: [EncounterStatus.DRAFT], // Podrazumevani status
-      type: [EncounterType.SOCIAL], // Podrazumevani tip
+      status: [EncounterStatus.DRAFT],
+      type: [EncounterType.SOCIAL],
       publishedDate: [null],
       archivedDate: [null],
       authorId: [this.user.value.id],
+      additionalLocationInfo: ['']  // Add the additional field for Location type
     });
   }
 
@@ -67,7 +75,7 @@ export class EncounterComponent implements OnInit {
 
     const payload = {
       ...formValue,
-      id: this.isEditing ? this.editingId : undefined, // Izbaci ID kod kreiranja novog objekta
+      id: this.isEditing ? this.editingId : undefined,
       publishedDate: formValue.publishedDate || null,
       archivedDate: formValue.archivedDate || null,
       location: {
@@ -75,7 +83,11 @@ export class EncounterComponent implements OnInit {
         longitude: formValue.location.longitude,
       },
     };
-
+    // Samo za hidden location encounter
+    if (this.image) 
+      payload.image = this.image; 
+    else
+      payload.image = null;
     console.log('Submitting payload:', payload);
 
     if (this.isEditing) {
@@ -92,7 +104,6 @@ export class EncounterComponent implements OnInit {
       });
     }
   }
-
 
   editEncounter(encounter: Encounter): void {
     this.isEditing = true;
@@ -119,5 +130,24 @@ export class EncounterComponent implements OnInit {
     });
     this.isEditing = false;
     this.editingId = null;
+  }
+
+
+  onImageSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+  
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        const base64Image = reader.result as string;
+  
+        this.image = base64Image;
+      };
+  
+
+      reader.readAsDataURL(file);
+    }
   }
 }
