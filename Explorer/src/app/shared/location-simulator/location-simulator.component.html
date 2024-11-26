@@ -1,12 +1,12 @@
 <div class="simulator-container">
-  <h3>Simulator Lokacije</h3>
+  <h3>Location simulator</h3>
   <div class="map-container">
     <xp-map [user]="user" (locationSelected)="onLocationSelected($event)" ></xp-map>
   </div>
   <div *ngIf="currentLocation" class="location-display">
-    <p>Trenutna lokacija:</p>
-    <p>Geografska širina: {{ currentLocation.lat }}</p>
-    <p>Geografska dužina: {{ currentLocation.lng }}</p>
+    <p>Current location:</p>
+    <p>Latitude: {{ currentLocation.lat }}</p>
+    <p>Longitude: {{ currentLocation.lng }}</p>
   </div>
   <button (click)="showEncounters()">Prikaz Encountera</button>
 </div>

@@ -1,30 +1,33 @@
 <div>
-    <!-- Input za distancu i dugme -->
-    <div>
-        <label for="distance">Unesite distancu (u kilometrima):</label>
-        <input type="number" id="distance" min="0" [(ngModel)]="distance">
-    </div>
-    <button (click)="search()">Pretraži</button>
+  <!-- Input for distance and button -->
+  <div>
+    <label for="distance">{{ 'SEARCH.INPUT_LABEL' | translate }}</label>
+    <input 
+      type="number" 
+      id="distance" 
+      min="0" 
+      [(ngModel)]="distance" />
+  </div>
+  <button (click)="search()">{{ 'SEARCH.BUTTON_SEARCH' | translate }}</button>
 
-    <!-- Mapa -->
-    <xp-map
-        class="map-container"
-        [initialCenter]="[45.2396, 19.8227]"
-        [initialZoom]="13"
-        (mapClick)="onMapClick($event)">
-    </xp-map>
+  <!-- Map -->
+  <xp-map
+    class="map-container"
+    [initialCenter]="[45.2396, 19.8227]"
+    [initialZoom]="13"
+    (mapClick)="onMapClick($event)">
+  </xp-map>
 
-    <!-- Prikaz rezultata pretrage -->
-    <div *ngIf="tours.length > 0">
-        <h3>Pronađene ture:</h3>
-        <ul>
-          <li *ngFor="let tour of tours">
-            <strong>{{ tour.name }}</strong>: {{ tour.description }}
-          </li>
-        </ul>
-      </div>
-      <div *ngIf="tours.length === 0">
-        <p>Nema dostupnih tura za prikaz.</p>
-      </div>
-   
+  <!-- Display search results -->
+  <div *ngIf="tours.length > 0">
+    <h3>{{ 'SEARCH.RESULTS_FOUND' | translate }}</h3>
+    <ul>
+      <li *ngFor="let tour of tours">
+        <strong>{{ tour.name }}</strong>: {{ tour.description }}
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="tours.length === 0">
+    <p>{{ 'SEARCH.NO_RESULTS' | translate }}</p>
+  </div>
 </div>

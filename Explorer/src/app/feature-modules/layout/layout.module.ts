@@ -10,9 +10,9 @@ import { ToursListComponent } from './tours-list/tours-list.component';
 import { TourSearchComponent } from './tour-search/tour-search.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ToursViewComponent } from './tours-view/tours-view.component';
-
 
 @NgModule({
   declarations: [
@@ -31,6 +31,7 @@ import { ToursViewComponent } from './tours-view/tours-view.component';
     ReactiveFormsModule,
     SharedModule,
     FormsModule,
+    TranslateModule
   ],
   exports: [
     NavbarComponent,

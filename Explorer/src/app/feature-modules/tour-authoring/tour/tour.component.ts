@@ -57,7 +57,7 @@ export class TourComponent implements OnInit {
     checkpointDescription: '',
     latitude: undefined,
     longitude: undefined,
-    image: ''
+    image: undefined,
   };
   newTravelTime: TravelTimeDTO = {
     time: 0,
@@ -112,6 +112,31 @@ export class TourComponent implements OnInit {
     this.getEquipmentByTourId(tour.id);
   }
 
+  onImageSelected(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+  
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+  
+      // Create a FileReader to read the file as base64
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        // The result is the base64 string representation of the file
+        const base64Image = reader.result as string;
+  
+        // Store the base64 string in the newCheckpoint.image property
+        this.newCheckpoint.image = base64Image;
+  
+        console.log("Selected file as base64:", base64Image);
+      };
+  
+      // Read the file as base64 (this gives us the base64-encoded string)
+      reader.readAsDataURL(file);
+    }
+  }
+  
+  
   ngOnInit(): void {
     this.loadTours();
     this.authService.user$.subscribe(user => {
@@ -172,7 +197,7 @@ export class TourComponent implements OnInit {
       this.newCheckpoint = { ...checkpoint };
     } else {
       // Resetujemo podatke za novi checkpoint
-      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: '' };
+      this.newCheckpoint = { id: 0, checkpointName: '', checkpointDescription: '', latitude: undefined, longitude: undefined, image: undefined };
     }
 
     // Otvaranje modalnog dijaloga
