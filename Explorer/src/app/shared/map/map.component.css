@@ -5,3 +5,10 @@
 #map {
   height: 600px;
 }
+.add-me-btn:disabled {
+  background-color: #ccc; /* Light gray background */
+  color: #666; /* Dark gray text */
+  cursor: not-allowed; /* Change cursor to indicate non-interactivity */
+  opacity: 0.6; /* Add some transparency */
+  border: 1px solid #999; /* Optional: dimmed border */
+}

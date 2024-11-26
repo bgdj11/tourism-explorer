@@ -76,12 +76,14 @@ export class LocationSimulatorComponent implements OnInit {
             },
             xp: encounter.xp,
             status: encounter.status === 0 ? 'DRAFT' : encounter.status === 1 ? 'ACTIVE' : 'ARCHIVED',
-            type: encounter.type === 0 ? 'SOCIAL' : encounter.type === 1 ? 'LOCATION' : 'MISC',
+            //type: encounter.type === 0 ? 'SOCIAL' : encounter.type === 1 ? 'LOCATION' : 'MISC',
+            type: encounter.type,
             publishedDate: encounter.publishedDate,
             archivedDate: encounter.archivedDate,
             authorId: encounter.authorId
           }));
-
+          
+        
           // Prosleđivanje encountera mapi
           this.mapComponent.showEncountersOnMap(this.encounters);
         } else {
