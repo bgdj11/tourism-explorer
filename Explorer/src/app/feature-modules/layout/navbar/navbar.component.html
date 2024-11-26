@@ -3,7 +3,6 @@
        <img src="../../../../assets/bck.jpg" alt="logo" class="logo" />
        <button mat-button class="custom-button" routerLink="/home">{{ 'NAVBAR.HOME' | translate }}</button>
     </div>
-
     <div class="navbar-right">
         <button *ngIf="user && user.username === ''" mat-button class="custom-button" [routerLink]="['login']">{{ 'NAVBAR.LOGIN' | translate }}</button>
         <button *ngIf="user && user.username !== ''" mat-button class="custom-button" (click)="onLogout()">{{ 'NAVBAR.LOGOUT' | translate }}</button>
@@ -26,3 +25,5 @@
         <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">{{ 'NAVBAR.TOUR_PROBLEMS' | translate }}</button>
     </div>
 </mat-toolbar>
+
+

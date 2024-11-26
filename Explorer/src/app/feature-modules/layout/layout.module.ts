@@ -11,16 +11,18 @@ import { TourSearchComponent } from './tour-search/tour-search.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { HomePageComponent } from './home-page/home-page.component';
+import { ToursViewComponent } from './tours-view/tours-view.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     NavbarComponent,
     AppRatingComponent,
-
     ToursListComponent,
-
-    TourSearchComponent
+    TourSearchComponent,
+    HomePageComponent,
+    ToursViewComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +38,8 @@ import { TranslateModule } from '@ngx-translate/core';
     HomeComponent,
     AppRatingComponent,
     ToursListComponent,
-    TourSearchComponent
+    TourSearchComponent,
+    HomePageComponent
   ]
 })
 export class LayoutModule { }

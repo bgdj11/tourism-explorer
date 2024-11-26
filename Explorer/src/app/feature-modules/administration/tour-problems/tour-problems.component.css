@@ -92,3 +92,8 @@
   .line{
     margin-left: 20px;
   }
+
+  .highlight-problem {
+    border: 2px solid red; /* Red border for highlighting */
+    background-color: #ffe6e6; /* Light red background */
+  }
