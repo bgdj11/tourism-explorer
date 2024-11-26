@@ -56,6 +56,17 @@
         </mat-select>
       </mat-form-field>
 
+      <div *ngIf="showImageForHiddenEncounter">
+        <div class="form-group">
+          <label for="image">Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="image"
+            (change)="onImageSelected($event)"
+          />
+        </div>
+      </div>
       <!-- Submit and Cancel Buttons -->
       <div class="form-actions">
         <button mat-raised-button color="primary" type="submit">
