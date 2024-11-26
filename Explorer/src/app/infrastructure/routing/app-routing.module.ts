@@ -24,6 +24,8 @@ import {EncounterComponent} from "../../feature-modules/administration/encounter
 import { MarketComponent } from 'src/app/feature-modules/marketplace/market/market.component';
 import { TourProblemsComponent } from 'src/app/feature-modules/administration/tour-problems/tour-problems.component';
 import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
+import { HomePageComponent } from 'src/app/feature-modules/layout/home-page/home-page.component';
+import { ToursListComponent } from 'src/app/feature-modules/layout/tours-list/tours-list.component';
 
 
 const routes: Routes = [
@@ -53,6 +55,9 @@ const routes: Routes = [
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
+  {path: 'home-page', component: HomePageComponent},
+  {path: 'tour-list', component: ToursListComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
 
 ];

@@ -23,6 +23,7 @@
     color: var(--primary-color);
     margin: 0 0 10px 0;
     font-weight: 700; 
+    text-align: center;
   }
   
   a {
@@ -36,17 +37,20 @@
   }
   
   button {
-    background-color: transparent;
-    color: #004D3B;
     border: none;
     padding: 10px 15px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #004D3B; 
+    background-color: #ffffff; 
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    cursor: pointer; 
+    transition: all 0.3s ease;
   }
   
   button:hover {
-    background-color: #008768;
+    color: #ffffff; 
+    background-color: #004D3B; 
   }
   
   
@@ -94,3 +98,5 @@
     line-height: 1.5;
   }
   
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
