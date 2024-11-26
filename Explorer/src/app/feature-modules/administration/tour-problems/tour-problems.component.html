@@ -1,6 +1,12 @@
 <div class="tour-problems-container" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="tourProblems.length > 0; else noProblems">
-      <div *ngFor="let problem of tourProblems" class="tour-problem-card">
+      <div *ngFor="let problem of tourProblems" class="tour-problem-card"
+      [ngClass]="{
+        'highlight-problem': loggedInUserRole === 'administrator' && isOlderThanFiveDays(problem)
+      }">
+      <p *ngIf="loggedInUserRole === 'administrator' && isOlderThanFiveDays(problem)" style="color: red; font-weight: bold;">
+        Not resolved in 5 days
+      </p>
         <h3 class="problem-title">about Tour: {{ problem.tourName || 'Loading...' }}
             <button
         *ngIf="loggedInUserRole === 'tourist' && !problem.resolved"
