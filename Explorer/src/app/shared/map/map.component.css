@@ -12,3 +12,9 @@
   opacity: 0.6; /* Add some transparency */
   border: 1px solid #999; /* Optional: dimmed border */
 }
+.small-btn {
+  font-size: 12px; /* Smaller font size */
+  padding: 4px 8px; /* Reduce padding */
+  border-radius: 4px; /* Optional: rounded corners */
+  line-height: 1.2; /* Adjust height alignment */
+}

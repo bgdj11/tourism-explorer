@@ -15,4 +15,8 @@ export class EncounterService {
   getEncounters(page: number, pageSize: number): Observable<EncounterDTO[]> {
     return this.http.get<EncounterDTO[]>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
   }
+  updateEncounter(encounter: EncounterDTO): Observable<EncounterDTO> {
+    console.log("Encounter: ")
+    return this.http.put<EncounterDTO>(`${this.apiUrl}/` + encounter.id,encounter);
+  }
 }

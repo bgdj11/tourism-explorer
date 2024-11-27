@@ -1,3 +1,7 @@
+import { UserDto } from "src/app/feature-modules/tour-execution/model/all-tourists";
+import { User } from "src/app/infrastructure/auth/model/user.model";
+
+
 export interface EncounterDTO {
   id: number;
   name: string;
@@ -12,4 +16,5 @@ export interface EncounterDTO {
   publishedDate?: string; // JSON datumi se obično parsiraju kao string
   archivedDate?: string;
   authorId: number;
+  usersWhoCompletedId: number[];
 }
