@@ -80,7 +80,8 @@ export class LocationSimulatorComponent implements OnInit {
             type: encounter.type,
             publishedDate: encounter.publishedDate,
             archivedDate: encounter.archivedDate,
-            authorId: encounter.authorId
+            authorId: encounter.authorId,
+            usersWhoCompletedId: encounter.usersWhoCompletedId
           }));
           
         

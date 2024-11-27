@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import {EncounterDTO} from "../model/encounter";
 import { Renderer2 } from '@angular/core';
+import { EncounterService } from '../encounter.service';
 
 @Component({
   selector: 'xp-map',
@@ -19,6 +20,8 @@ export class MapComponent implements AfterViewInit {
   private currentLocation: { lat: number, lng: number } | null = null;
   singleMarker: L.Marker | null = null;
   private routeControl: any;
+  private completedEncounters: EncounterDTO[] = [];
+  private savedEncounters: EncounterDTO[] = [];
 
   @Input() user: User | undefined;
   @Input() initialCenter: [number, number] = [45.2396, 19.8227];
@@ -34,7 +37,7 @@ export class MapComponent implements AfterViewInit {
 
   @Output() locationSelected = new EventEmitter<{ lat: number, lng: number }>();
 
-  constructor(private mapService: MapService, private renderer: Renderer2) {
+  constructor(private mapService: MapService, private renderer: Renderer2, private encounterService: EncounterService) {
   }
 
   private initMap(): void {
@@ -82,6 +85,7 @@ export class MapComponent implements AfterViewInit {
 
   public showEncountersOnMap(encounters: EncounterDTO[]): void {
     if (this.map) {
+      this.savedEncounters = encounters;
       this.setEncounterMarkers(encounters);
     } else {
       console.error("Map is not initialized yet.");
@@ -165,12 +169,19 @@ export class MapComponent implements AfterViewInit {
       iconAnchor: [16, 32],
       popupAnchor: [0, -32]
     });
-
+    let completedEncounter = false;
     this.markers.forEach(marker => this.map.removeLayer(marker));
     this.markers = [];
-
+    
+    console.log("Entered for")
     encounters.forEach(encounter => {
       const { location, name, description } = encounter;
+      encounter.usersWhoCompletedId.forEach(userId => {
+        if(this.user && this.user.id === userId){
+          this.completedEncounters.push(encounter);
+          console.log("Completed set for: " + userId)
+        }
+      });
       if (location) {
         const marker = L.marker([location.latitude, location.longitude], { icon: encounterIcon })
           .addTo(this.map);
@@ -187,9 +198,11 @@ export class MapComponent implements AfterViewInit {
               `;
     
               // Add the button conditionally
-              if (encounter.type === 'MISC') {
+              if (encounter.type === 'MISC' && !this.completedEncounters.includes(encounter)) {
+                completedEncounter = false;
+                console.log("Added button")
                 const button = this.renderer.createElement('button');
-                button.className = 'add-me-btn';
+                button.className = 'add-me-btn small-btn';
                 button.textContent = 'Set Completed';
                 if(this.currentLocation){
                   
@@ -200,7 +213,15 @@ export class MapComponent implements AfterViewInit {
                   }
                 }
                 this.renderer.listen(button, 'click', () => this.setCompleted(encounter)); // Add click listener
+                
                 this.renderer.appendChild(popupContent, button);
+              }else if(encounter.type === 'MISC') {
+                // Append "Completed" to the existing content
+                completedEncounter = false;
+                const completedText = this.renderer.createElement('strong');
+                completedText.textContent = 'Completed';
+                //this.renderer.appendChild(popupContent, this.renderer.createText('<br>'));
+                this.renderer.appendChild(popupContent, completedText);
               }
             }
           });
@@ -209,8 +230,23 @@ export class MapComponent implements AfterViewInit {
       }
     });
   }
-  setCompleted(encounter: any) {
-    console.log(`Set Completed clicked for:`, encounter);
+  setCompleted(encounter: EncounterDTO) {
+    console.log(`Set Completed clicked for:`, encounter.usersWhoCompletedId);
+    if(this.user){
+    
+    encounter.usersWhoCompletedId.push(this.user.id);
+    this.encounterService.updateEncounter(encounter).subscribe(
+      () => {
+        console.log('Encounter updated successfully');
+      },
+      error => {
+        console.error('Error updating encounter:', error);
+      }
+      
+    );
+    console.log("EncountersDTO length: " + this.encounters.length);
+    this.showEncountersOnMap(this.savedEncounters);
+    }
     // Your logic here
   }
   private calculateDistance(location1: { lat: number; lng: number }, location2: { lat: number; lng: number }): number {
