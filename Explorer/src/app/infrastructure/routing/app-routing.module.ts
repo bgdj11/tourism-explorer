@@ -26,6 +26,7 @@ import { TourProblemsComponent } from 'src/app/feature-modules/administration/to
 import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
 import { HomePageComponent } from 'src/app/feature-modules/layout/home-page/home-page.component';
 import { ToursListComponent } from 'src/app/feature-modules/layout/tours-list/tours-list.component';
+import {TouristProfileComponent} from "../../shared/tourist-profile/tourist-profile.component";
 
 
 const routes: Routes = [
@@ -58,8 +59,8 @@ const routes: Routes = [
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'home-page', component: HomePageComponent},
   {path: 'tour-list', component: ToursListComponent},
-  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
-
+  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
+  {path: 'tourist-profile', component: TouristProfileComponent, canActivate: [AuthGuard],},
 ];
 
 @NgModule({
