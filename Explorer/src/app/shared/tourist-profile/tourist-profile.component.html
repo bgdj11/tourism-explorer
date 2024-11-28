@@ -30,4 +30,16 @@
     </ul>
     <p *ngIf="profile.completedEncountersIds.length === 0">No encounters completed yet.</p>
   </div>
+
+  <div class="sync-container">
+    <button (click)="syncEncounters()">Sync Completed Encounters</button>
+    <p *ngIf="syncMessage" class="sync-message">{{ syncMessage }}</p>
+  </div>
+
+  <!-- Button for creating encounters -->
+  <div *ngIf="profile.level >= 10" class="create-encounter-button">
+    <button mat-raised-button color="primary" [routerLink]="['/encounter']">
+      Create Encounter
+    </button>
+  </div>
 </div>

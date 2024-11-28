@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TouristProfile} from "./model/tourist-profile.model";
-import {environment} from "../../env/environment";
+import { TouristProfile } from './model/tourist-profile.model';
+import { environment } from '../../env/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +14,9 @@ export class TouristProfileService {
 
   getTouristProfile(username: string): Observable<TouristProfile> {
     return this.http.get<TouristProfile>(`${this.apiUrl}/${username}`);
+  }
+
+  syncCompletedEncounters(username: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${username}/sync-completed-encounters`, {});
   }
 }
