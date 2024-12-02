@@ -8,6 +8,7 @@ import {TourDTO} from "../tour-authoring/model/tour.model";
 import {CheckpointDTO} from "../tour-authoring/model/checkpoint.model";
 import { TourProblem } from './model/tour-problem';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
+import { TourSale } from './model/tour-sale.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,4 +75,27 @@ export class MarketplaceService {
     return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
     }
 
+  addSale(tourSale: TourSale): Observable<TourSale> {
+      return this.http.post<TourSale>(environment.apiHost + 'author/tourSale', tourSale);
+    }
+
+  getTourSales(): Observable<PagedResults<TourSale>> {
+      return this.http.get<PagedResults<TourSale>>(environment.apiHost + 'author/tourSale')
+    }
+  
+  activateSales(tourSales: TourSale[]): Observable<string> {
+    return this.http.post<string>(environment.apiHost +'author/tourSale/activateSales', tourSales);
+  }
+  
+  deactivateSales(tourSales: TourSale[]): Observable<string> {
+    return this.http.post<string>(environment.apiHost +'author/tourSale/deactivateSales', tourSales);
+  }
+
+  deleteTourSale(id: number): Observable<TourSale> {
+    return this.http.delete<TourSale>(environment.apiHost + 'author/tourSale/' + id);
+  }
+
+  updateTourSale(tourSale: TourSale): Observable<TourSale> {
+    return this.http.put<TourSale>(environment.apiHost + 'author/tourSale/' + tourSale.id, tourSale);
+  }
 }

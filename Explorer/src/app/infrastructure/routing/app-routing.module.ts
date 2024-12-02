@@ -23,7 +23,7 @@ import { FollowersComponent } from 'src/app/feature-modules/tour-execution/follo
 import { MarketComponent } from 'src/app/feature-modules/marketplace/market/market.component';
 import { TourProblemsComponent } from 'src/app/feature-modules/administration/tour-problems/tour-problems.component';
 import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
-
+import { TourSaleComponent } from 'src/app/feature-modules/marketplace/tour-sale/tour-sale.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -49,7 +49,8 @@ const routes: Routes = [
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
-  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
+  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
+  {path: 'sales', component: TourSaleComponent, canActivate: [AuthGuard],}
   
 ];
 

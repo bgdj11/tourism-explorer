@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {TourDTO} from "../../tour-authoring/model/tour.model";
+import { TourReviewDTO } from '../../tour-authoring/model/tourReview.model';
 import { MarketplaceService } from '../marketplace.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { TourProblem } from "../model/tour-problem";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
+import { TourManagementService } from "../../tour-authoring/tour-management.service";
 
 @Component({
   selector: 'xp-market',
@@ -15,14 +17,16 @@ export class MarketComponent implements OnInit {
   tours: TourDTO[] = [];
   checkpointNames: { [tourId: number]: string } = {};
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 100;
   totalCount: number = 0;
   reportFormVisible: { [tourId: number]: boolean } = {};
   reportData: { [tourId: number]: TourProblem } = {};
   userId: number = 0;
   reportSubmitted: { [tourId: number]: boolean } = {};
+  tourReviews:{ [tourId: number]: TourReviewDTO[]} = {} ;
+  avgGrade: {[tourId:number]: number} = {};
 
-  constructor(private service: MarketplaceService, private authService: AuthService) { }
+  constructor(private tourService: TourManagementService, private service: MarketplaceService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
@@ -49,7 +53,8 @@ export class MarketComponent implements OnInit {
             description: '',
             reportedAt: new Date(),
             resolved: false,
-            problemComments: []
+            problemComments: [],
+            closed: false
           };
 
           this.service.getCheckpointIdsByTourId(tour.id).subscribe(
@@ -67,6 +72,17 @@ export class MarketComponent implements OnInit {
             },
             (error) => console.error(`Error fetching checkpoint IDs:`, error)
           );
+
+          this.tourService.getTourReviews(tour.id).subscribe(
+            (data) => {             
+              this.avgGrade[tour.id] = 0;
+              this.tourReviews[tour.id] = data.results;
+              this.tourReviews[tour.id].forEach(element => {
+                console.log("Tour review: " + element.comment)
+                this.avgGrade[tour.id] += element.rating;
+              });
+            }
+          )
         });
 
       },
@@ -95,7 +111,8 @@ export class MarketComponent implements OnInit {
           description: reportData.description,
           reportedAt: new Date(),
           resolved: false,
-          problemComments: []
+          problemComments: [],
+          closed: false
         };
   
         // Submit the problem report

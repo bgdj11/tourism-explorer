@@ -10,6 +10,7 @@ import { StartTourComponent } from './start-tour/start-tour.component';
 import { MyToursComponent } from './my-tours/my-tours.component';
 //import { CardComponent } from './card/card.component';
 import { FollowersComponent } from './followers/followers.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -25,7 +26,8 @@ import { FollowersComponent } from './followers/followers.component';
         CommonModule,
         MaterialModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        MatButtonModule,
     ],
     exports: [
       MyEquipmentComponent,

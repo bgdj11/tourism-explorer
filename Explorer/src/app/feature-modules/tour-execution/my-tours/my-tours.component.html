@@ -1,15 +1,52 @@
-<div *ngIf="purchasedTours.length > 0; else noTours">
-    <h3>My Purchased Tours</h3>
+<div class="tour-container" *ngIf="purchasedTours.length > 0; else noTours">
     <div *ngFor="let tour of purchasedTours" class="tour-card">
-      <h4>{{ tour.name }}</h4>
-      <p><strong>Description:</strong> {{ tour.description }}</p>
-      <p><strong>Weight:</strong> {{ tour.weight }}</p>
-      <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
-      <p><strong>Status:</strong> {{ tour.status }}</p>
-      <p *ngIf="tour.price"><strong>Price:</strong> {{ tour.price | currency }}</p>
+      <h2 class="tour-name">{{ tour.name }}</h2>
+      <p style="font-size: 18px; margin-bottom: 20px;"> {{ tour.description }}</p>
+      <div style="display: flex; " >
+        <div>
+          <p><strong>Length:</strong> {{ tour.lengthInKm }} km</p>
+          <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
+          <p *ngIf="tourReviews[tour.id].length > 0">
+            <mat-icon class="star">star</mat-icon> {{ avgGrade[tour.id] / tourReviews[tour.id].length}}
+          </p>
+        </div>
+        <p style="margin-left: 40px; "><strong>Checkpoints:</strong></p>
+        <div>
+          <div *ngFor="let point of tour.tourCheckpoints" style="margin-left: 5px;">
+            <p>• {{ point.checkpointName || 'Nema CheckPoint' }} </p>
+          </div>
+        </div>
+      </div>
+      <div  *ngIf="tourReviews[tour.id].length > 0">
+        <p style="font-size: small; margin-top: 20px; color: gray; font-style: italic;">Reviews:</p>
+        <div class="reviews-container">
+        <div
+          class="review-item"
+          *ngFor="let review of tourReviews[tour.id] || []">
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div class="profile-picture">
+              <img src="assets/tourist.png" width="30" height="30" alt="User Profile Picture" />
+            </div>
+            <p class="user-name" style="font-size: small; margin: 0; color: gray; ">
+              {{ review.personn.name }} {{ review.personn.surname }}
+            </p>
+          </div>
+  
+          <!-- Comment Section -->
+          <div class="comment-section" >
+            <p style="margin: 8px 0; font-size: small; color: #555;">{{ review.comment }}</p>
+            <p style="margin: 8px 0; font-size: small; color: #555;"><mat-icon class="star-c">star</mat-icon> {{ review.rating }}</p>
+          </div>
+          
+        </div>
+      </div>
+      </div>
+      <button mat-raised-button class="start-btn">
+        Start tour
+      </button>
     </div>
   </div>
-  
+
   <ng-template #noTours>
     <p>No purchased tours found.</p>
   </ng-template>
