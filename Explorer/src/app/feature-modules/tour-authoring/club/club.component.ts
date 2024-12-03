@@ -249,7 +249,7 @@ export class ClubsComponent implements OnInit {
               );
               alert('Membership request removed successfully.');
               console.log('Membership request removed successfully.');
-              this.loadMembershipRequestsForClub(clubId);
+              this.loadAllMembershipRequests();
             } else {
               console.warn('No matching request found.');
             }
@@ -269,11 +269,68 @@ export class ClubsComponent implements OnInit {
     const requestsForClub = this.membershipRequests.filter(req => req.clubId === clubId);
     return requestsForClub.some(req => 
       req.senderId === touristId && 
-      (req.status === MemRequestStatus.Pending || req.status === MemRequestStatus.Accepted || req.status === MemRequestStatus.Rejected)
+      (req.status === MemRequestStatus.Pending || req.status === MemRequestStatus.Accepted)
     );
   }
 
+  isTouristWaitingAcception(touristId: number, clubId: number): boolean{
+    const requestsForClub = this.membershipRequests.filter(req => req.clubId === clubId);
+    return requestsForClub.some( req => req.senderId === touristId && req.status === MemRequestStatus.Pending);
+  }
   
+  acceptTouristRequest(touristId: number, clubId:number): void{
+    this.service.getMembershipRequests(clubId).subscribe(
+      (requests: { results: MembershipRequest[]; totalCount: number }) => {
+        const memRequests = requests.results;
+        const touristRequest = memRequests.find(req => req.senderId === touristId);
+        if(!touristRequest){
+          console.log('No reqest for tourist.', touristRequest);
+          return;
+        }
+        touristRequest.status = MemRequestStatus.Accepted;
+        this.service.updateMembershipRequest(clubId, touristRequest).subscribe(
+          (acceptedRequest) =>{
+            alert('You accepted the request to join your club.');
+            this.loadAllMembershipRequests();
+          },
+          (err) =>{
+            console.log('Error occured during acception the request: ', err);
+          }
+        );
+        
+      },
+      (err) => {
+        console.log('No requests for the club with ID: ', clubId);
+      }
+    )
+  
+    
+  }
+
+  rejectTouristRequest(touristId: number, clubId:number): void{
+    this.service.getMembershipRequests(clubId).subscribe(
+      (requests: {results: MembershipRequest[], totalCount: number}) => {
+        const memRequests = requests.results;
+        const touristRequest = memRequests.find(req => req.senderId === touristId);
+        if(!touristRequest?.id){
+          console.log('No reqest for tourist.', touristRequest);
+          return;
+        }
+        this.service.deleteMembershipRequest(clubId, touristRequest.id).subscribe(
+          () =>{
+            alert('You rejected the request.');
+            this.loadAllMembershipRequests();
+          },
+          (err) => {
+            console.log('An error occured when you click the reject button.');
+          }
+        )
+      },
+      (err) => {
+        console.log('No requests for the club with ID: ', clubId);
+      }
+    )
+  }
 
 
   

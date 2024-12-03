@@ -12,49 +12,104 @@ import { forkJoin, map } from 'rxjs';
 })
 export class AvailableClubsComponent {
   @Input() clubs: ClubDTO[] = [];
-  @Input() membershipRequests: MembershipRequest[] = [];
 
   currentTouristId: number = 0;
-  filteredRequests: MembershipRequest[] = [];
+  filteredRequests: MembershipRequest[] = []; //sadrzace sve zahtjeve koji se odnose na trenuto prijavljenog turistu, bilo da ih je poslao turista vlasniku, ili su poziv od vlasnika(invitations)
+  invitationsToJoin: MembershipRequest[] = [];
   isWithdrawn: boolean = false;
+  acceptedRequests: MembershipRequest[] = []; // Lista zahtjeva koje je turista prihvatio
 
   constructor(private authService: AuthService, private service: TourManagementService) {}
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.currentTouristId = user?.id || 0;
+      this.loadAllClubsToApplyFor();
     });
-    this.loadAllMembershipRequests();
   }
 
+
   ngOnChanges(changes: SimpleChanges): void {
-    // Provera da li `membershipRequests` postoji u promenama i da li `currentTouristId` nije 0
-    if (changes['membershipRequests']) {
-      this.loadAllMembershipRequests();
+    if (changes['clubs']) {
+      console.log('Clubs updated:', this.clubs);
+      this.loadAllClubsToApplyFor();
     }
   }
 
-  loadAllMembershipRequests(): void {
+  loadAllClubsToApplyFor(): void {
     const requests$ = this.clubs.map(club => {
       if (club.id === undefined) {
         console.log('Club ID is missing');
         return [];
       }
   
-      return this.service.getMembershipRequests(club.id).pipe(
-        map(requestsForClub => requestsForClub.results.filter(req => req.senderId === this.currentTouristId))
-      );
-    });
+      return this.service.getMembershipRequests(club.id).pipe( //emitovane podatke
+        map(requestsForClub => requestsForClub.results.filter(req => req.senderId === this.currentTouristId )) //filtrira samo one koji se odnose na trenutnog turistu
+      ); // svaki Observable ->filtrirani zahtjev , ce biti niz sa po jednim elementom 
+    }); //requests$ sadrži Observables sa filtriranim zahtevima za članstvo //kombinuje sve observable u observables
+    //Svaki Observable u requests$ nakon filtriranja može emitovati prazan niz (ako nema zahteva za tog turistu) ili niz sa jednim zahtevom.
   
-    forkJoin(requests$).subscribe((allRequests: MembershipRequest[][]) => {
-      const filtered = allRequests.flat().filter(req => req !== undefined);
-      this.filteredRequests = filtered;
-      console.log('Filtered Requests:', this.filteredRequests);  
+    forkJoin(requests$).subscribe((allRequests: MembershipRequest[][]) => { //allrequests ce biti niz gdje svaki element odgovara filtriranom zahtjevu za jedan klub
+      const filtered = allRequests.flat().filter(req => req !== undefined); //uklanja prazne nizove koje emituju Observable u requests$ ako nema zahtjeva za turistu u tom klubu
+      this.filteredRequests = filtered.filter(req => req.status === MemRequestStatus.Pending);
+      this.invitationsToJoin = filtered.filter(req => req.status === MemRequestStatus.Invited);
+      this.acceptedRequests = filtered.filter(req => req.status === MemRequestStatus.Accepted);
+      console.log('Filtered Requests:', this.filteredRequests);
+      console.log('Invitations to Join:', this.invitationsToJoin);  
     });
   }
   
+  hasInvitationForClub(clubId: number | undefined): boolean{
+    if(clubId === undefined){
+      console.log('Club ID is undefined.');
+      return false;
+    }
+    //console.log('pozivnica: ', this.invitations);
+    return this.invitationsToJoin.some(invitation => invitation.clubId === clubId); //invitationToJoin je filtrirana i sadrzi samo pozive koji su upuceni current Tourist
+  }
 
-  sendJoinRequest(clubId: number | undefined): void{
+  hasJoinedTheClub(clubId: number | undefined):boolean{
+    if(clubId === undefined){
+      console.log('Club ID is undefined.');
+      return false;
+    }
+    return this.acceptedRequests.some(req => req.clubId === clubId);
+  }
+
+  acceptInvitation(clubId: number | undefined): void {
+    if(clubId === undefined){
+      console.log('Club ID is undefined.');
+      return;
+    }
+    const invitation = this.invitationsToJoin.find(inv => inv.clubId === clubId);
+    if (invitation) {
+      invitation.status = MemRequestStatus.Accepted;
+      this.service.updateMembershipRequest(clubId, invitation).subscribe(() => {
+        console.log('The invitation for club with ID: ', clubId, 'is accepted');
+        alert('You accepted the invitation for club.');
+        this.loadAllClubsToApplyFor(); // Osvježava prikaz klubova
+      });
+    }
+  }
+  
+  rejectInvitation(clubId: number | undefined): void {
+    if(clubId === undefined){
+      console.log('Club ID is undefined.');
+      return;
+    }
+    const invitation = this.invitationsToJoin.find(inv => inv.clubId === clubId);
+    if (invitation) {
+      this.service.deleteMembershipRequest(clubId, invitation.id!).subscribe(() => {
+        //invitation.status = MemRequestStatus.Rejected;
+        console.log('The invitation for club with ID: ', clubId, 'is rejected.');
+        alert('You rejected the invitation for club.');
+        this.loadAllClubsToApplyFor();
+      });
+    }
+  }
+  
+
+  sendJoinRequest(clubId: number | undefined): void{ //turista salje vlasniku zahtjev za uclanjenje 
     if(clubId === undefined){
       console.log('Club ID is undefined.');
       return;
@@ -87,7 +142,7 @@ export class AvailableClubsComponent {
       response => {
         console.log('Membership request sent successfully: ', response);
         alert('Membership request sent successfully.');
-        this.filteredRequests.push(membershipRequest);
+        this.loadAllClubsToApplyFor();
       },
       error => {
         console.log('Error sending membership request: ', error);
@@ -110,7 +165,7 @@ export class AvailableClubsComponent {
         () => {
           console.log('Membership request withdrawn successfully.');
           alert('Membership request withdrawn successfully.');
-          this.filteredRequests = this.filteredRequests.filter(req => req.id !== requestToWithdraw.id); // Uklanjanje iz liste
+          this.loadAllClubsToApplyFor();
         },
         (error) => {
           console.log('An error occured trying to withdraw the request.');
