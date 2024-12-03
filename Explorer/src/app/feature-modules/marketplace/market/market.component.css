@@ -18,7 +18,7 @@
   
   .tour-name {
     
-    font-size: 30px;
+    font-size: 23px;
     text-align: center;
     margin-bottom: 10px;
   }
@@ -28,23 +28,29 @@
     margin-bottom: 10px;
   }
   
+  .price{
+    font-size: 20px;
+    text-align: right;
+    margin-right: 20px;
+  }
+
   .tour-length,
   .tour-checkpoint {
     font-size: 0.9em;
   }
 
   .buy-button {
-    margin-top: 20px;
+    height: fit-content;
     padding: 10px 15px;
     background-color: white;
-    color: #3f51b5;
+    color: darkolivegreen;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
     font-weight: bold;
     width: 100px;
-    
+    margin-left: 187px;
     box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
   }
 
@@ -52,10 +58,8 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
-  .tour-card-footer {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
+  .tour-card-footer{
+    justify-content: left;
   }
 
   .shopping-cart-button {
@@ -88,16 +92,26 @@
   }
 
   .report-button {
-    margin-top: 25px;
-    background-color: #f0ad4e;
+    margin-top: 2px;
+    background-color: #f47344;
+    font-size: small;
     color: white;
     border: none;
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9em;
-    height: fit-content;
-    margin-right: 53px;
+    height:max-content;
+    margin-left: 165px;
+  }
+
+  .report-button1 {
+    margin-top: 30px;
+    margin-left: 142px;
+  }
+
+  .report-button1:hover {
+    background-color: #ccc;
   }
   
   .report-button:hover {
@@ -163,4 +177,45 @@
   .check-icon {
     color: #5cb85c;
     height: 30px;
+  }
+
+  .star{
+    color: rgb(223, 171, 0);
+    margin-bottom: -5px;
+}
+
+.star-c{
+  color: rgb(223, 171, 0);
+  font-size: 15px;
+  text-align:center;
+  margin-bottom: -11px;
+}
+
+  .reviews-container{
+    height: 80px;
+    overflow-y: auto;
+  }
+
+  .review-item {
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .profile-picture {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  
+  .profile-picture img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .comment-section {
+    margin-left: 30px; 
   }

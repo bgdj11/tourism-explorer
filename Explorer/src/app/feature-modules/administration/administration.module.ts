@@ -16,7 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TourProblemsComponent } from './tour-problems/tour-problems.component';
-
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -33,14 +36,19 @@ import { TourProblemsComponent } from './tour-problems/tour-problems.component';
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCheckboxModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatPaginatorModule,
+    MatPaginatorModule
   ],
+  providers: [MatDatepickerModule],
   exports: [
     EquipmentComponent,
     EquipmentFormComponent,

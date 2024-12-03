@@ -97,3 +97,30 @@
     border: 2px solid red; /* Red border for highlighting */
     background-color: #ffe6e6; /* Light red background */
   }
+
+  .form-field {
+    width: 150px;
+    height: 80px;
+  }
+
+  .custom-save-button{
+    margin-left: 20px;
+  }
+
+  .closeP-button {
+    background-color: rgb(238, 75, 75);
+    color: white;
+    margin-left: 450px ;
+    font-size: small;
+    height: max-content;
+  }
+
+  .closed-text {
+    color: red;
+    font-size: medium;
+    margin-left: 450px ;
+  }
+
+.icon{
+  margin-bottom: -5px;
+}

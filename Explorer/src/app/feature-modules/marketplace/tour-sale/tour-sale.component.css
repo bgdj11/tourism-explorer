@@ -1,0 +1,186 @@
+.create-button {
+    margin-left: 300px;
+    margin-top: 30px;
+    background-color: darkolivegreen;
+
+  }
+
+  .custom-save-button {
+    background-color: darkolivegreen;
+    color: white;
+  }
+  
+  .custom-save-button:hover {
+    background-color: #556b2f; /* Tamnija nijansa za hover */
+  }
+  
+  .custom-save-button:disabled {
+    background-color: #c8c8c8; /* Siva boja za disabled */
+    color: #9e9e9e;
+    cursor: not-allowed;
+  }
+  
+  .create-form {
+    background-color: white;
+    margin: 30px auto;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    border-color: darkolivegreen;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: darkolivegreen; /* Material Design Primary Color */
+    margin-bottom: 20px;
+  }
+  
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .tours-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    max-height: 400px; /* Fiksna visina prostora za ture */
+    overflow-y: auto; /* Vertikalno skrolovanje */
+    border: 1px solid #ccc; /* Opcionalno: okvir za oblast sa turama */
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .tour-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .tour-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+  }
+  
+  .tour-card.selected {
+    border-color: #1976d2;
+    box-shadow: 0 4px 8px rgba(25, 118, 210, 0.4);
+  }
+
+  .no-tours-message {
+    font-size: 1.2rem;
+    color: #757575;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .choose-header{
+    color: dimgray;
+  }
+
+  .tour-name{
+    color: rgb(58, 58, 58);
+  }
+
+  .sales-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .sale-dates {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: left;
+    margin-left: 20px;
+    margin-bottom: 1rem; /* Razmak od ostalih elemenata */
+  }
+  
+  .sale-card {
+    position: relative;
+    overflow: visible;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: calc(33% - 1rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .sale-discount {
+    background-color: red;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.8rem;
+    border-radius: 4px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  .sale-tours {
+    justify-content: center;
+    display: flex;
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+  }
+  
+  .tour-card1 {
+    
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    width: 200px;
+    padding: 1rem;
+  }
+  
+  .sale-actions {
+    justify-content: center;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .active-p{
+    color: green;
+  }
+
+  .notactive-p{
+    color: gray;
+  }
+
+
+  
+  
