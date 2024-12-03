@@ -1,0 +1,59 @@
+{
+  "NAVBAR": {
+    "HOME": "Home",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout",
+    "MANAGE_TOURS": "Manage Tours",
+    "MANAGE_OBJECTS": "Manage Objects",
+    "MANAGE_EQUIPMENT": "Manage Equipment",
+    "MANAGE_ACCOUNTS": "Manage Accounts",
+    "RATINGS": "Ratings",
+    "RATE_US": "Rate Us",
+    "SET_PREFERENCES": "Set Tour Preferences",
+    "BLOGS": "Blogs",
+    "EDIT_ACCOUNT": "Edit User Account",
+    "MY_EQUIPMENT": "My Equipment",
+    "LOCATION_SIMULATOR": "Location Simulator",
+    "CLUB": "Club",
+    "START_TOUR": "Start Tour",
+    "MY_TOURS": "My Tours",
+    "FOLLOWERS": "Followers",
+    "TOURS_MARKET": "Tours Market",
+    "TOUR_PROBLEMS": "Tour Problems"
+  },
+  "RATINGS": {
+    "TITLE": "Ratings",
+    "HEADER_RATING": "Rating",
+    "HEADER_COMMENT": "Comment",
+    "LABEL_RATING": "Rating",
+    "LABEL_COMMENT": "Comment",
+    "BUTTON_DONE": "Done"
+  },
+  "SLOGAN": "Do More with Explorer",
+  "SEARCH": {
+    "INPUT_LABEL": "Input distance (in km):",
+    "BUTTON_SEARCH": "Search",
+    "RESULTS_FOUND": "Tours found:",
+    "NO_RESULTS": "No tours found"
+  },
+  "TOURS_LIST": {
+    "PREV": "Prev",
+    "NEXT": "Next",
+    "DESCRIPTION": "Description",
+    "DIFFICULTY": "Difficulty",
+    "PRICE": "Price",
+    "TAGS": "Tags",
+    "FIRST_CHECKPOINT": "First Checkpoint",
+    "NAME": "Name",
+    "NO_DESCRIPTION": "No description available",
+    "CHECKPOINT_IMAGE": "Checkpoint Image",
+    "CHECKPOINT_IMAGE_ALT": "Image of the checkpoint",
+    "VIEW_MORE": "View More",
+    "PAGE_INFO": "Page {{currentPage}} of {{totalPages}}",
+    "REVIEWS": "Reviews",
+    "AVG_RATE": "Average rate for this tour: {{avg}}",
+    "USER_PROFILE": "User Profile Picture",
+    "COMMENT": "Comment",
+    "NO_REVIEWS": "No reviews available for this tour"
+  }
+}

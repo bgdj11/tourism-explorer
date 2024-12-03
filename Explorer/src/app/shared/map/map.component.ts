@@ -3,6 +3,9 @@ import * as L from 'leaflet';
 import {MapService} from "./map.service";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import {EncounterDTO} from "../model/encounter";
+import { Renderer2 } from '@angular/core';
+import { EncounterService } from '../encounter.service';
 
 @Component({
   selector: 'xp-map',
@@ -17,6 +20,8 @@ export class MapComponent implements AfterViewInit {
   private currentLocation: { lat: number, lng: number } | null = null;
   singleMarker: L.Marker | null = null;
   private routeControl: any;
+  private completedEncounters: EncounterDTO[] = [];
+  private savedEncounters: EncounterDTO[] = [];
 
   @Input() user: User | undefined;
   @Input() initialCenter: [number, number] = [45.2396, 19.8227];
@@ -25,13 +30,14 @@ export class MapComponent implements AfterViewInit {
   @Input() uniqueId: string = '';
   @Input() isModalMap: boolean = false;
   @Input() initialCheckpoint: {lat?: number, lng?: number} = {};
+  @Input() encounters: EncounterDTO[] = [];
 
   @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
   @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
 
   @Output() locationSelected = new EventEmitter<{ lat: number, lng: number }>();
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private renderer: Renderer2, private encounterService: EncounterService) {
   }
 
   private initMap(): void {
@@ -42,7 +48,7 @@ export class MapComponent implements AfterViewInit {
     this.map = L.map(mapElementId, {
       center: this.initialCenter,
       zoom: this.initialZoom,
-      
+
     });
 
     const tiles = L.tileLayer(
@@ -76,6 +82,16 @@ export class MapComponent implements AfterViewInit {
     }
 
   }
+
+  public showEncountersOnMap(encounters: EncounterDTO[]): void {
+    if (this.map) {
+      this.savedEncounters = encounters;
+      this.setEncounterMarkers(encounters);
+    } else {
+      console.error("Map is not initialized yet.");
+    }
+  }
+
 //string adresa, grad
   search(address: string): void {
     this.mapService.search(address).subscribe({
@@ -138,13 +154,124 @@ export class MapComponent implements AfterViewInit {
       });
     });
 }
-  
+
   private touristIcon = L.icon({
     iconUrl: 'assets/tourist.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
   });
+
+  public setEncounterMarkers(encounters: EncounterDTO[]): void {
+    const encounterIcon = L.icon({
+      iconUrl: 'assets/encounter.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+    let completedEncounter = false;
+    this.markers.forEach(marker => this.map.removeLayer(marker));
+    this.markers = [];
+    
+    console.log("Entered for")
+    encounters.forEach(encounter => {
+      const { location, name, description } = encounter;
+      encounter.usersWhoCompletedId.forEach(userId => {
+        if(this.user && this.user.id === userId){
+          this.completedEncounters.push(encounter);
+          console.log("Completed set for: " + userId)
+        }
+      });
+      if (location) {
+        const marker = L.marker([location.latitude, location.longitude], { icon: encounterIcon })
+          .addTo(this.map);
+          marker.bindPopup('<div id="popup-content"></div>');
+          //marker.bindPopup(`<strong>${name}</strong><br>${description}<br>`);
+
+          marker.on('popupopen', () => {
+            const popupContent = document.getElementById('popup-content');
+            if (popupContent) {
+              // Add name and description
+              popupContent.innerHTML = `
+                <strong>${name}</strong><br>
+                ${description}
+              `;
+    
+              // Add the button conditionally
+              if (encounter.type === 'MISC' && !this.completedEncounters.includes(encounter)) {
+                completedEncounter = false;
+                console.log("Added button")
+                const button = this.renderer.createElement('button');
+                button.className = 'add-me-btn small-btn';
+                button.textContent = 'Set Completed';
+                if(this.currentLocation){
+                  
+                  if (this.calculateDistance({lat: encounter.location.latitude, lng: encounter.location.longitude},this.currentLocation)*1000 > 100) {
+                    this.renderer.setAttribute(button, 'disabled', 'true');
+                    console.log("Distance: " + this.calculateDistance({lat: encounter.location.latitude, lng: encounter.location.longitude},this.currentLocation)*1000)
+                
+                  }
+                }
+                this.renderer.listen(button, 'click', () => this.setCompleted(encounter)); // Add click listener
+                
+                this.renderer.appendChild(popupContent, button);
+              }else if(encounter.type === 'MISC') {
+                // Append "Completed" to the existing content
+                completedEncounter = false;
+                const completedText = this.renderer.createElement('strong');
+                completedText.textContent = 'Completed';
+                //this.renderer.appendChild(popupContent, this.renderer.createText('<br>'));
+                this.renderer.appendChild(popupContent, completedText);
+              }
+            }
+          });
+
+        this.markers.push(marker);
+      }
+    });
+  }
+  setCompleted(encounter: EncounterDTO) {
+    console.log(`Set Completed clicked for:`, encounter.usersWhoCompletedId);
+    if(this.user){
+    
+    encounter.usersWhoCompletedId.push(this.user.id);
+    this.encounterService.updateEncounter(encounter).subscribe(
+      () => {
+        console.log('Encounter updated successfully');
+      },
+      error => {
+        console.error('Error updating encounter:', error);
+      }
+      
+    );
+    console.log("EncountersDTO length: " + this.encounters.length);
+    this.showEncountersOnMap(this.savedEncounters);
+    }
+    // Your logic here
+  }
+  private calculateDistance(location1: { lat: number; lng: number }, location2: { lat: number; lng: number }): number {
+    const R = 6371; // Earth's radius in kilometers
+    const lat1 = location1.lat;
+    const lng1 = location1.lng;
+    const lat2 = location2.lat;
+    const lng2 = location2.lng;
+  
+    const dLat = this.degreesToRadians(lat2 - lat1);
+    const dLng = this.degreesToRadians(lng2 - lng1);
+  
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.degreesToRadians(lat1)) * Math.cos(this.degreesToRadians(lat2)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in kilometers
+  }
+  
+  private degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+
 
   public setUserLocation(lat: number, lng: number): void {
     if (this.userMarker) {
@@ -165,13 +292,13 @@ export class MapComponent implements AfterViewInit {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
-      
+
       if (this.user && this.user.role === 'tourist') {
         // Ako je korisnik turista, koristi `setUserLocation` za jedinstveni marker
         this.setUserLocation(lat, lng);
         this.locationSelected.emit({ lat, lng });
       } else {
-        
+
         // Ako je mapa u modalnom dijalogu, koristi jedinstveni marker
         if (this.isModalMap) {
           this.setUniqueMarker(lat, lng);

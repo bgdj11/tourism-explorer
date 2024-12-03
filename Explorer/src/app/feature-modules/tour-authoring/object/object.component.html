@@ -1,10 +1,10 @@
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Ture</h2>
+    <h2 class="text-center mb-4">Objects</h2>
 
-    <!-- Dugme za dodavanje nove ture -->
+    <!-- Dugme za dodavanje novog objekta -->
     <div class="d-flex justify-content-end mb-3">
       <button class="btn btn-primary" (click)="openModal('add')">
-        <i class="bi bi-plus-circle"></i> Dodaj novi objekat
+        <i class="bi bi-plus-circle"></i> Add an object
       </button>
     </div>
 
@@ -14,9 +14,10 @@
         <thead class="table-dark text-center">
         <tr>
           <th>#</th>
-          <th>Naziv</th>
-          <th>Opis</th>
-          <th>Kategorija</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -59,16 +60,16 @@
         <form (ngSubmit)="onSubmit()">
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="name" class="form-label">Naziv objekta</label>
+              <label for="name" class="form-label">Object name</label>
               <input type="text" class="form-control" id="name" [(ngModel)]="object.name" name="name" required />
             </div>
             <div class="col-md-6">
-              <label for="weight" class="form-label">Kategorija</label>
+              <label for="weight" class="form-label">Category</label>
               <input type="text" class="form-control" id="weight" [(ngModel)]="object.category" name="weight" />
             </div>
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Opis Objekta</label>
+            <label for="description" class="form-label">Object description</label>
             <textarea class="form-control" id="description" [(ngModel)]="object.description" name="description" required></textarea>
           </div>
           <!-- Dodavanje mape u modal -->
@@ -84,9 +85,9 @@
             </xp-map>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
             <button type="submit" class="btn btn-primary">
-              <i class="bi bi-save"></i> Sačuvaj
+              <i class="bi bi-save"></i> Save
             </button>
           </div>
         </form>

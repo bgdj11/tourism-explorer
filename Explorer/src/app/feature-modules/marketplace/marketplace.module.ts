@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TourPreferencesComponent } from './tour-preferences/tour-preferences.component';
 import { TourPreferencesFormComponent } from './tour-preferences-form/tour-preferences-form.component';
 import { MaterialModule } from 'src/app/infrastructure/material/material.module';
@@ -8,13 +8,14 @@ import { MarketComponent } from './market/market.component';
 import { RouterModule } from '@angular/router';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { TourSaleComponent } from './tour-sale/tour-sale.component';
-import { FormsModule } from '@angular/forms'; // Importuj FormsModule
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SharedModule } from 'src/app/shared/shared.module';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SharedModule
   ],
   providers: [MatDatepickerModule],
   exports: [
