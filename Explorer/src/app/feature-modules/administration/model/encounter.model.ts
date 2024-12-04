@@ -14,6 +14,7 @@ export interface Encounter {
   authorId: number; // ID autora koji je kreirao Encounter
   image?: string; // Slika za hidden encounter
   isReviewed: boolean;
+  isRequired?: boolean;
 }
 
 export enum EncounterStatus {

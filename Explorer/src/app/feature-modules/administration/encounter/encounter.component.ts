@@ -66,7 +66,9 @@ export class EncounterComponent implements OnInit {
       publishedDate: [null],
       archivedDate: [null],
       authorId: [this.user.value.id],
-      additionalLocationInfo: ['']  // Add the additional field for Location type
+      additionalLocationInfo: [''] , // Add the additional field for Location type
+      requiredParticipants: [0], // Default value for SOCIAL encounters
+      radius: [0]
     });
   }
 
@@ -82,7 +84,7 @@ export class EncounterComponent implements OnInit {
   onSubmit(): void {
     const formValue = this.encounterForm.value;
 
-    const payload = {
+    const payload: any = {
       ...formValue,
       id: this.isEditing ? this.editingId : undefined,
       publishedDate: formValue.publishedDate || null,
@@ -93,11 +95,19 @@ export class EncounterComponent implements OnInit {
       },
       isReviewed: this.isAdmin,
     };
-    // Samo za hidden location encounter
-    if (this.image)
+
+    // Dodaj specificna polja za SOCIAL type
+    if (formValue.type === EncounterType.SOCIAL) {
+      payload.requiredParticipants = formValue.requiredParticipants;
+      payload.radius = formValue.radius;
+    }
+
+    if (this.image) {
       payload.image = this.image;
-    else
+    } else {
       payload.image = null;
+    }
+
     console.log('Submitting payload:', payload);
 
     if (this.isEditing) {

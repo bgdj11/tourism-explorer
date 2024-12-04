@@ -1,0 +1,175 @@
+<div *ngIf="!showForm">
+    <button mat-raised-button color="primary" class="create-button" (click)="toggleForm()">
+      <mat-icon>add</mat-icon>
+      Create New Sale
+    </button>
+  </div>
+  
+  <div class="create-form" *ngIf="showForm">
+    <h2>Create New Sale</h2>
+    <form (ngSubmit)="submitForm()" class="form-container">
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Discount (%)</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="newSale.discount"
+          name="discount"
+          required
+          min="1"
+          max="100"
+        />
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Start Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startPicker"
+          [(ngModel)]="newSale.startDate"
+          name="startDate"
+          [min]="minStartDate"
+          required
+          (change)="onStartDateChange()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>End Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endPicker"
+          [(ngModel)]="newSale.endDate"
+          name="endDate"
+          [min]="newSale.startDate"
+          [max]="maxEndDate"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <h3 class="choose-header">Choose Tours for the Sale*</h3>
+        <div class="tours-list">
+        <p *ngIf="tours.length === 0" class="no-tours-message">No tour is available.</p>
+        <div
+            class="tour-card"
+            *ngFor="let tour of tours"
+            [class.selected]="isTourSelected(tour.id)"
+            (click)="toggleTourSelection(tour.id)"
+        >
+            <h4 class="tour-name">{{ tour.name }}</h4>
+            <p>{{ tour.description }}</p>
+            <p><strong>Current price:</strong> {{ tour.price | currency }}</p>
+        </div>
+        </div>
+  
+      <div class="actions">
+        <button mat-raised-button color="warn" type="button" (click)="toggleForm()">Cancel</button>
+        <button mat-raised-button class="custom-save-button" type="submit" [disabled]="!isFormValid()">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="sales-container" *ngIf="sales.length > 0">
+    
+    <div class="sale-card" *ngFor="let sale of sales">
+        <div *ngIf="editingSaleId === sale.id; else saleCard">
+            <form (ngSubmit)="submitEdit(sale)">
+                <mat-form-field  class="form-field">
+                    <mat-label>Discount (%)</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      [(ngModel)]="newSale1.discount"
+                      name="discount"
+                      required
+                      min="1"
+                      max="100"
+                    />
+                  </mat-form-field>
+              
+                  <mat-form-field class="form-field">
+                    <mat-label>Start Date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="startPicker"
+                      [(ngModel)]="newSale1.startDate"
+                      name="startDate"
+                      [min]="minStartDate"
+                      required
+                      (change)="onStartDateChange()"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                  </mat-form-field>
+              
+                  <mat-form-field appearance="fill" class="form-field">
+                    <mat-label>End Date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="endPicker"
+                      [(ngModel)]="newSale1.endDate"
+                      name="endDate"
+                      [min]="newSale1.startDate"
+                      [max]="maxEndDate"
+                      required
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                  </mat-form-field>
+            
+                  <h3 class="choose-header">Choose Tours for the Sale*</h3>
+                    <div class="tours-list">
+                    <p *ngIf="tours.length === 0" class="no-tours-message">No tour is available.</p>
+                    <div
+                        class="tour-card"
+                        *ngFor="let tour of tours"
+                        [class.selected]="isTourSelected(tour.id)"
+                        (click)="toggleTourSelection(tour.id)"
+                    >
+                        <h4 class="tour-name">{{ tour.name }}</h4>
+                        <p>{{ tour.description }}</p>
+                        <p><strong>Current price:</strong> {{ tour.price | currency }}</p>
+                    </div>
+                    </div>
+          
+              <button mat-raised-button class="custom-save-button" [disabled]="!isFormValid1()" type="submit">Save</button>
+              <button mat-raised-button color="warn" (click)="cancelEdit()">Cancel</button>
+            </form>
+          </div>
+          <ng-template #saleCard>
+      <!-- Gornji deo kartice -->
+       <p class="active-p" *ngIf="sale.active ===true">Active</p>
+       <p class="notactive-p" *ngIf="sale.active ===false">Not active</p>
+      <div class="sale-header">
+        <div class="sale-dates">
+          <h3><strong>{{ sale.startDate | date: 'dd.MM.yyyy' }}</strong> - <strong>{{ sale.endDate | date: 'dd.MM.yyyy' }}</strong></h3>
+        </div>
+        <div class="sale-discount">
+          <span>{{ sale.discount }}%</span>
+        </div>
+      </div>
+  
+      <!-- Prikaz tura -->
+      <div class="sale-tours">
+        <div
+          class="tour-card1"
+          *ngFor="let tour of salesTourDetails.get(sale.id!) || []">
+          <h4 class="tour-name">{{ tour.name }}</h4>
+          <p>{{ tour.description }}</p>
+          <p><strong>Current price:</strong> {{ tour.price | currency }}</p>
+        </div>
+      </div>
+  
+      <!-- Dugmad -->
+      <div class="sale-actions">
+        <button mat-raised-button class="custom-save-button" [disabled]="sale.active" (click)="updateSale(sale)"><mat-icon>edit</mat-icon></button>
+        <button mat-raised-button color="warn" [disabled]="sale.active" (click)="deleteSale(sale)"><mat-icon>delete</mat-icon></button>
+      </div>
+    </ng-template>
+    </div>
+  </div>
+  <p *ngIf="sales.length === 0" class="no-sales-message">No sales available.</p>
