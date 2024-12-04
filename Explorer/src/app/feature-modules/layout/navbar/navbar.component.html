@@ -28,6 +28,7 @@
         <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">{{ 'NAVBAR.TOUR_PROBLEMS' | translate }}</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['sales']">Sales</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['coupon']">Coupon</button>
+        <button  mat-button class="custom-button" [routerLink]="['space-invaders']">Game</button>
 
     </div>
 </mat-toolbar>
