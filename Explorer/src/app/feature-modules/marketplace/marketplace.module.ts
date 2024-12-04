@@ -17,6 +17,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CouponComponent } from './coupon/coupon.component';
 import { CouponFormComponent } from './coupon-form/coupon-form.component';
+import { PacagesPublComponent } from './pacages-publ/pacages-publ.component';
+import { MyPacagesComponent } from './my-pacages/my-pacages.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { CouponFormComponent } from './coupon-form/coupon-form.component';
     ShoppingCartComponent,
     TourSaleComponent,
     CouponComponent,
-    CouponFormComponent
+    CouponFormComponent,
+    PacagesPublComponent,
+    MyPacagesComponent
   ],
   imports: [
     CommonModule,
@@ -45,7 +49,8 @@ import { CouponFormComponent } from './coupon-form/coupon-form.component';
   ],
   providers: [MatDatepickerModule],
   exports: [
-    TourPreferencesComponent
+    TourPreferencesComponent,
+    MyPacagesComponent
   ]
 })
 export class MarketplaceModule { }

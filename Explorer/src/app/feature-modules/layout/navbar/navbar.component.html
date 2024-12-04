@@ -30,5 +30,11 @@
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['coupon']">Coupon</button>
         <button  mat-button class="custom-button" [routerLink]="['space-invaders']">Game</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['bundle']">Bundle</button>
+
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['paceges-publ']">Pacages</button>
+
+
+
+
     </div>
 </mat-toolbar>

@@ -1,15 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { TourPreferences } from './model/tour-preferences.model';
 import { environment } from 'src/env/environment';
 import {TourDTO} from "../tour-authoring/model/tour.model";
 import {CheckpointDTO} from "../tour-authoring/model/checkpoint.model";
 import { TourProblem } from './model/tour-problem';
-import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
+import { ShoppingCartBundleDTO, ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
 import { TourSale } from './model/tour-sale.model';
 import { Coupon } from './model/coupon';
+import { BundleDTO } from './model/pacages-publ';
 
 @Injectable({
   providedIn: 'root'
@@ -132,4 +133,19 @@ export class MarketplaceService {
     deleteCoupon(id: number): Observable<void> {
       return this.http.delete<void>(environment.apiHost + `author/coupon/${id}`);
     }
+    getPublishedBundles(): Observable<BundleDTO[]> {
+      return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/bundles/publishedboundles`).pipe(
+        tap((data) => console.log('Fetched bundles:', data))
+      );
+    }
+    addBundleToCart(touristId: number, shoppingCartBundleDTO: ShoppingCartBundleDTO): Observable<any> {
+      return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/addboundle/${touristId}`, shoppingCartBundleDTO);
+      }
+      removeBundleFromCart(touristId: number, bundleId: number): Observable<any> {
+        return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove-bundle/${touristId}/${bundleId}`);
+        }
+
+        getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
+          return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
+        }
 }

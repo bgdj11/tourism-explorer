@@ -6,17 +6,24 @@
       <p>{{ errorMessage }}</p>
     </div>
   
-    <!-- Proveravamo da li postoje stavke u korpi -->
-    <div *ngIf="shoppingCart.shopingItems.length > 0; else emptyCart">
+    <div *ngIf="shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0">
       <ul>
-        <!-- Iteriramo kroz shopingItems i prikazujemo ih -->
+        <!-- Iteriramo kroz shopingItems -->
         <li *ngFor="let item of shoppingCart.shopingItems">
           <div class="cart-item">
             <span class="tour-name">{{ item.tourName }}</span>
             <span class="tour-price">{{ item.tourPrice | currency }}</span>
-  
-            <!-- Dugme za brisanje stavke -->
             <button (click)="removeTour(item.tourId)">Remove</button>
+          </div>
+        </li>
+    
+        <!-- Iteriramo kroz shopingBoundles (pakete) -->
+        <li *ngFor="let bundle of shoppingCart.shopingBundles">
+          <div class="cart-item">
+            <span class="tour-name">{{ bundle.name }}</span>
+            <span class="tour-price">{{ bundle.price | currency }}</span>
+            <button (click)="removeBundle(bundle.bundleId)">Remove</button>
+
           </div>
         </li>
       </ul>
@@ -28,7 +35,7 @@
     </div>
 
     <div>
-      <button *ngIf="shoppingCart && shoppingCart.shopingItems.length > 0" (click)="checkout()">Checkout</button>
+      <button *ngIf="shoppingCart && shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0" (click)="checkout()">Checkout</button>
     </div>
   
     <!-- Poruka kada je korpa prazna -->
