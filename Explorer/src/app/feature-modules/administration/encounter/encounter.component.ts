@@ -15,9 +15,11 @@ export class EncounterComponent implements OnInit {
   encounterForm!: FormGroup;
   encounters: Encounter[] = [];
   encounter: Encounter;
+  toReviewEncounters: Encounter[] = [];
   isEditing = false;
   editingId: number | null = null;
   user: BehaviorSubject<User>;
+  isAdmin = false;
   statuses = [
     { label: 'Draft', value: EncounterStatus.DRAFT },
     { label: 'Active', value: EncounterStatus.ACTIVE },
@@ -35,8 +37,14 @@ export class EncounterComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.user$;
+    this.user.subscribe(user => {
+      this.isAdmin = user.role === 'administrator';
+    });
     this.initializeForm();
-    this.loadEncounters();
+    if (this.isAdmin) {
+      this.loadEncounters();
+      this.loadToReviewEncounters();
+    }
 
     // Watch for changes in the 'type' form control
     this.encounterForm.get('type')?.valueChanges.subscribe((type: EncounterType) => {
@@ -67,8 +75,9 @@ export class EncounterComponent implements OnInit {
   loadEncounters(): void {
     console.log("OVDE SE POZIVA");
     this.adminService.getEncounters(1, 11).subscribe((response) => {
-      this.encounters = response.results;
-      console.log("OVO JE ENC: " + this.encounters);
+      // Filtriraj encountere sa isReviewed === true
+      this.encounters = response.results.filter(encounter => encounter.isReviewed);
+      console.log("Učitani pregledani encounteri: ", this.encounters);
     });
   }
 
@@ -84,6 +93,7 @@ export class EncounterComponent implements OnInit {
         latitude: formValue.location.latitude,
         longitude: formValue.location.longitude,
       },
+      isReviewed: this.isAdmin,
     };
 
     // Dodaj specificna polja za SOCIAL type
@@ -122,7 +132,10 @@ export class EncounterComponent implements OnInit {
   }
 
   deleteEncounter(id: number): void {
-    this.adminService.deleteEncounter(id).subscribe(() => this.loadEncounters());
+    this.adminService.deleteEncounter(id).subscribe(() => {
+      this.loadToReviewEncounters(); // Ponovno učitavanje liste nakon brisanja
+      this.loadEncounters();
+    });
   }
 
   publishEncounter(id: number): void {
@@ -160,4 +173,22 @@ export class EncounterComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
+  loadToReviewEncounters(): void {
+    this.adminService.getEncounters(1, 100).subscribe((response) => {
+      this.toReviewEncounters = response.results.filter(encounter => !encounter.isReviewed);
+    });
+  }
+
+  markAsReviewed(id: number): void {
+    const encounter = this.toReviewEncounters.find(e => e.id === id);
+    if (encounter) {
+      encounter.isReviewed = true; // Postavi isReviewed lokalno
+      this.adminService.updateEncounter(encounter).subscribe(() => {
+        this.loadToReviewEncounters(); // Ponovno učitavanje liste nakon promene
+        this.loadEncounters();
+      });
+    }
+  }
+
 }

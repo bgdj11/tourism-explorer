@@ -4,6 +4,7 @@ import { MapComponent } from './map/map.component';
 import { LocationSimulatorComponent } from './location-simulator/location-simulator.component';
 import { TouristProfileComponent } from './tourist-profile/tourist-profile.component';
 import {RouterLink} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
 
 
 
@@ -15,7 +16,8 @@ import {RouterLink} from "@angular/router";
   ],
   imports: [
     CommonModule,
-    RouterLink
+    RouterLink,
+    MatButtonModule
   ],
   exports: [MapComponent]
 })

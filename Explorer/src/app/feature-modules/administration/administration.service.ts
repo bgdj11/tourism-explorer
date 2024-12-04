@@ -106,9 +106,15 @@ export class AdministrationService {
   }
 
   addProblemComment(problemId: number, problemComment: ProblemComment): Observable<any> {
-    return this.http.post<any>(`${environment.apiHost}tourProblem/${problemId}/comments`, 
+    return this.http.post<any>(`${environment.apiHost}tourProblem/${problemId}/comments`,
       problemComment
     );
   }
+  getEncountersForReview(): Observable<Encounter[]> {
+    return this.http.get<Encounter[]>(`${environment.apiHost}administrator/encounters/to-review`);
+  }
 
+  markEncounterAsReviewed(id: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/mark-reviewed`, {});
+  }
 }
