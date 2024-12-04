@@ -8,6 +8,7 @@ import {TourDTO} from "../tour-authoring/model/tour.model";
 import {CheckpointDTO} from "../tour-authoring/model/checkpoint.model";
 import { TourProblem } from './model/tour-problem';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from './model/shopping-cart';
+import { Coupon } from './model/coupon';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,10 @@ export class MarketplaceService {
     return this.http.get<PagedResults<TourDTO>>(this.apiUrl, { params });
   }
 
+  getPublishToursByAuthorId(authorId : number): Observable<PagedResults<TourDTO>> {
+    return this.http.get<PagedResults<TourDTO>>(`${environment.apiHost}author/tours/toursByAuthorId/${authorId}`);
+  }
+
   getCheckpointIdsByTourId(tourId: number): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/${tourId}/checkpoint-ids`);
   }
@@ -72,6 +77,31 @@ export class MarketplaceService {
   
   checkout(touristId: number): Observable<any> {
     return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
+    }
+
+    getCoupons(page: number, pageSize: number): Observable<PagedResults<Coupon>> {
+      let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+  
+      return this.http.get<PagedResults<Coupon>>(environment.apiHost + 'author/coupon', { params });
+    }
+
+    getCouponById(id : number) : Observable<Coupon> {
+      return this.http.get<Coupon>(environment.apiHost + `author/coupon/${id}`);
+    }
+  
+    createCoupon(coupon: Coupon): Observable<Coupon> {
+      return this.http.post<Coupon>(environment.apiHost + 'author/coupon', coupon);
+  
+    }
+  
+    updateCoupon(coupon: Coupon): Observable<Coupon> {
+      return this.http.put<Coupon>(environment.apiHost + 'author/coupon/' + coupon.id, coupon);
+    }
+  
+    deleteCoupon(id: number): Observable<void> {
+      return this.http.delete<void>(environment.apiHost + `author/coupon/${id}`);
     }
 
 }

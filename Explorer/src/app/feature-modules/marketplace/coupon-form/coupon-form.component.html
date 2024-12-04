@@ -1,0 +1,40 @@
+<form [formGroup]="couponForm" class="coupon-form">
+    <div class="form-container">
+      <!-- Coupon Code -->
+      <mat-form-field class="form-field">
+        <mat-label>Coupon Code</mat-label>
+        <input matInput [value]="couponCode" formControlName="code" class="input-field" readonly>
+      </mat-form-field>
+      
+      
+  
+      <!-- Discount Percentage -->
+      <mat-form-field class="form-field">
+        <mat-label>Discount Percentage</mat-label>
+        <input matInput formControlName="discountPercentage" type="number" class="input-field" placeholder="Enter discount (e.g., 10)">
+      </mat-form-field>
+  
+      <!-- Expiry Date -->
+      <mat-form-field class="form-field">
+        <mat-label>Expiry Date</mat-label>
+        <input matInput formControlName="expiryDate" type="date" class="input-field">
+      </mat-form-field>
+  
+      <!-- Tour Selection -->
+      <mat-selection-list [(ngModel)]="selectedTourIds" (selectionChange)="onSelectionChange($event)">
+        <mat-list-option *ngFor="let tour of tours" [value]="tour.id">
+          {{ tour.name }}
+        </mat-list-option>
+      </mat-selection-list>
+      
+
+
+
+
+  
+      <!-- Submit Button -->
+      <button *ngIf="!shouldEditCoupon" mat-raised-button type="submit" color="primary" (click)="addCoupon()">Submit</button>
+      <button *ngIf="shouldEditCoupon" mat-raised-button type="submit" color="primary" (click)="updateCoupon()">Submit</button>
+    </div>
+  </form>
+  
