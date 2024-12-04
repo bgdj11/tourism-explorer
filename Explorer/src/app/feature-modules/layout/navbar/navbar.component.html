@@ -13,6 +13,8 @@
         <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['app-rating']">{{ 'NAVBAR.RATINGS' | translate }}</button>
         <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['app-rating']">{{ 'NAVBAR.RATE_US' | translate }}</button>
         <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['encounter']">Create encounter</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tourist-profile']">See Profile</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['addproblem']">Add Problem</button>
         <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tour-preferences']">{{ 'NAVBAR.SET_PREFERENCES' | translate }}</button>
         <button mat-button class="custom-button" [routerLink]="['blog']">{{ 'NAVBAR.BLOGS' | translate }}</button>
         <button *ngIf="user" mat-button class="custom-button" [routerLink]="['editUserAccount']">{{ 'NAVBAR.EDIT_ACCOUNT' | translate }}</button>
@@ -25,5 +27,7 @@
         <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['market']">{{ 'NAVBAR.TOURS_MARKET' | translate }}</button>
         <button *ngIf="user && (user.role === 'author' || user.role === 'tourist' || user.role === 'administrator')" mat-button class="custom-button" [routerLink]="['tour-problems']">{{ 'NAVBAR.TOUR_PROBLEMS' | translate }}</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['sales']">Sales</button>
+        <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['coupon']">Coupon</button>
+
     </div>
 </mat-toolbar>

@@ -15,6 +15,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CouponComponent } from './coupon/coupon.component';
+import { CouponFormComponent } from './coupon-form/coupon-form.component';
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     TourPreferencesFormComponent,
     MarketComponent,
     ShoppingCartComponent,
-    TourSaleComponent
+    TourSaleComponent,
+    CouponComponent,
+    CouponFormComponent
   ],
   imports: [
     CommonModule,
