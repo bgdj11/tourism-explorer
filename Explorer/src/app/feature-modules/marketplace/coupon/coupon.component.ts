@@ -3,6 +3,7 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { MarketplaceService } from '../marketplace.service';
 import { Coupon } from '../model/coupon';
+import { TourDTO } from '../../tour-authoring/model/tour.model';
 
 @Component({
   selector: 'xp-coupon',
@@ -16,23 +17,61 @@ export class CouponComponent implements OnInit {
   shouldEditCoupon: boolean = false;
   selectedCoupon : Coupon;
   user: User | undefined;
+  tours: TourDTO[] = []; // Čuva liste tura
 
   constructor(private service: MarketplaceService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.getCoupons(1, 10);
     this.authService.user$.subscribe(user => {
       this.user = user;
+  
+      this.loadTours().then(() => {
+      this.getCoupons(1, 10); // Učitaj kuponsku listu nakon tura
+      });
     });
   }
+  
 
-  // Dobavljanje liste kupona
   getCoupons(page: number, pageSize: number): void {
     this.service.getCoupons(page, pageSize).subscribe(response => {
       this.coupons = response.results;
+  
+      // Dodajte naziv ture ako je lista `tours` dostupna
+      this.coupons.forEach(coupon => {
+        if (coupon.tourId) {
+          const tour = this.tours.find(t => t.id === coupon.tourId);
+          coupon.tourName = tour ? tour.name : 'Nepoznata tura';
+        } else {
+          coupon.tourName = 'Sve ture';
+        }
+      });
     });
   }
-
+  
+  
+  loadTours(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.user?.id) {
+        this.service.getPublishToursByAuthorId(this.user.id).subscribe({
+          next: (response) => {
+            if (Array.isArray(response)) {
+              this.tours = response;
+            } else {
+              this.tours = response.results;
+            }
+            resolve();
+          },
+          error: (err) => {
+            console.error('Failed to fetch tours:', err);
+            reject(err);
+          }
+        });
+      } else {
+        resolve();
+      }
+    });
+  }
+  
   onAddCouponClicked(): void {
     this.shouldRenderCouponForm = true;
     this.shouldEditCoupon = false;
