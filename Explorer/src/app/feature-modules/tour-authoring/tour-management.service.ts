@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
 import {PagedResults} from "../../shared/model/paged-results.model";
 import {TourDTO} from "./model/tour.model";
@@ -11,6 +11,8 @@ import { TransportType, TravelTimeDTO } from './model/travelTime.model';
 import { TourReviewDTO } from './model/tourReview.model';
 import { MembershipRequest } from './model/membershipRequest.model';
 import { DailyAgendaDTO } from './model/DailyAgendaDTO.model';
+import { EncounterDTO } from 'src/app/shared/model/encounter';
+import { Encounter } from '../administration/model/encounter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -164,8 +166,27 @@ export class TourManagementService {
     return this.http.delete<void>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${id}`);
   }
   
-  
-  
+  createEncounter(encounter: EncounterDTO): Observable<EncounterDTO> {
+    const url = `${environment.apiHost}administrator/encounters`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getToken()}`
+    });
 
+    console.log('Payload being sent to server:', encounter);
+
+    return this.http.post<EncounterDTO>(url, encounter);
+  }
+  
+  getToken(): string {
+    // Pretpostavka: Token je sačuvan u localStorage nakon prijave
+    return localStorage.getItem('authToken') || '';
+  }
+
+  getEncounters(page: number, pageSize: number): Observable<PagedResults<Encounter>> {
+    return this.http.get<PagedResults<Encounter>>(
+      `${environment.apiHost}administrator/encounters?page=${page}&pageSize=${pageSize}`,
+    );
+  }
 
 }

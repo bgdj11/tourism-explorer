@@ -419,6 +419,104 @@
       </div>
     </div>
 
+    <div class="col-md-6">
+      <h4 class="text-center">Encounters for {{ selectedTour?.name }}</h4>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead class="table-dark text-center">
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>XP</th>
+              <th>Status</th>
+              <th>Type</th>
+              <th>Required</th>
+              <button class="btn btn-primary" (click)="openEncounterModal()">
+                <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
+              </button>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let encounter of encounters; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ encounter.name }}</td>
+              <td>{{ encounter.description }}</td>
+              <td>{{ encounter.location.latitude }}</td>
+              <td>{{ encounter.location.longitude }}</td>
+              <td>{{ encounter.xp }}</td>
+              <td>{{ encounter.status }}</td>
+              <td>{{ encounter.type }}</td>
+              <td>{{ encounter.isRequired ? 'Yes' : 'No' }}</td>
+              
+              <!--<td class="text-center">
+                <button class="btn btn-warning btn-sm mx-1" (click)="editEncounter(encounter)">
+                  <fa-icon [icon]="faPencil"></fa-icon>
+                </button>
+                <button class="btn btn-danger btn-sm mx-1" (click)="deleteEncounter(encounter.id)">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button> 
+              </td>--> 
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #encounterModal let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title">Add Encounter</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="createEncounter()">
+          <div class="mb-3">
+            <label for="encounterName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="encounterName" [(ngModel)]="newEncounter.name" name="name" required />
+          </div>
+          <div class="mb-3">
+            <label for="encounterDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="encounterDescription" [(ngModel)]="newEncounter.description" name="description" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="checkpoint" class="form-label">Checkpoint</label>
+            <select 
+              id="checkpoint" 
+              class="form-select" 
+              [(ngModel)]="selectedCheckpoint" 
+              name="checkpoint" 
+              (change)="onCheckpointChange()">
+              <option *ngFor="let checkpoint of selectedTourCheckpoints" [ngValue]="checkpoint">
+                {{ checkpoint.checkpointName }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="latitude" class="form-label">Latitude</label>
+            <input type="number" class="form-control" id="latitude" [(ngModel)]="newEncounter.location.latitude" name="latitude" readonly required />
+          </div>
+          <div class="mb-3">
+            <label for="longitude" class="form-label">Longitude</label>
+            <input type="number" class="form-control" id="longitude" [(ngModel)]="newEncounter.location.longitude" name="longitude" readonly required />
+          </div>          
+          <div class="mb-3">
+            <label for="xp" class="form-label">XP</label>
+            <input type="number" class="form-control" id="xp" [(ngModel)]="newEncounter.xp" name="xp" required />
+          </div>
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="isRequired" [(ngModel)]="newEncounter.isRequired" name="isRequired" />
+            <label for="isRequired" class="form-check-label">Is Required?</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+    
 
   </div>
   <div>
