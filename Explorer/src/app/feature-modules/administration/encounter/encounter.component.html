@@ -92,7 +92,7 @@
   </div>
 
   <!-- Tabela za prikaz Encounter-a -->
-  <div class="list-container">
+  <div *ngIf="isAdmin" class="list-container">
     <h2>Encounter List</h2>
     <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
       <ng-container matColumnDef="name">
@@ -150,6 +150,80 @@
 
       <tr mat-header-row *matHeaderRowDef="['name', 'description', 'location', 'xp', 'type', 'status', 'authorId', 'actions']"></tr>
       <tr mat-row *matRowDef="let row; columns: ['name', 'description', 'location', 'xp', 'type', 'status', 'authorId', 'actions']"></tr>
+    </table>
+  </div>
+  <div *ngIf="isAdmin" class="to-review-container">
+    <h2>To Review</h2>
+    <table mat-table [dataSource]="toReviewEncounters" class="mat-elevation-z8">
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.name }}</td>
+      </ng-container>
+
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.description }}</td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.type }}</td>
+      </ng-container>
+
+      <!-- XP Column -->
+      <ng-container matColumnDef="xp">
+        <th mat-header-cell *matHeaderCellDef>XP</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.xp }}</td>
+      </ng-container>
+
+      <!-- Location Column -->
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>Location</th>
+        <td mat-cell *matCellDef="let encounter">
+          Latitude: {{ encounter.location.latitude }}, Longitude: {{ encounter.location.longitude }}
+        </td>
+      </ng-container>
+
+      <!-- Author ID Column -->
+      <ng-container matColumnDef="authorId">
+        <th mat-header-cell *matHeaderCellDef>Author</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.authorId }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
+      </ng-container>
+
+      <!-- Published Date Column -->
+      <ng-container matColumnDef="publishedDate">
+        <th mat-header-cell *matHeaderCellDef>Published Date</th>
+        <td mat-cell *matCellDef="let encounter">
+          {{ encounter.publishedDate | date: 'medium' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let encounter">
+          <button mat-icon-button color="primary" (click)="markAsReviewed(encounter.id)">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteEncounter(encounter.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Table Header and Rows -->
+      <tr mat-header-row *matHeaderRowDef="['name', 'description', 'type', 'xp', 'location', 'authorId', 'status', 'publishedDate', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'description', 'type', 'xp', 'location', 'authorId', 'status', 'publishedDate', 'actions']"></tr>
     </table>
   </div>
 </div>

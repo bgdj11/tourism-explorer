@@ -11,6 +11,9 @@ import { forkJoin } from 'rxjs';
 import { TransportType, TravelTimeDTO } from '../model/travelTime.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { DailyAgendaDTO } from '../model/DailyAgendaDTO.model';
+import { EncounterDTO } from 'src/app/shared/model/encounter';
+import { Encounter } from '../../administration/model/encounter.model';
+import { Tour } from '../../tour-execution/model/review.model';
 
 @Component({
   selector: 'xp-tour',
@@ -26,6 +29,7 @@ export class TourComponent implements OnInit {
   selectedEquipmentIds: number[] = [];
   selectedTourTravelTimes: TravelTimeDTO[] = [];
   selectedTourDailyAgendas: DailyAgendaDTO[] = [];
+  encounters: Encounter[] = []; 
   selectedTour: any = null;
   lengthInKm: number;
   totalCount: number = 0;
@@ -35,6 +39,9 @@ export class TourComponent implements OnInit {
   modalTitle: string = '';
   userId: number =0;
   newBetweenDestination: string = '';
+  encounterStatuses = ['DRAFT', 'ACTIVE', 'ARCHIVED'];
+  encounterTypes = ['SOCIAL', 'LOCATION', 'MISC'];
+  selectedCheckpoint: CheckpointDTO | null = null;
   tour: TourDTO = {
     id: 0,
     name: '',
@@ -70,6 +77,18 @@ export class TourComponent implements OnInit {
     endDestination: '',
     description: ''
   }
+  newEncounter: EncounterDTO = {
+    id: 0,
+    name: '',
+    description: '',
+    location: { latitude: 0, longitude: 0 },
+    xp: 0,
+    status: 'DRAFT',
+    type: 'SOCIAL',
+    authorId: 0,
+    usersWhoCompletedId: [],
+    isRequired: false
+  };
 
   @Output() waypointsChanged = new EventEmitter<{ lat: number, lng: number }[]>();
 
@@ -80,6 +99,7 @@ export class TourComponent implements OnInit {
   @ViewChild('dailyAgendaModal') dailyAgendaModal!: TemplateRef<any>;
   @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
+  @ViewChild('encounterModal') encounterModal!: TemplateRef<any>;
 
   private modalRef!: NgbModalRef;
   tagsInput: string = '';
@@ -91,6 +111,7 @@ export class TourComponent implements OnInit {
     private authService: AuthService
   ) {
     this.loadAvailableEquipment();
+    //this.loadEncounters();
   }
   
   addBetweenDestination() {
@@ -108,8 +129,9 @@ export class TourComponent implements OnInit {
     this.selectedTour = tour;
     console.log("Selected tour status: " + this.selectedTour.status)
     this.selectedTourCheckpoints = tour.tourCheckpoints;
-    this.getCheckpointsByTourId(tour.id);
     this.getEquipmentByTourId(tour.id);
+    this.loadEncounters();
+    
   }
 
   onImageSelected(event: Event): void {
@@ -489,6 +511,121 @@ export class TourComponent implements OnInit {
     }
 
   }
+
+  openEncounterModal(): void {
+    this.newEncounter = {
+      id: 0,
+      name: '',
+      description: '',
+      location: { latitude: 0, longitude: 0 },
+      xp: 0,
+      status: 'DRAFT',
+      type: 'SOCIAL',
+      authorId: this.userId,
+      usersWhoCompletedId: [],
+      isRequired: false
+    };
+  
+    this.modalRef = this.modalService.open(this.encounterModal, { size: 'lg' });
+  }
+
+  createEncounter(): void {
+    if (!this.newEncounter.name || !this.newEncounter.description) {
+      console.error('Ime i opis su obavezni!');
+      return;
+    }
+  
+    if (!this.selectedCheckpoint) {
+      console.error('Checkpoint nije odabran!');
+      return;
+    }
+  
+    console.log('Podaci za Encounter:', this.newEncounter);
+    // Kreiraj novi Encounter pozivom servisa
+    this.tourService.createEncounter(this.newEncounter).subscribe(
+      (response) => {
+        console.log('Encounter uspešno kreiran:', response);
+        this.loadEncounters();
+        this.closeModal(); // Zatvori modal
+      },
+      (error) => {
+        if (error.status) {
+          console.error(`HTTP Status Code: ${error.status}`);
+        }
+        if (error.error) {
+          console.error('Detalji greške sa servera:', error.error);
+        } else {
+          console.error('Greška prilikom kreiranja Encounter-a:', error);
+        }
+      }
+    );
+  }
+  
+  onCheckpointChange(): void {
+    if (!this.selectedCheckpoint) {
+      console.error('Checkpoint ID nije odabran!');
+      return;
+    }
+  
+    const selectedCheckpoint = this.selectedTourCheckpoints.find(cp => cp.id === this.selectedCheckpoint?.id);
+  
+    console.log('ID = ', this.selectedCheckpoint);
+    if (selectedCheckpoint) {
+      // Postavi latitude i longitude iz odabranog checkpoint-a
+      this.newEncounter.location.latitude = selectedCheckpoint.latitude!;
+      this.newEncounter.location.longitude = selectedCheckpoint.longitude!;
+      console.log('Checkpoint pronađen i lokacija je postavljena:', selectedCheckpoint);
+    } else {
+      console.error('Checkpoint sa datim ID-om nije pronađen!');
+    }
+  }
+  
+  loadEncounters(): void {
+    console.log("OVDE SE POZIVA");
+    console.log("ID ture ", this.selectedTour);
+    this.selectedCheckpoint = this.selectedTour.tourCheckpoints;
+    console.log("Broj checkpointa: ", this.selectedCheckpoint);
+    this.tourService.getEncounters(1, 11).subscribe((response) => {
+      // Pripremamo validne lokacije iz checkpointa
+      const selectedLocations = this.selectedTourCheckpoints
+        .filter(checkpoint => checkpoint.latitude !== undefined && checkpoint.longitude !== undefined)
+        .map(checkpoint => ({
+          latitude: checkpoint.latitude!,
+          longitude: checkpoint.longitude!
+        }));
+  
+      // Filtriramo encountere
+      this.encounters = response.results.filter(encounter =>
+        encounter.location && // Proveravamo da li encounter ima validnu lokaciju
+        selectedLocations.some(location =>
+          this.areLocationsEqual(location, encounter.location)
+        )
+      );
+  
+      console.log("FILTRIRANI ENCOUNTERI: ", this.encounters);
+    });
+  }
+  
+
+  areLocationsEqual(
+    loc1: { latitude: number | undefined; longitude: number | undefined },
+    loc2: { latitude: number | undefined; longitude: number | undefined }
+  ): boolean {
+    if (!loc1.latitude || !loc1.longitude || !loc2.latitude || !loc2.longitude) {
+      return false; // Ako neka od vrednosti nije definisana, lokacije nisu jednake
+    }
+  
+    const precision = 1e-6; // Preciznost za poređenje koordinata
+    return (
+      Math.abs(loc1.latitude - loc2.latitude) < precision &&
+      Math.abs(loc1.longitude - loc2.longitude) < precision
+    );
+  }
+  
+  
+  
+  
+  
   protected readonly faTrash = faTrash;
   protected readonly faPencil = faPencil;
   protected readonly faPlus = faPlus;
