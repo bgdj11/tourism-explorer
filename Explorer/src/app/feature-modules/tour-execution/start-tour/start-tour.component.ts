@@ -9,6 +9,7 @@ import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { MapLocation } from 'src/app/feature-modules/tour-execution/model/map-location.model';
 import {VisitedCheckpointsDTO} from "../model/visitedCheckpoints.model";
+import { EncounterDTO } from 'src/app/shared/model/encounter';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class StartTourComponent implements OnInit, OnDestroy {
     private checkIntervalSubscription!: Subscription;
     currentLocation: MapLocation | null = null;
 
+  encounter: EncounterDTO | null;
   errorMessage: string | null = null;
   tours: TourDTO[] = [];
   activeTourExecution: TourExecution | null = null;
@@ -71,7 +73,8 @@ export class StartTourComponent implements OnInit, OnDestroy {
     if (savedExecution && userId) {
       const execution = JSON.parse(savedExecution) as TourExecution;
       this.executionId = execution.id;
-      this.startCheckingVisitedCheckpoints(userId);
+      if(this.encounter?.isRequired)
+        this.startCheckingVisitedCheckpoints(userId);
     }
   }
 
@@ -242,7 +245,8 @@ export class StartTourComponent implements OnInit, OnDestroy {
                                               // Nakon što se tura uspešno pokrene, prikaži samo aktivnu turu
                                               this.tours = this.tours.filter(tour => tour.id === tourId);*/
 
-                            this.startCheckingVisitedCheckpoints(userId);
+                            if(this.encounter?.isRequired)
+                              this.startCheckingVisitedCheckpoints(userId);
                         } else {
                             console.error('No execution ID returned from startTourExecution');
                             this.errorMessage = 'Failed to start the tour. Please try again.';

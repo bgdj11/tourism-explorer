@@ -17,4 +17,5 @@ export interface EncounterDTO {
   archivedDate?: string;
   authorId: number;
   usersWhoCompletedId: number[];
+  isRequired?: boolean;
 }
