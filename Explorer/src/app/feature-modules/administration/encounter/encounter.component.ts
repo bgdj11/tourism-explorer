@@ -30,7 +30,7 @@ export class EncounterComponent implements OnInit {
     { label: 'Miscellaneous', value: EncounterType.MISC }
   ];
   showImageForHiddenEncounter = false;  // Flag to show the additional input for 'Location' type
-  image: string | null = null; 
+  image: string | null = null;
   constructor(private fb: FormBuilder, private adminService: AdministrationService, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -58,7 +58,9 @@ export class EncounterComponent implements OnInit {
       publishedDate: [null],
       archivedDate: [null],
       authorId: [this.user.value.id],
-      additionalLocationInfo: ['']  // Add the additional field for Location type
+      additionalLocationInfo: [''] , // Add the additional field for Location type
+      requiredParticipants: [0], // Default value for SOCIAL encounters
+      radius: [0]
     });
   }
 
@@ -73,7 +75,7 @@ export class EncounterComponent implements OnInit {
   onSubmit(): void {
     const formValue = this.encounterForm.value;
 
-    const payload = {
+    const payload: any = {
       ...formValue,
       id: this.isEditing ? this.editingId : undefined,
       publishedDate: formValue.publishedDate || null,
@@ -83,11 +85,19 @@ export class EncounterComponent implements OnInit {
         longitude: formValue.location.longitude,
       },
     };
-    // Samo za hidden location encounter
-    if (this.image) 
-      payload.image = this.image; 
-    else
+
+    // Dodaj specificna polja za SOCIAL type
+    if (formValue.type === EncounterType.SOCIAL) {
+      payload.requiredParticipants = formValue.requiredParticipants;
+      payload.radius = formValue.radius;
+    }
+
+    if (this.image) {
+      payload.image = this.image;
+    } else {
       payload.image = null;
+    }
+
     console.log('Submitting payload:', payload);
 
     if (this.isEditing) {
@@ -135,17 +145,17 @@ export class EncounterComponent implements OnInit {
 
   onImageSelected(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
-  
+
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
       const reader = new FileReader();
-  
+
       reader.onloadend = () => {
         const base64Image = reader.result as string;
-  
+
         this.image = base64Image;
       };
-  
+
 
       reader.readAsDataURL(file);
     }
