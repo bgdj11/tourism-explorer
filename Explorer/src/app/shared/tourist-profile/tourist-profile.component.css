@@ -1,0 +1,57 @@
+.loading-container,
+.error-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.profile-container {
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.profile-details {
+  margin-bottom: 20px;
+}
+
+.profile-details p {
+  margin: 5px 0;
+}
+
+.completed-encounters {
+  margin-top: 20px;
+}
+
+.completed-encounters ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.completed-encounters li {
+  margin: 5px 0;
+}
+
+.encounter-link {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.encounter-link:hover {
+  text-decoration: underline;
+}
+
+.badge {
+  background-color: #28a745;
+  color: #fff;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 12px;
+  margin-left: 8px;
+}

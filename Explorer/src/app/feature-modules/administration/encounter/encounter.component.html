@@ -67,6 +67,20 @@
           />
         </div>
       </div>
+
+      <div *ngIf="encounterForm.get('type')?.value === 'SOCIAL'">
+        <mat-form-field class="full-width">
+          <mat-label>Required Participants</mat-label>
+          <input matInput type="number" formControlName="requiredParticipants" placeholder="Enter number of participants" />
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Radius (meters)</mat-label>
+          <input matInput type="number" formControlName="radius" placeholder="Enter radius in meters" />
+        </mat-form-field>
+      </div>
+
+
       <!-- Submit and Cancel Buttons -->
       <div class="form-actions">
         <button mat-raised-button color="primary" type="submit">

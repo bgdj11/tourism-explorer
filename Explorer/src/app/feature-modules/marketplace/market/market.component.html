@@ -1,6 +1,16 @@
+<div><mat-checkbox class="checkbox" [(ngModel)]="isOnSaleChecked" (change)="filterToursBySales()">ON SALE</mat-checkbox></div>
+<div *ngIf="isOnSaleChecked" class="sort-controls">
+  <mat-select placeholder="Sort by discount" (selectionChange)="sortTours($event.value)">
+    <mat-option value="asc">Sort by discount - ascending</mat-option>
+    <mat-option value="desc">Sort by discount - descending</mat-option>
+  </mat-select>
+</div>
 <div class="tour-container">
-    <div *ngFor="let tour of tours" class="tour-card">
-      <h3 class="tour-name">{{ tour.name }}</h3>
+    <div *ngFor="let tour of filteredTours" class="tour-card">
+      <div *ngIf="findDiscount(tour)" class="sale-discount">
+        <span class="discount">{{ findDiscount(tour)! }} %</span>
+      </div>
+      <h2 class="tour-name">{{ tour.name }}</h2>
       <p class="tour-description">{{ tour.description }}</p>
       <p class="tour-length">
         <strong>Length:</strong> {{ tour.lengthInKm || 'N/A' }} km
@@ -8,16 +18,47 @@
       <p class="tour-checkpoint">
         <strong>Start point:</strong> {{ checkpointNames[tour.id] || 'Nema CheckPoint' }}
       </p>
-      
-      <div class="tour-card-footer">
-        <button class="report-button" (click)="toggleReportForm(tour.id)">Report a Problem</button>
+      <p *ngIf="tourReviews[tour.id].length > 0">
+        <mat-icon class="star">star</mat-icon> {{ avgGrade[tour.id] / tourReviews[tour.id].length}}
+      </p>
+      <p class="oldPrice" *ngIf="findDiscount(tour)"><del class="del">{{ tour.price! * 100 / (100 - findDiscount(tour)!)}} AC</del></p>
+      <p class="price">
+         {{ tour.price || 'No price' }} AC
+      </p>
+      <div class="tour-card-footer">      
         <button (click)="addTourToCart(tour)" class="buy-button">Add to cart</button>
-        
       </div>
+      <div  *ngIf="tourReviews[tour.id].length > 0">
+        <p style="font-size: small;margin-top: 25px; color: gray; font-style: italic;">Reviews:</p>
+        <div class="reviews-container">
+        <div
+          class="review-item"
+          *ngFor="let review of tourReviews[tour.id] || []">
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <div class="profile-picture">
+              <img src="assets/tourist.png" width="30" height="30" alt="User Profile Picture" />
+            </div>
+            <p class="user-name" style="margin: 0; font-size: small; color: gray; ">
+              {{ review.personn.name }} {{ review.personn.surname }}
+            </p>
+          </div>
+  
+          <!-- Comment Section -->
+          <div class="comment-section" >
+            <p style="margin: 5px 0; font-size: small; color: #555;">{{ review.comment }}</p>
+            <p style="margin: 5px 0; font-size: small; color: #555;"><mat-icon class="star-c">star</mat-icon> {{ review.rating }}</p>
+          </div>
+          
+        </div>
+      </div>
+      </div>
+      
+      
+      <button mat-button class="report-button1" color="warn" (click)="toggleReportForm(tour.id)">Report a Problem</button>
   
       <div *ngIf="reportFormVisible[tour.id]" class="report-form">
         <div class="form-header">
-          <h4>Report a Problem</h4>
+          <h4 style="color: black">Problem</h4>
           <button class="close-button" (click)="toggleReportForm(tour.id)" mat-icon-button>
             <mat-icon>close</mat-icon></button>
         </div>

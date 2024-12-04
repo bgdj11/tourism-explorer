@@ -1,0 +1,33 @@
+<div *ngIf="isLoading" class="loading-container">
+  <p>Loading tourist profile...</p>
+</div>
+
+<div *ngIf="errorMessage" class="error-container">
+  <p class="error">{{ errorMessage }}</p>
+</div>
+
+<div *ngIf="profile && !isLoading" class="profile-container">
+  <h1>Tourist Profile</h1>
+
+  <div class="profile-details">
+    <p><strong>Username:</strong> {{ profile.username }}</p>
+    <p><strong>XP:</strong> {{ profile.xp }}</p>
+    <p>
+      <strong>Level:</strong>
+      {{ profile.level }}
+      <span *ngIf="profile.level >= 10" class="badge">Creator</span>
+    </p>
+  </div>
+
+  <div class="completed-encounters">
+    <h2>Completed Encounters</h2>
+    <ul>
+      <li *ngFor="let encounterId of profile.completedEncountersIds" class="encounter-item">
+        <a [routerLink]="['/encounters', encounterId]" class="encounter-link">
+          Encounter ID: {{ encounterId }}
+        </a>
+      </li>
+    </ul>
+    <p *ngIf="profile.completedEncountersIds.length === 0">No encounters completed yet.</p>
+  </div>
+</div>

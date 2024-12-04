@@ -16,6 +16,7 @@ export class LocationSimulatorComponent implements OnInit {
   currentLocation: { lat: number, lng: number } | null = null;
   user: User | undefined;
   encounters: EncounterDTO[] = []; // Store fetched encounters
+  private intervalId: any; // Store interval ID for clean
 
   constructor(
     private authService: AuthService,
@@ -43,6 +44,39 @@ export class LocationSimulatorComponent implements OnInit {
         );
       }
     });
+    // Start periodic API calls
+    this.startCheckingEncounters();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup interval when the component is destroyed
+    this.stopCheckingEncounters();
+  }
+
+// Start checking encounters periodically
+  private startCheckingEncounters(): void {
+    this.intervalId = setInterval(() => {
+      this.checkEncounters();
+    }, 10000); // Every 10 seconds
+  }
+
+  // Stop periodic API calls
+  private stopCheckingEncounters(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  // Call the encounter check API
+  private checkEncounters(): void {
+    this.encounterService.checkTouristsInEncounters().subscribe(
+      () => {
+        console.log('Encounter check executed successfully.');
+      },
+      error => {
+        console.error('Error checking encounters:', error);
+      }
+    );
   }
 
   // Handle location selection from the map
@@ -83,8 +117,8 @@ export class LocationSimulatorComponent implements OnInit {
             authorId: encounter.authorId,
             usersWhoCompletedId: encounter.usersWhoCompletedId
           }));
-          
-        
+
+
           // Prosleđivanje encountera mapi
           this.mapComponent.showEncountersOnMap(this.encounters);
         } else {
