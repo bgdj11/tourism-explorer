@@ -20,6 +20,7 @@ export class TourProblemsComponent implements OnInit {
   problemComments : (ProblemComment & { username?: string, userRole?: string })[] = [];
   commentText: string = ''; // To bind with textarea
   isCommentDisabled: boolean = true;
+  due: Date | undefined;
   //commentDetails: { [commentId: number]: { username?: string, userRole?: string } } = {};
 
   constructor(private service: AdministrationService, private authService: AuthService) { }
@@ -84,8 +85,60 @@ export class TourProblemsComponent implements OnInit {
     );
   }
 
+  calculateTomorrow(): string {
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    return today.toISOString().split('T')[0];
+  }
+
+  hasDeadlineExpire(problem: TourProblem): boolean{
+    if(problem.resolvingDue == undefined){
+      return false;
+    }
+    const currentDate = new Date();
+    const deadline = new Date(problem.resolvingDue!);
+    if(deadline <= currentDate){
+      return true;
+    }
+    return false;
+  }
+
+  isOlderThanFiveDays(problem: TourProblem): boolean {
+    const reportedDate = new Date(problem.reportedAt); 
+    const currentDate = new Date(); 
+    const differenceInDays = Math.floor(
+      (currentDate.getTime() - reportedDate.getTime()) / (1000 * 3600 * 24)
+    );
+    return !problem.resolved && differenceInDays > 5; 
+  }
+
   markAsResolved(problem: TourProblem): void {
     problem.resolved = true;
+    this.service.updateProblem(problem).subscribe(
+      (updatedProblem) => {
+        console.log('Problem marked as resolved:', updatedProblem);
+      },
+      (error) => {
+        console.error('Error updating problem:', error);
+      }
+    );
+  }
+
+  closeProblem(problem: TourProblem): void {
+    problem.closed = true;
+    this.service.updateProblem(problem).subscribe(
+      (updatedProblem) => {
+        console.log('Problem marked as closed:', updatedProblem);
+      },
+      (error) => {
+        console.error('Error updating closed:', error);
+      }
+    );
+  }
+
+  SaveDeadline(problem: TourProblem): void {
+    problem.resolvingDue = this.due;
+    this.due = undefined;
     this.service.updateProblem(problem).subscribe(
       (updatedProblem) => {
         console.log('Problem marked as resolved:', updatedProblem);

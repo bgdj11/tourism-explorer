@@ -1,77 +1,87 @@
-<!-- tours-list.component.html -->
 <div class="container mt-4">
-<div class="tours-container" *ngIf="hasActiveTours">
+  <div class="tours-container" *ngIf="hasActiveTours">
     <!-- Left Button (Previous) -->
     <button class="pagination-button" (click)="showPrevious()" [disabled]="currentPage <= 1">
-        &lt; Prev
+      &lt; {{ 'TOURS_LIST.PREV' | translate }}
     </button>
+
     <!-- Tours Display -->
-    <div class="tours-list" >
-        <div *ngFor="let tour of tours" class="tour-card">
-            <div *ngIf="tour.status === 1">
-                <h3>{{ tour.name }}</h3>
-                <p><strong>Description:</strong> {{ tour.description }}</p>
-                <p><strong>Difficulty:</strong> {{ tour.weight }}</p>
-                <p><strong>Price:</strong> {{ tour.price | currency }}</p>
-                <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
-                <div *ngIf="tour.tourCheckpoints && tour.tourCheckpoints.length > 0">
-                    <h4>First Checkpoint:</h4>
-                    <p><strong>Name:</strong> {{ tour.tourCheckpoints[0].checkpointName }}</p>
-                    <p><strong>Description:</strong> {{ tour.tourCheckpoints[0].checkpointDescription || 'No description
-                        available' }}</p>
-                    <p><strong>Location:</strong> {{ tour.tourCheckpoints[0].latitude }}, {{
-                        tour.tourCheckpoints[0].longitude }}</p>
-                </div>
+    <div class="tours-list">
+      <div *ngFor="let tour of tours" class="tour-card">
+        <div *ngIf="tour.status === 1">
+          <h3>{{ tour.name }}</h3>
+          <p><strong>{{ 'TOURS_LIST.DESCRIPTION' | translate }}:</strong> {{ tour.description }}</p>
+          <p><strong>{{ 'TOURS_LIST.DIFFICULTY' | translate }}:</strong> {{ tour.weight }}</p>
+          <p><strong>{{ 'TOURS_LIST.PRICE' | translate }}:</strong> {{ tour.price | currency }}</p>
+          <p><strong>{{ 'TOURS_LIST.TAGS' | translate }}:</strong> {{ tour.tags.join(', ') }}</p>
+
+          <div *ngIf="tour.tourCheckpoints && tour.tourCheckpoints.length > 0">
+            <h4>{{ 'TOURS_LIST.FIRST_CHECKPOINT' | translate }}:</h4>
+            <p><strong>{{ 'TOURS_LIST.NAME' | translate }}:</strong> {{ tour.tourCheckpoints[0].checkpointName }}</p>
+            <p>
+              <strong>{{ 'TOURS_LIST.DESCRIPTION' | translate }}:</strong> 
+              {{ tour.tourCheckpoints[0].checkpointDescription || ('TOURS_LIST.NO_DESCRIPTION' | translate) }}
+            </p>
+            <!-- Image Display -->
+            <div *ngIf="tour.tourCheckpoints[0].image">
+              <h4>{{ 'TOURS_LIST.CHECKPOINT_IMAGE' | translate }}:</h4>
+              <img 
+                [src]="tour.tourCheckpoints[0].image" 
+                alt="{{ 'TOURS_LIST.CHECKPOINT_IMAGE_ALT' | translate }}" 
+                style="width: 100%; height: auto; max-width: 400px; max-height:300px;" />
             </div>
-            <button (click)="openModal(tour)">View More</button>
+          </div>
         </div>
+        <button (click)="openModal(tour)">{{ 'TOURS_LIST.VIEW_MORE' | translate }}</button>
+      </div>
     </div>
+
     <!-- Right Button (Next) -->
     <button class="pagination-button" (click)="showNext()" [disabled]="currentPage * pageSize >= totalCount">
-        Next &gt;
+      {{ 'TOURS_LIST.NEXT' | translate }} &gt;
     </button>
-    
-</div>
-<!-- Pagination Status (Optional, shows current page and total count) -->
-<div class="pagination-status" *ngIf="hasActiveTours">
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
-</div>
+  </div>
 
+  <!-- Pagination Status -->
+  <div class="pagination-status" *ngIf="hasActiveTours">
+    <span>{{ 'TOURS_LIST.PAGE_INFO' | translate: { currentPage: currentPage, totalPages: totalPages } }}</span>
+  </div>
 
-<ng-template #reviewsModal let-modal>
+  <ng-template #reviewsModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">{{ selectedTour.name }} - Reviews</h5>
+      <h5 class="modal-title">
+        {{ selectedTour.name }} - {{ 'TOURS_LIST.REVIEWS' | translate }}
+      </h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-       
-        <p>Average rate for this tour: {{rateCount / tourReviews.length}}</p>
+      <p>{{ 'TOURS_LIST.AVG_RATE' | translate: { avg: rateCount / tourReviews.length } }}</p>
+
       <div *ngIf="tourReviews && tourReviews.length > 0; else noReviews">
         <div *ngFor="let tourReview of tourReviews" class="review-item" style="margin-bottom: 20px;">
           <!-- User Info -->
           <div style="display: flex; align-items: center; margin-bottom: 10px;">
             <div class="profile-picture">
-              <img src="assets/tourist.png" width="30" height="30" alt="User Profile Picture" />
+              <img src="assets/tourist.png" width="30" height="30" alt="{{ 'TOURS_LIST.USER_PROFILE' | translate }}" />
             </div>
             <p class="user-name" style="margin: 0; font-weight: bold;">
               {{ tourReview.personn.name }} {{ tourReview.personn.surname }}
             </p>
           </div>
-  
+
           <!-- Comment Section -->
           <div class="comment-section" style="margin-left: 50px;">
-            <p style="font-weight: bold; margin: 0;">Comment</p>
+            <p style="font-weight: bold; margin: 0;">{{ 'TOURS_LIST.COMMENT' | translate }}</p>
             <p style="margin: 5px 0; color: #555;">{{ tourReview.comment }}</p>
             <p style="margin: 5px 0; color: #555;">{{ tourReview.rating }}</p>
           </div>
         </div>
       </div>
-  
+
       <!-- Fallback if no reviews are available -->
       <ng-template #noReviews>
-        <p>No reviews available for this tour.</p>
+        <p>{{ 'TOURS_LIST.NO_REVIEWS' | translate }}</p>
       </ng-template>
     </div>
   </ng-template>
-
 </div>

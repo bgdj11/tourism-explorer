@@ -70,6 +70,7 @@ export class ToursListComponent implements OnInit {
         map(checkpoints => {
           // Ensure the checkpoints are set to the tour
           tour.tourCheckpoints = checkpoints;
+          console.log(tour.tourCheckpoints);
           return tour;  // Return the updated tour
         })
       )

@@ -20,9 +20,13 @@ import { TourSearchComponent } from 'src/app/feature-modules/layout/tour-search/
 import { StartTourComponent } from 'src/app/feature-modules/tour-execution/start-tour/start-tour.component';
 import { MyToursComponent } from 'src/app/feature-modules/tour-execution/my-tours/my-tours.component';
 import { FollowersComponent } from 'src/app/feature-modules/tour-execution/followers/followers.component';
+import {EncounterComponent} from "../../feature-modules/administration/encounter/encounter.component";
 import { MarketComponent } from 'src/app/feature-modules/marketplace/market/market.component';
 import { TourProblemsComponent } from 'src/app/feature-modules/administration/tour-problems/tour-problems.component';
 import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
+import { TourSaleComponent } from 'src/app/feature-modules/marketplace/tour-sale/tour-sale.component';
+import { HomePageComponent } from 'src/app/feature-modules/layout/home-page/home-page.component';
+import { ToursListComponent } from 'src/app/feature-modules/layout/tours-list/tours-list.component';
 
 
 const routes: Routes = [
@@ -34,6 +38,9 @@ const routes: Routes = [
   {path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard],},
   {path: 'comment', component: CommentComponent},
   {path: 'app-rating', component: AppRatingComponent},
+  {path: 'encounter', component: EncounterComponent},
+  //{path: 'allproblems', component: AllProblemsComponent, canActivate: [AuthGuard],},
+  //{path: 'addproblem', component: AddProblemComponent, canActivate: [AuthGuard],},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
@@ -49,8 +56,12 @@ const routes: Routes = [
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
+  {path: 'sales', component: TourSaleComponent, canActivate: [AuthGuard],},
+  {path: 'home-page', component: HomePageComponent},
+  {path: 'tour-list', component: ToursListComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],}
-  
+
 ];
 
 @NgModule({

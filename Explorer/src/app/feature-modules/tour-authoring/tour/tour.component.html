@@ -1,10 +1,10 @@
 <div class="container mt-4">
-  <h2 class="text-center mb-4">Ture</h2>
+  <h2 class="text-center mb-4">Tours</h2>
 
   <!-- Dugme za dodavanje nove ture -->
   <div class="d-flex justify-content-end mb-3">
     <button class="btn btn-primary" (click)="openModal('add')">
-      <i class="bi bi-plus-circle"></i> Dodaj novu turu
+      <i class="bi bi-plus-circle"></i> Add new tour
     </button>
   </div>
 
@@ -14,12 +14,12 @@
       <thead class="table-dark text-center">
       <tr>
         <th>#</th>
-        <th>Naziv</th>
-        <th>Opis</th>
-        <th>Težina</th>
-        <th>Cena</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Difficulty</th>
+        <th>Price in $</th>
         <th>Status</th>
-        <th>Akcije</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -80,33 +80,33 @@
       <form (ngSubmit)="onSubmit()">
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="name" class="form-label">Naziv Ture</label>
+            <label for="name" class="form-label">Tour name</label>
             <input type="text" class="form-control" id="name" [(ngModel)]="tour.name" name="name" required />
           </div>
           <div class="col-md-6">
-            <label for="weight" class="form-label">Težina</label>
+            <label for="weight" class="form-label">Difficulty</label>
             <input type="text" class="form-control" id="weight" [(ngModel)]="tour.weight" name="weight" />
           </div>
         </div>
         <div class="mb-3">
-          <label for="description" class="form-label">Opis Ture</label>
+          <label for="description" class="form-label">Tour description</label>
           <textarea class="form-control" id="description" [(ngModel)]="tour.description" name="description" required></textarea>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="price" class="form-label">Cena</label>
+            <label for="price" class="form-label">Price in $</label>
             <input type="number" class="form-control" id="price" [(ngModel)]="tour.price" name="price" />
           </div>
           <div class="col-md-6">
-            <label for="tags" class="form-label">Tagovi (odvojeni zarezima)</label>
+            <label for="tags" class="form-label">Tags (separated by commas)</label>
             <input type="text" class="form-control" id="tags" [(ngModel)]="tagsInput" name="tagsInput" />
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Zatvori</button>
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
           <button type="submit" class="btn btn-primary">
-            <i class="bi bi-save"></i> Sačuvaj
+            <i class="bi bi-save"></i> Save
           </button>
         </div>
       </form>
@@ -116,7 +116,7 @@
   <!-- Modal za dodavanje checkpointa -->
   <ng-template #checkpointModal let-modal>
     <div class="modal-header">
-      <h4 class="modal-title">Dodaj Checkpoint</h4>
+      <h4 class="modal-title">Add Checkpoint</h4>
       <button type="button" class="close" aria-label="Close" (click)="closeModal()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -124,24 +124,29 @@
     <div class="modal-body">
       <form #checkpointForm="ngForm" (ngSubmit)="addCheckpoint()">
         <div class="form-group">
-          <label for="checkpointName">Naziv</label>
+          <label for="checkpointName">Name</label>
           <input type="text" class="form-control" id="checkpointName" [(ngModel)]="newCheckpoint.checkpointName" name="checkpointName" required>
         </div>
         <div class="form-group">
-          <label for="checkpointDescription">Opis</label>
+          <label for="checkpointDescription">Description</label>
           <textarea class="form-control" id="checkpointDescription" [(ngModel)]="newCheckpoint.checkpointDescription" name="checkpointDescription" required></textarea>
         </div>
         <div class="form-group">
-          <label for="latitude">Latituda</label>
+          <label for="latitude">Latitude</label>
           <input type="number" class="form-control" id="latitude" [(ngModel)]="newCheckpoint.latitude" name="latitude" required>
         </div>
         <div class="form-group">
-          <label for="longitude">Longituda</label>
+          <label for="longitude">Longitude</label>
           <input type="number" class="form-control" id="longitude" [(ngModel)]="newCheckpoint.longitude" name="longitude" required>
         </div>
         <div class="form-group">
-          <label for="image">Slika</label>
-          <input type="text" class="form-control" id="image" [(ngModel)]="newCheckpoint.image" name="image">
+          <label for="image">Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="image"
+            (change)="onImageSelected($event)"
+          />
         </div>
         
       
@@ -165,7 +170,7 @@
   <!-- Modal za dodavanje travel time-a -->
   <ng-template #travelTimeModal let-modal>
     <div class="modal-header">
-      <h4 class="modal-title">Dodaj Travel Time</h4>
+      <h4 class="modal-title">Add Travel Time</h4>
       <button type="button" class="close" aria-label="Close" (click)="closeModal()">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -173,16 +178,16 @@
     <div class="modal-body">
       <form #checkpointForm="ngForm" (ngSubmit)="addTravelTime()">
         <div class="form-group">
-          <label for="longitude">Tip prevoza</label>
+          <label for="longitude">Transporation type</label>
           <select class="form-control" id="transportType" [(ngModel)]="newTravelTime.transportType" name="transportType" required>
             <option [ngValue]="TransportType.Walk">Walk</option>
             <option [ngValue]="TransportType.Car">Car</option>
             <option [ngValue]="TransportType.Bike">Bike</option>
           </select>
-          <label for="longitude">Procenjeno vreme</label>
+          <label for="longitude">Approximate duration</label>
           <input type="number" class="form-control" id="latitude" [(ngModel)]="newTravelTime.time" name="time" required>
         </div>
-        <button type="submit" class="btn btn-primary">Sačuvaj</button>    
+        <button type="submit" class="btn btn-primary">Save</button>    
       </form>
     </div>
    
@@ -255,7 +260,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Izaberite Opreme</h4>
+          <h4 class="modal-title">Select equipment</h4>
           <button type="button" class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -272,7 +277,7 @@
               </li>
             </ul>
           </div>
-          <button class="btn btn-primary" (click)="addSelectedEquipment()">Dodaj Izabranu Opreme</button>
+          <button class="btn btn-primary" (click)="addSelectedEquipment()">Add selected equipment</button>
         </div>
       </div>
     </div>
@@ -281,18 +286,18 @@
 
   <div *ngIf="selectedTour" class="row mt-5">
     <div class="col-md-6">
-      <h4 class="text-center">Checkpointi za {{ selectedTour.name }}</h4>
+      <h4 class="text-center">Checkpoints for {{ selectedTour.name }}</h4>
       <div class="table-responsive">
         <table class="table table-hover table-bordered">
           <thead class="table-dark text-center">
           <tr>
             <th>#</th>
-            <th>Naziv</th>
-            <th>Opis</th>
-            <th>Latituda</th>
-            <th>Longituda</th>
-            <th>Akcije</th>
-            <button class="btn btn-primary" [disabled]="selectedTour.status == 1" (click)="openCheckpointModal()">
+            <th>Name</th>
+            <th>Description</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Actions</th>
+            <button class="btn btn-primary"  (click)="openCheckpointModal()">
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>
@@ -316,17 +321,17 @@
     </div>
 
     <div class="col-md-6">
-      <h4 class="text-center">Oprema za {{ selectedTour.name }}</h4>
+      <h4 class="text-center">Equipment for {{ selectedTour.name }}</h4>
       <div class="table-responsive">
         <table class="table table-hover table-bordered">
           <thead class="table-dark text-center">
           <tr>
             <th>#</th>
-            <th>Naziv</th>
-            <th>Opis</th>
-            <th>Akcije</th> <!-- Dodana kolona za akcije -->
-            <button class="btn btn-primary" [disabled]="selectedTour.status == 1"  (click)="openEquipmentModal()">
-              <fa-icon [icon]="faPlus"></fa-icon> Dodaj opremu
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th> <!-- Dodana kolona za akcije -->
+            <button class="btn btn-primary"  (click)="openEquipmentModal()">
+              <fa-icon [icon]="faPlus"></fa-icon> Add equipment
             </button>
           </tr>
           </thead>
@@ -347,15 +352,15 @@
     </div>
   
     <div class="col-md-6">
-      <h4 class="text-center">Time travel za {{ selectedTour.name }}</h4>
+      <h4 class="text-center">Time travel for {{ selectedTour.name }}</h4>
       <div class="table-responsive">
         <table class="table table-hover table-bordered">
           <thead class="table-dark text-center">
           <tr>
             <th>#</th>
-            <th>Tip</th>
-            <th>Vreme u minutima</th>
-            <button class="btn btn-primary" [disabled]="selectedTour.status == 1" (click)="openTravelTimeModal()">
+            <th>Type</th>
+            <th>Time in minutes</th>
+            <button class="btn btn-primary" (click)="openTravelTimeModal()">
               <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
             </button>
           </tr>

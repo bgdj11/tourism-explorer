@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClubDTO } from '../model/club.model';
-import { TourManagementService } from '../tour-management.service'; 
+import { TourManagementService } from '../tour-management.service';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { TourExecutionService } from '../../tour-execution/tour.execution.service';
 import { MembershipRequest, MemRequestStatus } from '../model/membershipRequest.model';
@@ -13,11 +13,11 @@ import { MembershipRequest, MemRequestStatus } from '../model/membershipRequest.
 export class ClubsComponent implements OnInit {
 
   clubs: ClubDTO[] = [];
-  availableClubs: ClubDTO[] = []; //proslijedice se child komponenti
   currentUserId : number = 0;
   newClub: ClubDTO = { name: '', description: '', photo: '', ownerId: 0 };
   editingClub: ClubDTO | null = null;
   showAddClubForm: boolean = false;
+  availableClubs: ClubDTO[] = [];
 
   membershipRequests: MembershipRequest[] = [];
   tourists: any[] = [];
@@ -25,11 +25,10 @@ export class ClubsComponent implements OnInit {
   filteredTourists: any[] = []; // Filtrirani turisti
   touristInvitedForClub: { [clubId: number]: { [touristId: number]: boolean } } = {};
 
-  requestAction = new EventEmitter<MembershipRequest>();
-  
+
   constructor(private service: TourManagementService,
-    private authService : AuthService,
-    private tourService : TourExecutionService,
+              private authService : AuthService,
+              private tourService : TourExecutionService,
   ) { }
 
   ngOnInit(): void {
@@ -40,7 +39,7 @@ export class ClubsComponent implements OnInit {
 
     this.getClubs(1, 10);
     this.getAllTourists();
-    this.loadAllMembershipRequests(); 
+    this.loadAllMembershipRequests();
   }
 
   loadAllMembershipRequests(): void {
@@ -49,25 +48,25 @@ export class ClubsComponent implements OnInit {
     });
   }
 
-  
+
   loadMembershipRequestsForClub(clubId: number): void {
     this.service.getMembershipRequests(clubId).subscribe(
       (response: { results: MembershipRequest[], totalCount: number }) => {
         console.log(`API response for club ${clubId}:`, response);
-  
+
         if (Array.isArray(response.results)) {
           this.membershipRequests = response.results;
-  
+
           if (!this.touristInvitedForClub[clubId]) {
             this.touristInvitedForClub[clubId] = {};
           }
-  
+
           response.results.forEach(request => {
             if (this.service.isTouristInvited(request.clubId, request.senderId)) {
               this.touristInvitedForClub[clubId][request.senderId] = true;
             }
           });
-  
+
           console.log('Tourists invited for club:', this.touristInvitedForClub);
         } else {
           console.error(`Error: Expected 'results' to be an array but got:`, response.results);
@@ -78,8 +77,12 @@ export class ClubsComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
+
+
+
+
   toggleAddClubForm(): void {
     this.showAddClubForm = !this.showAddClubForm;
   }
@@ -93,8 +96,8 @@ export class ClubsComponent implements OnInit {
       this.filteredTourists = this.tourists.filter(t => t.id !== this.currentUserId);
     }
   }
-  
-  
+
+
   inviteTourist(tourist: any, clubId: number): void {
     const membershipRequest: MembershipRequest = {
       senderId: tourist.id,  // ID turiste kojem šaljemo poziv
@@ -102,7 +105,7 @@ export class ClubsComponent implements OnInit {
       status: MemRequestStatus.Invited, // Status poziva
       clubId: clubId // ID kluba
     };
-  
+
     this.service.createMembershipRequest(clubId, membershipRequest).subscribe(
       response => {
         console.log('Membership request created successfully:', response);
@@ -115,9 +118,9 @@ export class ClubsComponent implements OnInit {
       }
     );
   }
-  
 
-  
+
+
 
   getAllTourists(): void {
     this.tourService.getAllTourists().subscribe(
@@ -129,29 +132,25 @@ export class ClubsComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
   addTouristToClub(): void {
     this.getAllTourists();
   }
-    
+
 
   getClubs(page: number, pageSize: number): void {
     this.service.getClubs(page, pageSize).subscribe(response => {
       this.clubs = response.results;
-      this.filterAvailableClubs(this.clubs);
+      this.availableClubs = this.clubs.filter(club => club.ownerId !== this.currentUserId);
       this.loadAllMembershipRequests();
-
+      console.log('Available clubs: ', this.availableClubs);
     });
   }
 
-  filterAvailableClubs(clubs: ClubDTO[]): void{
-    this.availableClubs = clubs.filter(club => club.ownerId !== this.currentUserId);
-  }
-
-    addClub(){
-      if (this.currentUserId) {
-        this.newClub.ownerId = this.currentUserId;
+  addClub(){
+    if (this.currentUserId) {
+      this.newClub.ownerId = this.currentUserId;
 
       this.service.createClub(this.newClub).subscribe(
         response => {
@@ -161,22 +160,22 @@ export class ClubsComponent implements OnInit {
         error => {
           console.error('Error creating club:', error);
         }
-        
-        
+
+
       )
     }
   }
-    
+
 
   deleteClub(id: number): void {
     this.service.deleteClub(id).subscribe(() => {
       console.log('Club deleted');
       this.getClubs(1, 10);
     });
-  } 
+  }
 
   editClub(club: ClubDTO): void {
-    this.editingClub = { ...club };  
+    this.editingClub = { ...club };
   }
 
   updateClub(): void {
@@ -184,8 +183,8 @@ export class ClubsComponent implements OnInit {
       this.service.updateClub(this.editingClub).subscribe(
         response => {
           console.log('Club updated successfully', response);
-          this.editingClub = null;  
-          this.getClubs(1, 10);  
+          this.editingClub = null;
+          this.getClubs(1, 10);
         },
         error => {
           console.error('Error updating club:', error);
@@ -195,19 +194,7 @@ export class ClubsComponent implements OnInit {
       console.error('You are not authorized to update this club.');
     }
   }
-/*
-  isClubOwner(club: ClubDTO): boolean {
-    return club.ownerId === this.currentUserId;
-  }
 
-  isMember(club: ClubDTO): boolean{
-    return false;
-  }
-
-  joinClub(club: ClubDTO): void{
-    return;
-  }
-*/
   addTourist(clubId: number): void {
     console.log(`Adding tourist to club with ID: ${clubId}`);
     // Dodajte logiku za dodavanje turiste ovde
@@ -219,33 +206,33 @@ export class ClubsComponent implements OnInit {
     );
     return requestsForClub.some((req) => req.senderId === touristId);
   }
-  
+
   removeTouristFromClub(senderId: number,clubId: number): void {
     this.service.getClubById(clubId).subscribe(
       (club) => {
         const ownerId = club.ownerId; // Pristupite ownerId kluba
-        
+
         this.service.getMembershipRequests(clubId).subscribe(
           (response: { results: MembershipRequest[]; totalCount: number }) => {
             const requests = response.results; // Izdvojite niz zahteva
-            
+
             const matchedRequest = requests.find(
               (request) =>
                 request.ownerId === ownerId && // Poređenje sa vlasnikom kluba
                 request.senderId === senderId &&
                 request.status === 2 // Proverite da li status odgovara
             );
-    
+
             if (matchedRequest) {
               console.log('Matched Request:', matchedRequest);
               this.service.deleteMembershipRequest(clubId, matchedRequest.id || 0).subscribe({
-                next:(_) => {
-                  console.log('Matched Request:', matchedRequest.id);
-                },
-                error: (err) => {
-                  console.log('Error occured: ', err); 
+                  next:(_) => {
+                    console.log('Matched Request:', matchedRequest.id);
+                  },
+                  error: (err) => {
+                    console.log('Error occured: ', err);
+                  }
                 }
-              }
               );
               alert('Membership request removed successfully.');
               console.log('Membership request removed successfully.');
@@ -262,9 +249,9 @@ export class ClubsComponent implements OnInit {
       (error) => {
         console.error('Error fetching club by ID:', error);
       }
-    );    
-  }    
-  
+    );
+  }
+
   isTouristPendingOrAcceptedOrRejected(touristId: number, clubId: number): boolean {
     const requestsForClub = this.membershipRequests.filter(req => req.clubId === clubId);
     return requestsForClub.some(req => 
@@ -303,7 +290,6 @@ export class ClubsComponent implements OnInit {
         console.log('No requests for the club with ID: ', clubId);
       }
     )
-  
     
   }
 
@@ -331,9 +317,5 @@ export class ClubsComponent implements OnInit {
       }
     )
   }
+}
 
-
-  
-
-
-}  
