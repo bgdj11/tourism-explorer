@@ -1,0 +1,189 @@
+:root {
+  --primary-color: #004D3B;
+  --secondary-color: #bbe6e4;
+  --accent-color: #A9C18C; /* Maslinasta nijansa */
+  --font-family: 'Roboto', 'Segoe UI', sans-serif; 
+  --background-color: #f5f5f5;
+  --text-color: #333;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-size: 16px; 
+}
+
+.container {
+  max-width: 600px; /* Smanjeno za uže prikazivanje */
+  margin: 20px auto; /* Centrirano sa dodatnim margama */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Suptilna senka */
+}
+
+h2 {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: var(--accent-color); /* Dodata maslinasta boja */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02); /* Suptilno povećanje na hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 1.4rem;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.card-content {
+  font-size: 1rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.button-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.button-primary:hover {
+  background-color: #008768;
+}
+
+
+label {
+  font-weight: 500;
+  color: var(--text-color);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 500;
+
+}
+
+.form button:hover {
+  background-color: #008768;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.edit-button img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.delete-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute; 
+  top: 10px;
+  right: 10px;
+}
+
+.delete-icon {
+  width: 20px; 
+  height: 20px;
+}
+
+.published-button, .archived-button {
+  background-color: var(--primary-color); /* Tamno zelena boja */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 5px; /* Razmak između dugmadi */
+}
+
+.published-button:hover, .archived-button:hover {
+  background-color: #008768; /* Svetlija zelena boja na hover */
+}
+
+.published-button:disabled, .archived-button:disabled {
+  background-color: #ccc; /* Svetlo siva pozadina */
+  color: #777; /* Svetlo siva boja teksta */
+  cursor: not-allowed; /* Pokazivač miša za onemogućeno stanje */
+  border: 1px solid #ddd; /* Suptilna ivica */
+  opacity: 0.7; /* Blago smanjenje vidljivosti */
+}
+

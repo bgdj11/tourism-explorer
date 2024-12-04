@@ -1,0 +1,105 @@
+<div *ngIf="bundles.length > 0" class="container">
+  <div class="container">
+  <h2>Bundles</h2>
+  <ul>
+    <li *ngFor="let bundle of bundles" class="card">
+      <h3 class="card-title">{{ bundle.name }}
+        <button (click)="editName(bundle.id)" class="edit-button">
+          <img src="assets/edit.png" alt="Edit Name" />
+        </button>
+      </h3>
+
+      <div *ngIf="editNameMode && selectedBundleId === bundle.id">
+        <input type="text" [(ngModel)]="editedName" />
+        <button (click)="saveName(bundle.id)">Save</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+
+      <button 
+        *ngIf="bundle.id"
+        (click)="deleteBundle(bundle.id)" 
+        class="delete-button">
+        <img src="assets/bin.png" alt="Delete Bundle" class="delete-icon" />
+      </button>
+
+
+      <p class="card-content">Price: {{ bundle.customPrice | currency }}
+        <button (click)="editPrice(bundle.id)" class="edit-button">
+          <img src="assets/edit.png" alt="Edit Price" />
+        </button>
+      </p>
+
+      <div *ngIf="editPriceMode && selectedBundleId === bundle.id">
+        <input type="number" [(ngModel)]="editedPrice" />
+        <button (click)="savePrice(bundle.id)">Save</button>
+        <button (click)="cancelEdit()">Cancel</button>
+      </div>
+
+      <p class="card-content">Status: {{ getStatusText(bundle.status) }}</p> 
+      <p class="card-content">Total Price: {{ bundle.totalToursPriceCalculated | currency }}</p>
+      
+
+      <div>
+        <h4 class="card-title">Tours:</h4>
+        <ul>
+          <li *ngFor="let tour of bundle.tours" class="card-content">
+            {{ tour.name }} - {{ tour.price | currency }}
+            <button *ngIf="tour.id && bundle.id" (click)="confirmAndRemoveTour(tour.id, bundle.id)" class="edit-button">
+              <img src="assets/bin.png" alt="Bin" class="edit-icon">
+            </button>
+
+            
+
+          </li>
+        </ul>
+
+        <button 
+          (click)="publishBundle(bundle.id)" class="published-button"
+          [disabled]="bundle.status === 2" 
+          title="You cannot publish an archived bundle">
+          Publish
+        </button>
+
+        <button (click)="archiveBundle(bundle.id)" class="archived-button">Archive</button>
+
+                <!-- Lista tura sa checkbox-ovima -->
+        <div *ngIf="showTourList[bundle.id]" class="container">
+          <h2>Available Tours</h2>
+          <ul>
+            <li *ngFor="let tour of tours" class="card">
+              <label>
+                <input type="checkbox" [(ngModel)]="selectedTourIds[tour.id]" /> 
+                {{ tour.name }} - {{ tour.price | currency }}
+              </label>
+            </li>
+          </ul>
+          <button (click)="addSelectedTours(bundle.id)">Add Tours</button>
+
+        </div>
+
+      </div>
+      <button (click)="toggleTourList(bundle.id)">+</button>
+
+    </li>
+  </ul>
+</div>
+</div>
+
+<div class="container">
+  <div class="form-section">
+    <h2 class="form-title">Create new bundle</h2>
+  
+    <form class="form" (submit)="create()">
+      <div class="form-group">
+        <label>
+          Name:
+          <input [(ngModel)]="newBundle.name" name="name" class="form-input">
+        </label>
+        <br>
+        <button type="submit">Create</button>
+      </div>
+      
+    </form>
+  </div>
+</div>
+

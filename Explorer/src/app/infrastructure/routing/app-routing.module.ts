@@ -30,6 +30,7 @@ import { ToursListComponent } from 'src/app/feature-modules/layout/tours-list/to
 import {TouristProfileComponent} from "../../shared/tourist-profile/tourist-profile.component";
 import { CouponComponent } from 'src/app/feature-modules/marketplace/coupon/coupon.component';
 import {SpaceInvadersComponent} from "../../feature-modules/space-invaders/space-invaders.component";
+import { BundleComponent } from 'src/app/feature-modules/tour-authoring/bundle/bundle.component';
 
 
 const routes: Routes = [
@@ -67,7 +68,7 @@ const routes: Routes = [
   {path: 'tourist-profile', component: TouristProfileComponent, canActivate: [AuthGuard],},
   {path: 'coupon', component: CouponComponent, canActivate: [AuthGuard],},
   { path: 'space-invaders', component: SpaceInvadersComponent },
-
+  { path: 'bundle', component: BundleComponent },
 
 ];
 
