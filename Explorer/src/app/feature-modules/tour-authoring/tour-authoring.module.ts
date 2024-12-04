@@ -8,14 +8,15 @@ import { ObjectComponent } from './object/object.component';
 import {SharedModule} from "../../shared/shared.module";
 import { ClubsComponent } from './club/club.component';
 import { AvailableClubsComponent } from './available-clubs/available-clubs.component';
-
+import { BundleComponent } from './bundle/bundle.component';
 
 @NgModule({
   declarations: [
     TourComponent,
     ObjectComponent,
     ClubsComponent,
-    AvailableClubsComponent
+    AvailableClubsComponent,
+    BundleComponent
 
   ],
   imports: [
@@ -28,7 +29,8 @@ import { AvailableClubsComponent } from './available-clubs/available-clubs.compo
   exports: [
     TourComponent,
     ObjectComponent,
-    ClubsComponent
+    ClubsComponent,
+    BundleComponent
   ]
 })
 export class TourAuthoringModule { }
