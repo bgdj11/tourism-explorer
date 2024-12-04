@@ -5,6 +5,10 @@ import { MarketplaceService } from '../marketplace.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import {TourDTO} from "../../tour-authoring/model/tour.model";
+import { TourManagementService } from "../../tour-authoring/tour-management.service";
+import { forkJoin } from 'rxjs';
+import { switchMap, map  } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'xp-tour-sale',
@@ -22,8 +26,9 @@ export class TourSaleComponent implements OnInit{
   salesTourDetails: Map<number, TourDTO[]> = new Map();
   editingSaleId: number | null = null;
   selectedTourIds: number[] = [];
+  tourUpdates: TourDTO[]=[];
 
-  constructor(private service: MarketplaceService, private authService: AuthService) { }
+  constructor(private service: MarketplaceService, private authService: AuthService, private tourService: TourManagementService) { }
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
@@ -37,14 +42,35 @@ export class TourSaleComponent implements OnInit{
     this.service.getTourSales().subscribe({
       next: (result: PagedResults<TourSale>) => {
         this.sales = result.results.filter(sale => sale.authorId === this.loggedInUserId);
-        this.populateTourDetails();
-        const salesToActivate = this.sales.filter(sale => !sale.active && new Date(sale.startDate) <= new Date());
-        const salesToDeactivate = this.sales.filter(sale => sale.active && new Date(sale.endDate) < new Date());
+        
+        const salesToActivate = this.sales.filter(sale => !sale.active && new Date(sale.startDate) <= new Date() && new Date(sale.endDate) >= new Date());
+        const salesToDeactivate = this.sales.filter(sale => sale.active && new Date(sale.endDate) < new Date() && new Date(sale.startDate) <= new Date());
 
         if (salesToActivate.length > 0) {
           this.service.activateSales(salesToActivate).subscribe({
             next: (response) => console.log(response),
             error: (err) => console.error('Error activating sales:', err),
+          });
+
+          this.tourUpdates = [];
+          salesToActivate.forEach(sale => {
+            sale.tours.forEach(tourId => {
+              this.service.getTour(tourId).subscribe({
+                next: (tour) => {
+                  tour.price = tour.price! * (100 - sale.discount) / 100; // Postavi novu cenu
+                  this.tourService.updateTour(tour).subscribe({
+                    next: (updatedTour) => console.log('Tur ažuriran:', updatedTour),
+                    error: (err) => console.error('Greška pri ažuriranju tura:', err)
+                  });
+                },
+                error: (err) => console.error(`Greška pri dobijanju tura sa ID ${tourId}:`, err)
+              });
+            });
+          });
+          
+          forkJoin(this.tourUpdates).subscribe({
+            next: () => console.log('Sve ture su ažurirane.'),
+            error: (err) => console.error('Greška pri ažuriranju tura:', err),
           });
         }
 
@@ -53,7 +79,29 @@ export class TourSaleComponent implements OnInit{
             next: (response) => console.log(response),
             error: (err) => console.error('Error deactivating sales:', err),
           });
+          this.tourUpdates = [];
+          salesToDeactivate.forEach(sale => {
+            sale.tours.forEach(tourId => {
+              this.service.getTour(tourId).subscribe({
+                next: (tour) => {
+                  tour.price = tour.price! * 100 / (100 - sale.discount); // Postavi novu cenu
+                  this.tourService.updateTour(tour).subscribe({
+                    next: (updatedTour) => console.log('Tur ažuriran:', updatedTour),
+                    error: (err) => console.error('Greška pri ažuriranju tura:', err)
+                  });
+                },
+                error: (err) => console.error(`Greška pri dobijanju tura sa ID ${tourId}:`, err)
+              });
+            });
+          });
+          
+          forkJoin(this.tourUpdates).subscribe({
+            next: () => console.log('Sve ture su ažurirane.'),
+            error: (err) => console.error('Greška pri ažuriranju tura:', err),
+          });
         }
+
+        this.populateTourDetails();
       },
       error: () => {
       }
@@ -123,7 +171,7 @@ export class TourSaleComponent implements OnInit{
 
   toggleForm(): void {
     this.showForm = !this.showForm;
-
+    this.updateMaxEndDate();
     if (!this.showForm) {
       this.resetForm();
     }

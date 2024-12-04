@@ -7,6 +7,10 @@ import { TourProblem } from "../model/tour-problem";
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 import { TourManagementService } from "../../tour-authoring/tour-management.service";
+import { TourSale } from '../model/tour-sale.model';
+import { forkJoin } from 'rxjs';
+import { switchMap, map  } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'xp-market',
@@ -25,6 +29,11 @@ export class MarketComponent implements OnInit {
   reportSubmitted: { [tourId: number]: boolean } = {};
   tourReviews:{ [tourId: number]: TourReviewDTO[]} = {} ;
   avgGrade: {[tourId:number]: number} = {};
+  sales: TourSale[] = [];
+  tourUpdates: TourDTO[]=[];
+  discount: {[tourId:number]: number}={};
+  isOnSaleChecked: boolean = false;
+  filteredTours: TourDTO[] = [];
 
   constructor(private tourService: TourManagementService, private service: MarketplaceService, private authService: AuthService) { }
 
@@ -32,7 +41,109 @@ export class MarketComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       this.userId = user.id;  // <-- Get logged-in user ID from AuthService
       this.loadTours();
+      this.getSales();
+      this.isOnSaleChecked = false;
+      this.filteredTours = [...this.tours];
+      this.filterToursBySales();
     });
+  }
+
+  getSales(): void {
+    this.service.getTourSales().subscribe({
+      next: (result: PagedResults<TourSale>) => {
+        this.sales = result.results;
+        
+        const salesToActivate = this.sales.filter(sale => !sale.active && new Date(sale.startDate) <= new Date() && new Date(sale.endDate) >= new Date());
+        const salesToDeactivate = this.sales.filter(sale => sale.active && new Date(sale.endDate) < new Date() && new Date(sale.startDate) <= new Date());
+
+        if (salesToActivate.length > 0) {
+          this.service.activateSales(salesToActivate).subscribe({
+            next: (response) => console.log(response),
+            error: (err) => console.error('Error activating sales:', err),
+          });
+
+          this.tourUpdates = [];
+          salesToActivate.forEach(sale => {
+            sale.tours.forEach(tourId => {
+              this.service.getTour(tourId).subscribe({
+                next: (tour) => {
+                  tour.price = tour.price! * (100 - sale.discount) / 100; // Postavi novu cenu
+                  this.tourService.updateTour(tour).subscribe({
+                    next: (updatedTour) => console.log('Tur ažuriran:', updatedTour),
+                    error: (err) => console.error('Greška pri ažuriranju tura:', err)
+                  });
+                },
+                error: (err) => console.error(`Greška pri dobijanju tura sa ID ${tourId}:`, err)
+              });
+            });
+          });
+          
+          forkJoin(this.tourUpdates).subscribe({
+            next: () => console.log('Sve ture su ažurirane.'),
+            error: (err) => console.error('Greška pri ažuriranju tura:', err),
+          });
+        }
+
+        if (salesToDeactivate.length > 0) {
+          this.service.deactivateSales(salesToDeactivate).subscribe({
+            next: (response) => console.log(response),
+            error: (err) => console.error('Error deactivating sales:', err),
+          });
+          this.tourUpdates = [];
+          salesToDeactivate.forEach(sale => {
+            sale.tours.forEach(tourId => {
+              this.service.getTour(tourId).subscribe({
+                next: (tour) => {
+                  tour.price = tour.price! * 100 / (100 - sale.discount); // Postavi novu cenu
+                  this.tourService.updateTour(tour).subscribe({
+                    next: (updatedTour) => console.log('Tur ažuriran:', updatedTour),
+                    error: (err) => console.error('Greška pri ažuriranju tura:', err)
+                  });
+                },
+                error: (err) => console.error(`Greška pri dobijanju tura sa ID ${tourId}:`, err)
+              });
+            });
+          });
+          
+          forkJoin(this.tourUpdates).subscribe({
+            next: () => console.log('Sve ture su ažurirane.'),
+            error: (err) => console.error('Greška pri ažuriranju tura:', err),
+          });
+        }
+
+      },
+      error: () => {
+      }
+    })
+  }
+
+  filterToursBySales(): void {
+    if (this.isOnSaleChecked) {
+      this.filteredTours = this.tours.filter(tour => 
+        this.sales.some(sale => sale.active && sale.tours.includes(tour.id))
+      );
+    } else {
+      this.filteredTours = [...this.tours]; 
+    }
+  }
+
+  sortTours(order: 'asc' | 'desc'): void {
+    this.filteredTours.sort((a, b) => {
+      const discountA = this.findDiscount(a) || 0;
+      const discountB = this.findDiscount(b) || 0;
+  
+      if (order === 'asc') {
+        return discountA - discountB; // Rastuće
+      } else {
+        return discountB - discountA; // Opadajuće
+      }
+    });
+  }
+
+  findDiscount(tour: TourDTO): number | null {
+    const activeSale = this.sales.find(sale => sale.active && sale.tours.includes(tour.id) 
+    );
+    return activeSale ? activeSale.discount : null;
   }
 
   loadTours(): void {

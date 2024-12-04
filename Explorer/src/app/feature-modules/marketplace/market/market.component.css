@@ -34,9 +34,47 @@
     margin-right: 20px;
   }
 
+  .oldPrice{
+    text-align: right;
+    margin-right: 20px;
+  }
+
   .tour-length,
   .tour-checkpoint {
     font-size: 0.9em;
+  }
+
+  .del{
+    color: gray;
+  }
+
+  .sale-discount {
+    background-color: red;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 60px;
+    height: 30px;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    margin-left: 260px;
+    margin-top: -23px;
+  }
+
+  .discount{
+    
+    margin-top: 15px;
+  }
+
+  .checkbox{
+    margin-top: 10px;
+    margin-left: 170px;
+    color: darkolivegreen;
+  }
+
+  ::ng-deep .checkbox.mat-checkbox-checked .checkbox.mat-checkbox-background {
+    background-color: darkolivegreen !important; /* Postavlja zelenu boju */
   }
 
   .buy-button {
@@ -49,8 +87,9 @@
     cursor: pointer;
     text-align: center;
     font-weight: bold;
-    width: 100px;
-    margin-left: 187px;
+    width: 120px;
+    font-size: 15px;
+    margin-left: 172px;
     box-shadow: 0 2px 4px rgba(0.2, 0.2, 0.2, 0.2);
   }
 
@@ -166,7 +205,8 @@
     padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
+    
+    font-size: 14px;
   }
   
   .submit-report-button:disabled {
@@ -218,4 +258,17 @@
   
   .comment-section {
     margin-left: 30px; 
+  }
+
+  .sort-controls {
+    width: 270px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 177px;
+  }
+  
+  .mat-select {
+    width: 200px;
   }
