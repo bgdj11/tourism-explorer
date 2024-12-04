@@ -24,9 +24,11 @@ import {EncounterComponent} from "../../feature-modules/administration/encounter
 import { MarketComponent } from 'src/app/feature-modules/marketplace/market/market.component';
 import { TourProblemsComponent } from 'src/app/feature-modules/administration/tour-problems/tour-problems.component';
 import { ShoppingCartComponent } from 'src/app/feature-modules/marketplace/shopping-cart/shopping-cart.component';
+import { TourSaleComponent } from 'src/app/feature-modules/marketplace/tour-sale/tour-sale.component';
 import { HomePageComponent } from 'src/app/feature-modules/layout/home-page/home-page.component';
 import { ToursListComponent } from 'src/app/feature-modules/layout/tours-list/tours-list.component';
 import {TouristProfileComponent} from "../../shared/tourist-profile/tourist-profile.component";
+import { CouponComponent } from 'src/app/feature-modules/marketplace/coupon/coupon.component';
 
 
 const routes: Routes = [
@@ -57,10 +59,14 @@ const routes: Routes = [
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
+  {path: 'sales', component: TourSaleComponent, canActivate: [AuthGuard],},
   {path: 'home-page', component: HomePageComponent},
   {path: 'tour-list', component: ToursListComponent},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'tourist-profile', component: TouristProfileComponent, canActivate: [AuthGuard],},
+  {path: 'coupon', component: CouponComponent, canActivate: [AuthGuard],}
+
+
 ];
 
 @NgModule({

@@ -1,56 +1,13 @@
 <div id="clubs">
-  <p>Clubs</p>
-  <hr>
-  <div id="clubs-details">
-    <div>
-      <table>
-          <thead>
-              <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th>Photo</th>
-                  <th>Actions</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr *ngFor="let cl of clubs">
-                  <td>{{cl.name}}</td>
-                  <td>{{cl.description}}</td>
-                  <td>{{cl.photo}}</td>
-                  <td>
-                      <button (click)="cl.id !== undefined ? deleteClub(cl.id) : null">Delete</button>
-                      <button *ngIf="cl.ownerId === currentUserId" (click)="editClub(cl)">Edit</button>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
-    </div>
+  <!-- Header sa dugmetom za dodavanje kluba -->
+  <div id="clubs-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <p>Clubs</p>
+    <button (click)="toggleAddClubForm()">+ Add Club</button>
   </div>
   <hr>
-  <div *ngIf="editingClub"  class="form-section">
-      <h3>Edit Club</h3>
-      <form class="form" (submit)="updateClub()">
-        <label>
-          Name:
-          <input [(ngModel)]="editingClub.name" name="name">
-        </label>
-        <br>
-        <label>
-          Description:
-          <input [(ngModel)]="editingClub.description" name="description">
-        </label>
-        <br>
-        <label>
-          Photo URL:
-          <input [(ngModel)]="editingClub.photo" name="photo">
-        </label>
-        <br>
-        <button type="submit">Update Club</button>
-      </form>
-    </div>
 
-  <hr>
-  <div class="form-section">
+  <!-- Forma za dodavanje novog kluba -->
+  <div *ngIf="showAddClubForm" class="form-section">
     <h3>Add New Club</h3>
     <form class="form" (submit)="addClub()">
       <label>
@@ -69,7 +26,122 @@
       </label>
       <br>
       <button type="submit">Add Club</button>
-    </form>
+    </form>   
+    <button type="button" (click)="toggleAddClubForm()">Cancel</button>
 
+</div>
+
+  <hr>
+  <!-- Lista klubova sa tabelom -->
+  <div id="clubs-details">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Photo</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through clubs -->
+          <ng-container *ngFor="let cl of clubs">
+            <!-- Club row -->
+            <tr>
+              <td>{{cl.name}}</td>
+              <td>{{cl.description}}</td>
+              <td>
+                <img [src]="cl.photo" alt="{{cl.name}}" width="100" height="100">
+              </td>
+              <td>
+                <button *ngIf="cl.ownerId === currentUserId && cl.id !== undefined" (click)="deleteClub(cl.id!)">Delete</button>
+                <button *ngIf="cl.ownerId === currentUserId" (click)="editClub(cl)">Edit</button>
+                <button *ngIf="cl.ownerId === currentUserId && cl.id !== undefined" (click)="toggleTouristList(cl.id!)">Add Tourist</button>
+              </td>
+            </tr>
+            <!-- Tourist list row (conditionally displayed) -->
+            <tr *ngIf="showTouristListForClubId === cl?.id">
+              <td colspan="4">
+                <div class="form-section">
+                  <h4>Tourist List</h4>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let tourist of filteredTourists">
+                        <td>{{ tourist.firstName }}</td>
+                        <td>{{ tourist.lastName }}</td>
+                        <td>{{ tourist.username }}</td>
+                        <td>
+                          <button 
+                            *ngIf="isTouristInClub(tourist.id, cl.id || 0)" 
+                            (click)="removeTouristFromClub(tourist.id, cl.id || 0)">
+                            Remove
+                          </button>
+                          <button 
+                            *ngIf="!isTouristPendingOrAcceptedOrRejected(tourist.id, cl.id || 0) " 
+                            (click)="inviteTourist(tourist, cl.id || 0)" 
+                            [disabled]="cl.id && touristInvitedForClub[cl.id]?.[tourist.id]">
+                            Invite
+                          </button>
+                          <div *ngIf="isTouristWaitingAcception(tourist.id, cl.id || 0)">
+                            <button 
+                              (click)="acceptTouristRequest(tourist.id, cl.id || 0)" >
+                              Accept the request
+                            </button>
+                            <button
+                              (click)="rejectTouristRequest(tourist.id, cl.id || 0)">
+                              Reject the request
+                            </button>
+                          </div>
+                          
+                        </td>
+                
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
   </div>
+  <hr>
+  <!-- Forma za uređivanje kluba -->
+  <div *ngIf="editingClub" class="form-section">
+    <h3>Edit Club</h3>
+    <form class="form" (submit)="updateClub()">
+      <label>
+        Name:
+        <input [(ngModel)]="editingClub.name" name="name">
+      </label>
+      <br>
+      <label>
+        Description:
+        <input [(ngModel)]="editingClub.description" name="description">
+      </label>
+      <br>
+      <label>
+        Photo URL:
+        <input [(ngModel)]="editingClub.photo" name="photo">
+      </label>
+      <br>
+      <button type="submit">Update Club</button>
+      <button type="button" (click)="editingClub = null">Cancel</button>
+    </form>
+    </div>
+  <div id="available-clubs">
+    <h3>Available Clubs to Join </h3>
+    <xp-available-clubs [clubs]="availableClubs"></xp-available-clubs>
+  </div>
+
 </div>

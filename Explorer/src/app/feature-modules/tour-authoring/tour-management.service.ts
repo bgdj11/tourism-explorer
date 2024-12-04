@@ -163,6 +163,10 @@ export class TourManagementService {
   deleteMembershipRequest(clubId: number, id: number): Observable<void> {
     return this.http.delete<void>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${id}`);
   }
+
+  updateMembershipRequest(clubId: number,  updatedMemRequest: MembershipRequest): Observable<MembershipRequest> {
+    return this.http.put<MembershipRequest>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${updatedMemRequest.id}`, updatedMemRequest);
+  }
   
   
   

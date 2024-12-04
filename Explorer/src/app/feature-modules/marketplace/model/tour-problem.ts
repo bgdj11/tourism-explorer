@@ -9,6 +9,8 @@ export interface TourProblem {
     reportedAt: Date;
     resolved: boolean;
     problemComments: ProblemComment[];
+    resolvingDue?: Date;
+    closed: boolean;
   }
 
   export interface ProblemComment {

@@ -1,0 +1,37 @@
+<div id="coupon" class="coupon-container">
+  <!-- "Dodaj" Button -->
+  <div>
+      <div class="add-button-container">
+          <button color="primary" (click)="onAddCouponClicked()" mat-icon-button class="add-button">
+              <mat-icon>add</mat-icon>
+          </button>
+      </div>
+  </div>
+
+  <!-- Lista kupona -->
+  <div class="coupon-cards">
+      <div *ngFor="let coupon of coupons" class="coupon-card">
+          <h2>{{ coupon.code }}</h2>
+          <p><strong>Popust:</strong> {{ coupon.discountPercentage }}%</p>
+          <p><strong>Važi do:</strong> {{ coupon.expiryDate | date:'short' }}</p>
+          <p><strong>Tura:</strong> {{ coupon.tourName || 'Sve ture' }}</p>
+
+          <div class="coupon-actions">
+              <button color="accent" (click)="deleteCoupon(coupon.id || 0)" mat-icon-button>
+                  <mat-icon>delete</mat-icon>
+              </button>
+              <button color="primary" (click)="onEditCouponClicked(coupon)" mat-icon-button>
+                  <mat-icon>edit</mat-icon>
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Forma za dodavanje/uređivanje kupona -->
+  <xp-coupon-form 
+      (couponUpdated)="getCoupons(1,10)" 
+      *ngIf="shouldRenderCouponForm" 
+      [coupon]="selectedCoupon" 
+      [shouldEditCoupon]="shouldEditCoupon">
+  </xp-coupon-form>
+</div>
