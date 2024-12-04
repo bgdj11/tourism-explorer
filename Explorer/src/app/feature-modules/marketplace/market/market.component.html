@@ -1,5 +1,15 @@
+<div><mat-checkbox class="checkbox" [(ngModel)]="isOnSaleChecked" (change)="filterToursBySales()">ON SALE</mat-checkbox></div>
+<div *ngIf="isOnSaleChecked" class="sort-controls">
+  <mat-select placeholder="Sort by discount" (selectionChange)="sortTours($event.value)">
+    <mat-option value="asc">Sort by discount - ascending</mat-option>
+    <mat-option value="desc">Sort by discount - descending</mat-option>
+  </mat-select>
+</div>
 <div class="tour-container">
-    <div *ngFor="let tour of tours" class="tour-card">
+    <div *ngFor="let tour of filteredTours" class="tour-card">
+      <div *ngIf="findDiscount(tour)" class="sale-discount">
+        <span class="discount">{{ findDiscount(tour)! }} %</span>
+      </div>
       <h2 class="tour-name">{{ tour.name }}</h2>
       <p class="tour-description">{{ tour.description }}</p>
       <p class="tour-length">
@@ -11,6 +21,7 @@
       <p *ngIf="tourReviews[tour.id].length > 0">
         <mat-icon class="star">star</mat-icon> {{ avgGrade[tour.id] / tourReviews[tour.id].length}}
       </p>
+      <p class="oldPrice" *ngIf="findDiscount(tour)"><del class="del">{{ tour.price! * 100 / (100 - findDiscount(tour)!)}} AC</del></p>
       <p class="price">
          {{ tour.price || 'No price' }} AC
       </p>
@@ -47,7 +58,7 @@
   
       <div *ngIf="reportFormVisible[tour.id]" class="report-form">
         <div class="form-header">
-          <h4 style="color: rgb(232, 39, 39);">Problem</h4>
+          <h4 style="color: black">Problem</h4>
           <button class="close-button" (click)="toggleReportForm(tour.id)" mat-icon-button>
             <mat-icon>close</mat-icon></button>
         </div>

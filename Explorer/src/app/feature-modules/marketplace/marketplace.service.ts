@@ -64,6 +64,10 @@ export class MarketplaceService {
     return this.http.get<TourDTO>(`${environment.apiHost}tourProblem/tourForTourProblem/${tourId}`);
   }
 
+  getTour1(tourId: number): Observable<TourDTO>{
+    return this.http.get<TourDTO>(`${environment.apiHost}author/tours/${tourId}`);
+  }
+
   addTourToCart(touristId: number, shoppingCartItemDto: ShoppingCartItemDTO): Observable<any> {
     return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/add/${touristId}`, shoppingCartItemDto);
     }
@@ -103,6 +107,7 @@ export class MarketplaceService {
   updateTourSale(tourSale: TourSale): Observable<TourSale> {
     return this.http.put<TourSale>(environment.apiHost + 'author/tourSale/' + tourSale.id, tourSale);
   }
+  
     getCoupons(page: number, pageSize: number): Observable<PagedResults<Coupon>> {
       let params = new HttpParams()
       .set('page', page.toString())
