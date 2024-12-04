@@ -25,7 +25,7 @@ import { CouponFormComponent } from './coupon-form/coupon-form.component';
     TourPreferencesFormComponent,
     MarketComponent,
     ShoppingCartComponent,
-    TourSaleComponent
+    TourSaleComponent,
     CouponComponent,
     CouponFormComponent
   ],
