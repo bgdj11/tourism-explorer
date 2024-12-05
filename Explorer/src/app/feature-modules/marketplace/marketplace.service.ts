@@ -127,4 +127,14 @@ export class MarketplaceService {
     deleteCoupon(id: number): Observable<void> {
       return this.http.delete<void>(environment.apiHost + `author/coupon/${id}`);
     }
+
+    applyCoupon(touristId: number | null, couponCode: string): Observable<ShoppingCartDTO> {
+      const url = `${environment.apiHost}tourist/shoppingcart/${touristId}/apply-coupon?couponCode=${couponCode}`;
+  
+  // Ako nema potrebe za dodatnim podacima u telu zahteva, možete poslati prazan objekat
+      const body = {};  // Možete dodati telo zahteva ako je potrebno
+
+      return this.http.post<ShoppingCartDTO>(url, body);
+    }
+    
 }
