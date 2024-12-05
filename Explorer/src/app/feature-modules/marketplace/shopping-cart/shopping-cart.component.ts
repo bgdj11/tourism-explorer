@@ -42,6 +42,10 @@ export class ShoppingCartComponent implements OnInit {
 
     this.service.getShoppingCart(this.touristId).subscribe({
       next: (cart) => {
+        console.log('Shopping cart data:', cart);  // Proverite sve podatke
+        console.log('Shopping Bundles:', cart.shopingBundles);  // Proverite samo pakete
+        console.log('Shopping Bundles:', cart.shopingItems);  // Proverite samo pakete
+
         this.shoppingCart = cart;
         this.errorMessage = null;  // Resetujemo grešku ako je učitavanje uspešno
       },
@@ -53,6 +57,7 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
+
   // Metoda za brisanje ture iz shopping kartice
   removeTour(tourId: number): void {
     if (!this.touristId) {
@@ -61,6 +66,24 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     this.service.removeTourFromCart(this.touristId, tourId).subscribe({
+      next: () => {
+        this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
+        this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
+      },
+      error: (err) => {
+        console.error('Error removing tour from cart', err);
+        this.removeErrorMessage = 'There was an error removing the tour from your cart. Please try again later.';
+      }
+    });
+  }
+
+  removeBundle(bundleId: number): void {
+    if (!this.touristId) {
+      this.removeErrorMessage = 'User not logged in';
+      return;
+    }
+
+    this.service.removeBundleFromCart(this.touristId, bundleId).subscribe({
       next: () => {
         this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
         this.loadShoppingCart();  // Ponovo učitavamo shopping karticu

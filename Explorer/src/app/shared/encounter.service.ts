@@ -19,4 +19,7 @@ export class EncounterService {
     console.log("Encounter: ")
     return this.http.put<EncounterDTO>(`${this.apiUrl}/` + encounter.id,encounter);
   }
+  checkTouristsInEncounters(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/check-tourists-in-encounters`, {}); // Dodato prazno telo {}
+  }
 }

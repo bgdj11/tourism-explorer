@@ -22,7 +22,7 @@ import { ToursViewComponent } from './tours-view/tours-view.component';
     ToursListComponent,
     TourSearchComponent,
     HomePageComponent,
-    ToursViewComponent
+    ToursViewComponent,
   ],
   imports: [
     CommonModule,

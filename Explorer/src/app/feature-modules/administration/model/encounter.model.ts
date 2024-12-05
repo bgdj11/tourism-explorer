@@ -13,6 +13,8 @@ export interface Encounter {
   archivedDate?: Date; // Datum arhiviranja (opcionalno)
   authorId: number; // ID autora koji je kreirao Encounter
   image?: string; // Slika za hidden encounter
+  isReviewed: boolean;
+  isRequired?: boolean;
 }
 
 export enum EncounterStatus {

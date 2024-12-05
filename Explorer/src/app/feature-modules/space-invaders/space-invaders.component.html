@@ -1,0 +1,13 @@
+<div class="game-container">
+  <div id="player" [ngStyle]="{'left.px': player.x}">
+    <img src="assets/spaceship.png" alt="Player" height="200" width="200">
+  </div>
+  <div class="enemy" *ngFor="let enemy of enemies" [ngStyle]="{'top.px': enemy.y, 'left.px': enemy.x}">
+    <img src="assets/enemy.png" alt="Enemy" height="200" width="200">
+  </div>
+  <div id="projectile" *ngIf="projectile.active" [ngStyle]="{'top.px': projectile.y, 'left.px': projectile.x}"></div>
+
+  <div class="game-time">
+    Time: {{ gameTime }} sec
+  </div>
+</div>

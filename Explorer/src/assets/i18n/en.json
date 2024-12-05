@@ -19,7 +19,9 @@
     "MY_TOURS": "My Tours",
     "FOLLOWERS": "Followers",
     "TOURS_MARKET": "Tours Market",
-    "TOUR_PROBLEMS": "Tour Problems"
+    "TOUR_PROBLEMS": "Tour Problems",
+    "PACAGES_PUBL": "Pacages",
+    "PACAGES_MY": "My Pacages"
   },
   "RATINGS": {
     "TITLE": "Ratings",

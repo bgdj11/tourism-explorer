@@ -1,0 +1,61 @@
+h2 {
+    color: #333; /* Dark gray */
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background-color: #f4f4f4; /* Light gray background */
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease;
+  }
+  
+  li:hover {
+    transform: translateY(-5px); /* Hover effect for interactivity */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+  }
+  
+  h3 {
+    color: #555; /* Medium gray */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: #777; /* Light gray text */
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  
+  .currency {
+    font-weight: bold;
+  }
+  
+  /* Tours section inside each bundle */
+  h4 {
+    color: #444; /* Darker gray for headings */
+    margin-top: 15px;
+  }
+  
+  ul li {
+    background-color: #eaeaea; /* Slightly darker gray for tour items */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+
+  .shopping-cart-button {
+    position: fixed;
+    right: 60px;
+    bottom: 600px;
+    z-index: 1000;
+  }
+  

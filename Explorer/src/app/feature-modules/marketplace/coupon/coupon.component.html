@@ -14,7 +14,7 @@
           <h2>{{ coupon.code }}</h2>
           <p><strong>Popust:</strong> {{ coupon.discountPercentage }}%</p>
           <p><strong>Važi do:</strong> {{ coupon.expiryDate | date:'short' }}</p>
-          <p><strong>Tura:</strong> {{ coupon.tourId || 'Sve ture' }}</p>
+          <p><strong>Tura:</strong> {{ coupon.tourName || 'Sve ture' }}</p>
 
           <div class="coupon-actions">
               <button color="accent" (click)="deleteCoupon(coupon.id || 0)" mat-icon-button>

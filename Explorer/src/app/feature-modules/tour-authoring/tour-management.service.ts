@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
 import {PagedResults} from "../../shared/model/paged-results.model";
 import {TourDTO} from "./model/tour.model";
@@ -11,6 +11,10 @@ import { TransportType, TravelTimeDTO } from './model/travelTime.model';
 import { TourReviewDTO } from './model/tourReview.model';
 import { MembershipRequest } from './model/membershipRequest.model';
 import { DailyAgendaDTO } from './model/DailyAgendaDTO.model';
+import { EncounterDTO } from 'src/app/shared/model/encounter';
+import { Encounter } from '../administration/model/encounter.model';
+import { BundleDTO } from './model/bundle.model';
+import { BundleTourDTO } from './model/bundleTour.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +24,7 @@ export class TourManagementService {
   private checkpointUrl = environment.apiHost + 'author/tours/tour-checkpoints';
   private equipmentUrl = environment.apiHost + 'author/tours/equipment';
   private clubUrl = environment.apiHost + 'tourist/clubs';
+  private bundleUrl = environment.apiHost + 'author/bundles'; 
 
   constructor(private http: HttpClient) { }
 
@@ -167,9 +172,69 @@ export class TourManagementService {
   updateMembershipRequest(clubId: number,  updatedMemRequest: MembershipRequest): Observable<MembershipRequest> {
     return this.http.put<MembershipRequest>(environment.apiHost + `tourist/club/${clubId}/memshiprequest/${updatedMemRequest.id}`, updatedMemRequest);
   }
-  
-  
-  
 
+  getAllBundles(): Observable<BundleDTO[]> {
+    return this.http.get<BundleDTO[]>(environment.apiHost + `author/bundles/allBundles`);
+  }
+
+  createBundle(bundle: BundleDTO): Observable<BundleDTO> {
+    return this.http.post<BundleDTO>(environment.apiHost + `author/bundles`, bundle);
+  }
+
+  addTourToBundle(bundleId: number, bundleTour: BundleTourDTO): Observable<void> {
+    const url = environment.apiHost + `author/bundles/${bundleId}/add-tour`;
+    return this.http.post<void>(url, bundleTour);
+  }
+
+  getBundleTourIds(bundleId: number): Observable<number[]> {
+    return this.http.get<number[]>(environment.apiHost + `/author/bundles/bundleTours/${bundleId}`);
+  }
+
+  deleteTourFromBundle(tourId: number): Observable<void> {
+    const url = environment.apiHost + `author/bundles/bundleTours/${tourId}`;
+    return this.http.delete<void>(url);
+  }
+
+  publishBundle(bundleId: number): Observable<{ message: string }> {
+    const url = environment.apiHost + `author/bundles/${bundleId}/check-tours-status`;
+    return this.http.post<{ message: string }>(url, {});
+  }
+
+  archiveBundle(bundleId: number): Observable<{ message: string }> {
+    const url = environment.apiHost + `author/bundles/${bundleId}/archive`;
+    return this.http.post<{ message: string }>(url, {});
+  }
+  
+  updateBundle(bundle: BundleDTO): Observable<any> {
+    return this.http.put<any>(environment.apiHost + `author/bundles/${bundle.id}`, bundle);
+  }
+
+  deleteBundle(bundleId: number): Observable<void> {
+    const url = environment.apiHost + `author/bundles/${bundleId}`;  // API endpoint za brisanje bundle-a
+    return this.http.delete<void>(url);
+  }
+  
+  createEncounter(encounter: EncounterDTO): Observable<EncounterDTO> {
+    const url = `${environment.apiHost}administrator/encounters`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+
+    console.log('Payload being sent to server:', encounter);
+
+    return this.http.post<EncounterDTO>(url, encounter);
+  }
+  
+  getToken(): string {
+    // Pretpostavka: Token je sačuvan u localStorage nakon prijave
+    return localStorage.getItem('authToken') || '';
+  }
+
+  getEncounters(page: number, pageSize: number): Observable<PagedResults<Encounter>> {
+    return this.http.get<PagedResults<Encounter>>(
+      `${environment.apiHost}administrator/encounters?page=${page}&pageSize=${pageSize}`,
+    );
+  }
 
 }

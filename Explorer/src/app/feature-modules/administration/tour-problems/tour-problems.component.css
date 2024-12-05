@@ -19,6 +19,10 @@
     font-size: 1.2em;
     margin-bottom: 0px;
   }
+
+  .problem-title{
+    margin-left: 0px;
+  }
   
   .problem-category, .problem-priority, .problem-description {
     margin: 5px 0;
@@ -54,6 +58,7 @@
     margin-left: 650px;
     color: white;
     background-color: #3f51b5;
+    font-size: 14px;
   }
 
   .comment-section-button :hover{
