@@ -3,6 +3,7 @@ import { MarketplaceService } from '../marketplace.service';
 import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { empty } from 'rxjs';
 
 @Component({
   selector: 'xp-shopping-cart',
@@ -15,6 +16,9 @@ export class ShoppingCartComponent implements OnInit {
   user: User | undefined;  // Ulogovani korisnik
   errorMessage: string | null = null;  // Greška pri učitavanju
   removeErrorMessage: string | null = null;  // Greška pri brisanju ture
+  
+  couponCode: string = '';
+  showCouponForm: boolean = false;
 
   constructor(private service: MarketplaceService, private authService: AuthService) {}
 
@@ -113,6 +117,42 @@ export class ShoppingCartComponent implements OnInit {
         this.errorMessage = 'There was an error processing your checkout. Please try again later.';
       }
     });
+  }
+
+  toggleCouponForm(){
+    this.showCouponForm = !this.showCouponForm;
+  }
+
+  applyCoupon(){
+    if(!this.couponCode.trim()){
+      alert('put the valid coupon code.');
+      return;
+    }
+
+    if (!this.touristId) {
+      alert('Tourist ID is invalid!');
+      return;
+    }    
+
+    this.service.applyCoupon(this.touristId, this.couponCode).subscribe(
+      (response: ShoppingCartDTO) => {
+        //ucitaj ture sa novim cijenama.. neka funkcija 
+        alert('Coupon has successfully been applied.');
+        this.loadShoppingCart();
+      },
+      (err) => {
+        console.log('An error occured while applying a coupon: ', err);
+      }
+    );
+
+
+  }
+
+  clearCoupon(){
+    this.couponCode = '';
+    this.errorMessage = null;
+    alert('Coupon is not used.');
+    this.showCouponForm = !this.showCouponForm;
   }
 }
 

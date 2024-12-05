@@ -27,7 +27,24 @@
           </div>
         </li>
       </ul>
+
+      <div class="coupon-section" (click)="toggleCouponForm()" >
+        <div class="coupon-header">
+          Coupon
+        </div>
+        <div>
+          Unesi promo kod i ostvari pogodnosti.
+        </div>
+      </div>
   
+      <div *ngIf="showCouponForm" class="coupon-form">
+        <label for="couponCode">Promo kod:</label>
+        <input type="text" id="couponCode" [(ngModel)]="couponCode" />
+        <div class="coupon-actions">
+          <button (click)="applyCoupon()">Prihvati</button>
+          <button (click)="clearCoupon()">Izbriši</button>
+        </div>
+      </div>
       <!-- Ukupna cena -->
       <div class="total-price">
         <p><strong>Total Price:</strong> {{ shoppingCart.totalPrice | currency }}</p>
