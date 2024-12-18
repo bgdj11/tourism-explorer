@@ -1,0 +1,89 @@
+/* Glavni kontejner */
+.container {
+  display: flex;
+  justify-content: center; /* Centriranje po horizontali */
+  align-items: center;     /* Centriranje po vertikali */
+  height: 100vh;           /* Visina ekrana */
+  background-color: #f0f0f0;
+  gap: 40px;
+}
+
+/* Tabla za Tetris */
+.tetris-wrapper {
+  border: 5px solid #333; /* Okvir oko tabele */
+  background-color: black;
+  width: 300px;
+  height: 600px; /* Fiksna veličina table */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-board {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Desna kolona sa statistikama */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+.right-column h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.right-column p {
+  margin: 10px 0;
+}
+
+.play-button {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.play-button:hover {
+  background-color: #45a049;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.popup h2 {
+  margin: 0 0 10px;
+  color: red;
+}
+
+.popup p {
+  margin: 5px 0;
+  font-size: 16px;
+}

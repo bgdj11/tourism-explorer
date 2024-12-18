@@ -22,6 +22,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { SpaceInvadersComponent } from './feature-modules/space-invaders/space-invaders.component';
 import {NgOptimizedImage} from "@angular/common";
+import { TetrisComponent } from './feature-modules/tetris/tetris.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -32,7 +33,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    SpaceInvadersComponent
+    SpaceInvadersComponent,
+    TetrisComponent
   ],
   imports: [
     BrowserModule,
