@@ -21,19 +21,21 @@ export class EncounterComponent implements OnInit {
   user: BehaviorSubject<User>;
   isAdmin = false;
   statuses = [
-    { label: 'Draft', value: EncounterStatus.DRAFT },
-    { label: 'Active', value: EncounterStatus.ACTIVE },
-    { label: 'Archived', value: EncounterStatus.ARCHIVED }
+    {label: 'Draft', value: EncounterStatus.DRAFT},
+    {label: 'Active', value: EncounterStatus.ACTIVE},
+    {label: 'Archived', value: EncounterStatus.ARCHIVED}
   ];
 
   types = [
-    { label: 'Social', value: EncounterType.SOCIAL },
-    { label: 'Location', value: EncounterType.LOCATION },
-    { label: 'Miscellaneous', value: EncounterType.MISC }
+    {label: 'Social', value: EncounterType.SOCIAL},
+    {label: 'Location', value: EncounterType.LOCATION},
+    {label: 'Miscellaneous', value: EncounterType.MISC}
   ];
   showImageForHiddenEncounter = false;  // Flag to show the additional input for 'Location' type
   image: string | null = null;
-  constructor(private fb: FormBuilder, private adminService: AdministrationService, private authService: AuthService) {}
+
+  constructor(private fb: FormBuilder, private adminService: AdministrationService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     this.user = this.authService.user$;
@@ -66,7 +68,7 @@ export class EncounterComponent implements OnInit {
       publishedDate: [null],
       archivedDate: [null],
       authorId: [this.user.value.id],
-      additionalLocationInfo: [''] , // Add the additional field for Location type
+      additionalLocationInfo: [''], // Add the additional field for Location type
       requiredParticipants: [0], // Default value for SOCIAL encounters
       radius: [0]
     });
@@ -190,5 +192,4 @@ export class EncounterComponent implements OnInit {
       });
     }
   }
-
 }

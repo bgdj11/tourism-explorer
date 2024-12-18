@@ -1,0 +1,26 @@
+<div class="container">
+  <!-- Glavna tabla za igru -->
+  <div class="tetris-wrapper">
+    <canvas #board class="game-board"></canvas>
+  </div>
+
+  <!-- Desna kolona sa statistikama -->
+  <div class="right-column">
+    <h1>TETRIS</h1>
+    <p>Score: {{ points }}</p>
+    <p>Lines: {{ lines }}</p>
+    <p>Level: {{ level }}</p>
+    <canvas #next class="next"></canvas>
+    <button (click)="play()" class="play-button">Play</button>
+  </div>
+</div>
+
+<!-- GAME OVER pop-up -->
+<div class="overlay" *ngIf="gameOverFlag">
+  <div class="popup">
+    <h2>GAME OVER</h2>
+    <p>Your Score: {{ finalScore }}</p>
+    <p>Lines Cleared: {{ finalLines }}</p>
+    <button (click)="resetGame()" class="play-button">Play Again</button>
+  </div>
+</div>
