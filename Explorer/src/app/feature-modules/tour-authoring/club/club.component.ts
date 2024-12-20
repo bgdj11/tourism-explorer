@@ -18,6 +18,7 @@ export class ClubsComponent implements OnInit {
   editingClub: ClubDTO | null = null;
   showAddClubForm: boolean = false;
   availableClubs: ClubDTO[] = [];
+  
 
   membershipRequests: MembershipRequest[] = [];
   tourists: any[] = [];
@@ -156,6 +157,7 @@ export class ClubsComponent implements OnInit {
         response => {
           console.log('Club added successfully', response);
           this.newClub = {name: '', description: '', photo: '', ownerId: this.currentUserId};
+          this.getClubs(1, 10);
         },
         error => {
           console.error('Error creating club:', error);
@@ -168,11 +170,14 @@ export class ClubsComponent implements OnInit {
 
 
   deleteClub(id: number): void {
-    this.service.deleteClub(id).subscribe(() => {
-      console.log('Club deleted');
-      this.getClubs(1, 10);
-    });
+    if (confirm('Are you sure you want to delete this club?')) {
+      this.service.deleteClub(id).subscribe(() => {
+        console.log('Club deleted');
+        this.getClubs(1, 10);
+      });
+    }
   }
+  
 
   editClub(club: ClubDTO): void {
     this.editingClub = { ...club };

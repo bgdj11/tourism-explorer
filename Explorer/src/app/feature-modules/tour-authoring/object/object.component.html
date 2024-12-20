@@ -1,97 +1,106 @@
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Objects</h2>
+  <h2 class="text-center mb-4">Objects</h2>
 
-    <!-- Dugme za dodavanje novog objekta -->
-    <div class="d-flex justify-content-end mb-3">
-      <button class="btn btn-primary" (click)="openModal('add')">
-        <i class="bi bi-plus-circle"></i> Add an object
-      </button>
-    </div>
-
-    <!-- Tabela tura -->
-    <div class="table-responsive">
-      <table class="table table-hover table-bordered">
-        <thead class="table-dark text-center">
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let object of objects; let i = index"
-
-            (click)="selectObject(object)">
-          <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-          <td>{{ object.name }}</td>
-          <td>{{ object.description }}</td>
-          <td>{{ object.category }}</td>
-          <td class="text-center">
-            <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', object); $event.stopPropagation();">
-              <fa-icon [icon]="faPencil"></fa-icon>
-            </button>
-            <button class="btn btn-danger btn-sm mx-1" (click)="deleteObject(object.id); $event.stopPropagation();">
-              <fa-icon [icon]="faTrash"></fa-icon>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Paginacija -->
-    <ngb-pagination
-      [(page)]="currentPage"
-      [pageSize]="pageSize"
-      [collectionSize]="totalCount"
-      aria-label="Pagination"
-      class="d-flex justify-content-center mt-3">
-    </ngb-pagination>
-
-    <!-- Modal za dodavanje/editovanje ture -->
-    <ng-template #objectModal let-modal>
-      <div class="modal-header">
-        <h5 class="modal-title">{{ modalTitle }}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="onSubmit()">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="name" class="form-label">Object name</label>
-              <input type="text" class="form-control" id="name" [(ngModel)]="object.name" name="name" required />
-            </div>
-            <div class="col-md-6">
-              <label for="weight" class="form-label">Category</label>
-              <input type="text" class="form-control" id="weight" [(ngModel)]="object.category" name="weight" />
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Object description</label>
-            <textarea class="form-control" id="description" [(ngModel)]="object.description" name="description" required></textarea>
-          </div>
-          <!-- Dodavanje mape u modal -->
-          <div class="form-group">
-            <xp-map
-              #objectModalMap
-              [initialCenter]="[45.2396, 19.8227]"
-              [initialZoom]="13"
-              [initialCheckpoint]="{ lat: object.latitude!, lng: object.longitude! }"
-              [uniqueId]="'object-map-' + object.id"
-              [isModalMap]="true"
-              (mapClick)="onMapClick($event)">
-            </xp-map>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
-            <button type="submit" class="btn btn-primary">
-              <i class="bi bi-save"></i> Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </ng-template>
+  <!-- Dugme za dodavanje novog objekta -->
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" (click)="openModal('add')">
+      <i class="bi bi-plus-circle"></i> Add an object
+    </button>
   </div>
+
+  <!-- Tabela tura -->
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="table-dark text-center">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let object of objects; let i = index"
+
+          (click)="selectObject(object)">
+        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.category }}</td>
+        <td class="text-center">
+          <button class="btn btn-warning btn-sm mx-1" (click)="openModal('edit', object); $event.stopPropagation();">
+            <fa-icon [icon]="faPencil"></fa-icon>
+          </button>
+          <button class="btn btn-danger btn-sm mx-1" (click)="deleteObject(object.id); $event.stopPropagation();">
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginacija -->
+  <ngb-pagination
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="totalCount"
+    aria-label="Pagination"
+    class="d-flex justify-content-center"
+    
+    >
+  </ngb-pagination>
+
+  <!-- Modal za dodavanje/editovanje ture -->
+  <ng-template #objectModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalTitle }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Object name</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="object.name" name="name" required />
+          </div>
+          <div class="col-md-6">
+            <label for="weight" class="form-label">Category</label>
+            <select class="form-select" id="category" [(ngModel)]="object.category" name="category" required>
+              <option value="" disabled>Select category</option>
+              <option value="TOILET">TOILET</option>
+              <option value="PARKING">PARKING</option>
+              <option value="RESTAURANT">RESTAURANT</option>
+              <option value="OTHER">OTHER</option>
+            </select>
+            <!--<input type="text" class="form-control" id="weight" [(ngModel)]="object.category" name="weight" />-->
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Object description</label>
+          <textarea class="form-control" id="description" [(ngModel)]="object.description" name="description" required></textarea>
+        </div>
+        <!-- Dodavanje mape u modal -->
+        <div class="form-group">
+          <xp-map
+            #objectModalMap
+            [initialCenter]="[45.2396, 19.8227]"
+            [initialZoom]="13"
+            [initialCheckpoint]="{ lat: object.latitude!, lng: object.longitude! }"
+            [uniqueId]="'object-map-' + object.id"
+            [isModalMap]="true"
+            (mapClick)="onMapClick($event)">
+          </xp-map>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
 
