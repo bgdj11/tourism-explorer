@@ -4,6 +4,9 @@ import { MembershipRequest, MemRequestStatus } from '../model/membershipRequest.
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { TourManagementService } from '../tour-management.service';
 import { forkJoin, map } from 'rxjs';
+import { ResourceType, SendMessageRequest } from '../../tour-execution/model/message-request';
+import { TourExecutionService } from '../../tour-execution/tour.execution.service';
+import { PagedResults } from 'src/app/shared/model/paged-results.model';
 
 @Component({
   selector: 'xp-available-clubs',
@@ -12,23 +15,61 @@ import { forkJoin, map } from 'rxjs';
 })
 export class AvailableClubsComponent {
   @Input() clubs: ClubDTO[] = [];
+  @Input() clubId: number = 0; 
+  @Input() ownerClubId: number = 0;
 
   currentTouristId: number = 0;
   filteredRequests: MembershipRequest[] = []; //sadrzace sve zahtjeve koji se odnose na trenuto prijavljenog turistu, bilo da ih je poslao turista vlasniku, ili su poziv od vlasnika(invitations)
   invitationsToJoin: MembershipRequest[] = [];
   isWithdrawn: boolean = false;
   acceptedRequests: MembershipRequest[] = []; // Lista zahtjeva koje je turista prihvatio
+  messageContent: string = '';
+  messages: SendMessageRequest[] = [];
+  editingMessageId: number | null = null; // ID poruke koja se trenutno uređuje
+  messageEdit: SendMessageRequest;
 
-  constructor(private authService: AuthService, private service: TourManagementService) {}
+  constructor(private authService: AuthService, private service: TourManagementService, private tourExecutionService: TourExecutionService) {}
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.currentTouristId = user?.id || 0;
       this.loadAllClubsToApplyFor();
+      this.getMessages();
     });
   }
 
+  editMessage(message: any) {
+    // Postavljanje sadržaja poruke u polje za unos
+    this.messageContent = message.content;
+    this.messageEdit = message;
+    // Čuvanje ID-a poruke koju uređujemo
+    this.editingMessageId = message.id;
+  }
 
+  
+  getMessages(): void {
+      this.tourExecutionService.getMessagesByOwnerId(this.clubId).subscribe({
+        next: (result: PagedResults<SendMessageRequest>) => {
+          this.messages = result.results
+        },
+        error: (err: any) => {
+          console.log(err)
+        }
+      })
+    }
+
+    deleteMessage(messageId: number): void {
+      this.tourExecutionService.deleteMessage(messageId).subscribe({
+        next:(_) => {
+          this.getMessages();
+        },
+        error: (err) => {
+          console.log('Error occured: ', err); 
+        }
+      });
+}
+
+    
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['clubs']) {
       console.log('Clubs updated:', this.clubs);
@@ -74,6 +115,65 @@ export class AvailableClubsComponent {
       return false;
     }
     return this.acceptedRequests.some(req => req.clubId === clubId);
+  }
+
+  // Funkcija koja proverava da li je korisnik u mogućnosti poslati poruku
+  canSendMessage(clubId: number): boolean {
+    return this.hasJoinedTheClub(clubId);  // Korisnik može da pošalje poruku ako je član kluba
+  }
+  sendMessage(clubId: number): void {
+    if (this.messageContent.trim()) {
+      const message: SendMessageRequest = {
+        senderId: this.currentTouristId,
+        content: this.messageContent,
+        resourceType: ResourceType.Club,  // Ispravno korišćenje enum-a
+        followerId: this.clubId,
+        resourceUrl: ''
+      };
+
+      // Pozivanje servisa za slanje poruke
+      this.sendMessageToServer(message);
+      this.messageContent = '';  // Resetovanje polja poruke
+    }
+  }
+
+  sendMessageOrUpdate(clubId: number) {
+    if (this.editingMessageId) {
+      // Ažuriranje poruke ako je postavljen ID poruke
+      this.updateMessage(this.editingMessageId, this.messageContent);
+    } else {
+      // Slanje nove poruke ako nije postavljen ID poruke
+      this.sendMessage(clubId);
+    }
+    // Nakon slanja/izmena poruke, praznimo polje za unos
+    this.messageContent = '';
+    this.editingMessageId = null; // Resetovanje ID-a poruke koja se uređuje
+  }
+
+  updateMessage(messageId: number, updatedContent: string) {
+    // Pozivanje servisa za ažuriranje poruke
+    this.messageEdit.content = updatedContent;
+    this.tourExecutionService.updateMessage(messageId,this.messageEdit).subscribe(response => {
+      console.log('Message updated:', response);
+      // Ažuriraj poruku u listi (ako je potrebno)
+      this.getMessages();
+    }, error => {
+      console.error('Error updating message:', error);
+    });
+  }
+
+
+  // Poziv funkcije za slanje poruke putem servisa
+  sendMessageToServer(message: SendMessageRequest): void {
+    this.tourExecutionService.sendMessageToFollower(message).subscribe(
+      response => {
+        console.log('Message successfully sent:', response);
+        this.getMessages();
+      },
+      error => {
+        console.error('Error sending message:', error);
+      }
+    );
   }
 
   acceptInvitation(clubId: number | undefined): void {
