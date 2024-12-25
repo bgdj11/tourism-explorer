@@ -12,21 +12,24 @@
 }
 
 .club-card h4 {
-    color: var(--primary-color); /* Koristi boju primarnog dugmeta */
-    font-size: 1.2rem; /* Veličina naslova */
-    font-weight: 600; /* Debeli font */
+    color: var(--primary-color); /* Koristi primarnu boju */
+    font-size: 1.5rem; /* Veća veličina naslova */
+    font-weight: bold; /* Debeli font */
     margin-bottom: 10px; /* Razmak ispod naslova */
 }
 
 .club-card p {
     font-size: 1rem; /* Veličina opisa */
-    color: var(--text-color); /* Koristi boju teksta iz root komponente */
-    margin-bottom: 15px; /* Razmak između opisa i dugmadi */
+    color: var(--text-color); /* Koristi definisanu boju teksta */
+    margin-bottom: 15px; /* Razmak između opisa i drugih elemenata */
 }
 
 .club-card img {
     border-radius: 8px; /* Zaobljeni uglovi slike */
     margin-bottom: 10px; /* Razmak ispod slike */
+    max-width: 100%; /* Ograničenje širine slike */
+    height: auto; /* Proporcionalna visina */
+    border: 2px solid var(--primary-color); /* Primarna boja kao okvir */
 }
 
 .club-card button {
@@ -37,7 +40,8 @@
     border-radius: 5px; /* Zaobljeni uglovi dugmeta */
     cursor: pointer; /* Pokazivač miša kao dugme */
     transition: background-color 0.3s ease; /* Efekat pri prelazu boje dugmeta */
-    font-size: 1rem; /* Veličina fonta */
+    font-size: 1rem; /* Konzistentna veličina fonta */
+    font-weight: 500; /* Blago zadebljani tekst */
 }
 
 .club-card button:hover {
@@ -47,5 +51,74 @@
 .club-card button:disabled {
     background-color: #ccc; /* Siva boja za onemogućeno dugme */
     color: #777; /* Svetlo siva boja teksta */
-    cursor: not-allowed; /* Pokazivač kao "ne dozvoljeno" */
+    cursor: not-allowed; /* Onemogućeni kursor */
+    opacity: 0.7; /* Blago prozirno */
+}
+
+.messages {
+    margin-top: 15px; /* Razmak od prethodnog sadržaja */
+    padding-left: 15px; /* Razmak sa leve strane */
+    border-left: 3px solid var(--primary-color); /* Primarna boja za liniju */
+    background-color: var(--background-color); /* Svetla pozadina */
+    padding: 10px; /* Unutrašnji razmak */
+    border-radius: 8px; /* Zaobljeni uglovi */
+}
+
+.message-item {
+    margin-bottom: 10px; /* Razmak između poruka */
+    padding: 10px; /* Unutrašnji razmak za poruku */
+    border-radius: 5px; /* Zaobljeni uglovi */
+    background-color: #fff; /* Bela pozadina za poruku */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Blaga senka */
+}
+
+.message-item p {
+    margin: 0; /* Bez dodatnih margina */
+    font-size: 1rem; /* Konzistentna veličina fonta */
+    color: var(--text-color); /* Boja teksta */
+}
+
+.message-actions {
+    margin-top: 5px; /* Razmak između teksta poruke i dugmadi */
+    text-align: right; /* Poravnanje dugmadi desno */
+}
+
+.message-actions button {
+    margin-right: 10px; /* Razmak između dugmadi */
+    font-size: 1rem; /* Konzistentna veličina fonta */
+    padding: 5px 10px; /* Unutrašnji razmak */
+    border: none; /* Bez ivica */
+    background-color: var(--primary-color); /* Primarna boja */
+    color: white; /* Bela boja teksta */
+    border-radius: 4px; /* Zaobljeni uglovi */
+    cursor: pointer; /* Pokazivač miša kao dugme */
+    transition: background-color 0.3s ease; /* Efekat pri prelazu boje */
+}
+
+.message-actions button:hover {
+    background-color: #008768; /* Tamnija primarna boja */
+}
+
+textarea {
+    width: 100%; /* Puna širina */
+    height: 60px; /* Fiksna visina */
+    margin-top: 10px; /* Razmak od prethodnog sadržaja */
+    padding: 10px; /* Unutrašnji razmak */
+    border: 1px solid #ddd; /* Svetla ivica */
+    border-radius: 4px; /* Zaobljeni uglovi */
+    resize: none; /* Onemogućeno menjanje veličine */
+    font-family: var(--font-family); /* Konzistentan font */
+    font-size: 1rem; /* Konzistentna veličina fonta */
+}
+
+textarea:focus {
+    border-color: var(--primary-color); /* Primarna boja pri fokusu */
+    outline: none; /* Uklanjanje standardnog outline-a */
+    box-shadow: 0 0 5px rgba(0, 77, 59, 0.5); /* Blaga senka u primarnoj boji */
+}
+.message-sender {
+    font-size: 0.9rem; /* Malo manji font za ime pošiljaoca */
+    font-weight: bold; /* Istaknut tekst */
+    color: var(--primary-color); /* Koristi primarnu boju */
+    margin-bottom: 5px; /* Razmak ispod senderId */
 }

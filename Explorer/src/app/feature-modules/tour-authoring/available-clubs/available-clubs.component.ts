@@ -7,6 +7,7 @@ import { forkJoin, map } from 'rxjs';
 import { ResourceType, SendMessageRequest } from '../../tour-execution/model/message-request';
 import { TourExecutionService } from '../../tour-execution/tour.execution.service';
 import { PagedResults } from 'src/app/shared/model/paged-results.model';
+import { UserDto } from '../../tour-execution/model/all-tourists';
 
 @Component({
   selector: 'xp-available-clubs',
@@ -27,6 +28,7 @@ export class AvailableClubsComponent {
   messages: SendMessageRequest[] = [];
   editingMessageId: number | null = null; // ID poruke koja se trenutno uređuje
   messageEdit: SendMessageRequest;
+  users: any[] = [];
 
   constructor(private authService: AuthService, private service: TourManagementService, private tourExecutionService: TourExecutionService) {}
 
@@ -35,6 +37,7 @@ export class AvailableClubsComponent {
       this.currentTouristId = user?.id || 0;
       this.loadAllClubsToApplyFor();
       this.getMessages();
+      this.getAllTourists();
     });
   }
 
@@ -69,7 +72,27 @@ export class AvailableClubsComponent {
       });
 }
 
-    
+getAllTourists(): void {
+  this.tourExecutionService.getAllTourists().subscribe(
+    response => {
+      this.users = response; 
+      console.log('Users loaded:', this.users); // Proverite sadržaj korisnika
+    },
+    error => {
+      console.error('Error fetching tourists:', error);
+    }
+  );
+}
+getUserNameById(senderId: number): string {
+  console.log('Finding user for senderId:', senderId); // Provera vrednosti senderId
+  const user = this.users.find(u => u.id === senderId);
+  if (!user) {
+    console.warn(`No user found for senderId: ${senderId}`);
+  }
+  return user ? user.username : 'Unknown';
+}
+
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['clubs']) {
       console.log('Clubs updated:', this.clubs);

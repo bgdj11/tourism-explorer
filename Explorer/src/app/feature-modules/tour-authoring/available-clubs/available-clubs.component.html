@@ -1,22 +1,20 @@
-<table>
-  <thead>
-    <tr>
-      <th>Message Content</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let message of messages">
-      <td>{{ message.content }}</td>
-      <td>
-        <!-- Prikazivanje dugmeta za update samo ako je senderId jednak trenutnom korisniku -->
-        <button *ngIf="message.senderId === currentTouristId" (click)="editMessage(message)">Update</button>
-        
-        <!-- Prikazivanje dugmeta za brisanje samo ako je trenutni korisnik vlasnik kluba -->
-        <button *ngIf="ownerClubId === currentTouristId" (click)="deleteMessage(message.id || 0)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="messages">
+  <div *ngFor="let message of messages" class="message-item">
+    <!-- Prikaz userName iznad sadržaja poruke -->
+    <p class="message-sender">From: {{ getUserNameById(message.senderId) }}</p>
+    
+    <!-- Sadržaj poruke -->
+    <p>{{ message.content }}</p>
+    
+    <div class="message-actions">
+      <!-- Prikazivanje dugmeta za update samo ako je senderId jednak trenutnom korisniku -->
+      <button *ngIf="message.senderId === currentTouristId" (click)="editMessage(message)">Update</button>
+      
+      <!-- Prikazivanje dugmeta za brisanje samo ako je trenutni korisnik vlasnik kluba -->
+      <button *ngIf="ownerClubId === currentTouristId" (click)="deleteMessage(message.id || 0)">Delete</button>
+    </div>
+  </div>
+</div>
 
 <div *ngFor="let club of clubs" class="club-card">
   <div *ngIf="club.id === clubId">
