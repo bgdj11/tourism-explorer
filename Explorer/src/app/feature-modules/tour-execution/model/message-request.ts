@@ -5,6 +5,7 @@ export interface SendMessageRequest {
     content: string;
     resourceUrl?: string;
     resourceType?: ResourceType | null; 
+    clubId?: number;
   }
 
   export enum ResourceType {

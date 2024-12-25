@@ -174,16 +174,16 @@ import { catchError, map, of, switchMap } from 'rxjs';
   return this.http.get<NotificationDto[]>(`${environment.apiHost}notifications/${userId}`);
   }
 
-  getMessagesByOwnerId(ownerId: number): Observable<PagedResults<SendMessageRequest>> {
-    return this.http.get<PagedResults<SendMessageRequest>>(`${environment.apiHost}message/${ownerId}`);
+  getMessagesByOwnerId(clubId: number): Observable<PagedResults<SendMessageRequest>> {
+    return this.http.get<PagedResults<SendMessageRequest>>(`${environment.apiHost}tourist/club/${clubId}/message/getAllByOwnerId`);
+  }
+  
+  updateMessage(clubId: number,messageId: number, message: any): Observable<any> {
+    return this.http.put<any>(`${environment.apiHost}tourist/club/${clubId}/message/${messageId}`, message); // URL za ažuriranje poruke
   }
 
-  updateMessage(messageId: number, message: any): Observable<any> {
-    return this.http.put<any>(`${environment.apiHost}message/${messageId}`, message); // URL za ažuriranje poruke
-  }
-
-  deleteMessage(messageId: number): Observable<any> {
-    return this.http.delete(`${environment.apiHost}message/${messageId}`);
+  deleteMessage(clubId: number,messageId: number): Observable<any> {
+    return this.http.delete(`${environment.apiHost}tourist/club/${clubId}/message/${messageId}`);
   }
   
 }

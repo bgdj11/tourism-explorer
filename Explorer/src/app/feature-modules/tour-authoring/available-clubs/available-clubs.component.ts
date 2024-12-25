@@ -19,6 +19,7 @@ export class AvailableClubsComponent {
   @Input() clubId: number = 0; 
   @Input() ownerClubId: number = 0;
 
+  showMessages: boolean = false; // Stanje koje prati da li su poruke vidljive
   currentTouristId: number = 0;
   filteredRequests: MembershipRequest[] = []; //sadrzace sve zahtjeve koji se odnose na trenuto prijavljenog turistu, bilo da ih je poslao turista vlasniku, ili su poziv od vlasnika(invitations)
   invitationsToJoin: MembershipRequest[] = [];
@@ -29,7 +30,14 @@ export class AvailableClubsComponent {
   editingMessageId: number | null = null; // ID poruke koja se trenutno uređuje
   messageEdit: SendMessageRequest;
   users: any[] = [];
-
+  newMessageUpdate: SendMessageRequest = {
+    senderId: 0,        // ili neki drugi podrazumevani podatak
+    followerId: 0,      // ili neki drugi podrazumevani podatak
+    content: "",           // Prazan string
+    resourceUrl: "",       // Prazan string
+    resourceType: ResourceType.Club       // Prazan string
+  };
+  
   constructor(private authService: AuthService, private service: TourManagementService, private tourExecutionService: TourExecutionService) {}
 
   ngOnInit(): void {
@@ -49,7 +57,10 @@ export class AvailableClubsComponent {
     this.editingMessageId = message.id;
   }
 
-  
+  toggleMessagesVisibility(): void {
+    this.showMessages = !this.showMessages;
+  }
+
   getMessages(): void {
       this.tourExecutionService.getMessagesByOwnerId(this.clubId).subscribe({
         next: (result: PagedResults<SendMessageRequest>) => {
@@ -61,8 +72,21 @@ export class AvailableClubsComponent {
       })
     }
 
+    isOwnerOfClub(clubId: number): boolean {
+      console.log('ownerClubId:', this.ownerClubId);
+      console.log('currentTouristId:', this.currentTouristId);
+      console.log('clubId:', clubId);
+      console.log('clubs:', this.clubs);
+    
+      const isOwner = this.ownerClubId === this.currentTouristId;
+      console.log('isOwner:', isOwner);
+    
+      return isOwner;
+    }
+    
+    //popravit ovo pod hitno
     deleteMessage(messageId: number): void {
-      this.tourExecutionService.deleteMessage(messageId).subscribe({
+      this.tourExecutionService.deleteMessage(this.clubId,messageId).subscribe({
         next:(_) => {
           this.getMessages();
         },
@@ -142,8 +166,9 @@ getUserNameById(senderId: number): string {
 
   // Funkcija koja proverava da li je korisnik u mogućnosti poslati poruku
   canSendMessage(clubId: number): boolean {
-    return this.hasJoinedTheClub(clubId);  // Korisnik može da pošalje poruku ako je član kluba
+    return this.hasJoinedTheClub(clubId) || this.isOwnerOfClub(clubId);
   }
+  
   sendMessage(clubId: number): void {
     if (this.messageContent.trim()) {
       const message: SendMessageRequest = {
@@ -176,7 +201,15 @@ getUserNameById(senderId: number): string {
   updateMessage(messageId: number, updatedContent: string) {
     // Pozivanje servisa za ažuriranje poruke
     this.messageEdit.content = updatedContent;
-    this.tourExecutionService.updateMessage(messageId,this.messageEdit).subscribe(response => {
+    this.newMessageUpdate.content = updatedContent;
+    this.newMessageUpdate.id = this.messageEdit.id;
+    this.newMessageUpdate.followerId = this.messageEdit.followerId;
+    this.newMessageUpdate.resourceType = this.messageEdit.resourceType;
+    this.newMessageUpdate.resourceUrl = this.messageEdit.resourceUrl;
+    this.newMessageUpdate.senderId = this.messageEdit.senderId;
+    this.newMessageUpdate.clubId = this.messageEdit.followerId;
+
+    this.tourExecutionService.updateMessage(this.clubId,messageId,this.newMessageUpdate).subscribe(response => {
       console.log('Message updated:', response);
       // Ažuriraj poruku u listi (ako je potrebno)
       this.getMessages();

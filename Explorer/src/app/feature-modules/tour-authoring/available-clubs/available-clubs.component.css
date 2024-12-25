@@ -122,3 +122,47 @@ textarea:focus {
     color: var(--primary-color); /* Koristi primarnu boju */
     margin-bottom: 5px; /* Razmak ispod senderId */
 }
+
+.button-group {
+    display: flex;
+    gap: 10px; /* Dodaje razmak od 10px između dugmadi */
+    margin-top: 10px; /* Dodaje razmak između grupa dugmadi i ostalih elemenata */
+  }
+  
+  .button-item {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+  
+  .button-item:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .messages {
+    margin-top: 15px;
+  }
+  
+  .invitation-actions {
+    margin-top: 10px;
+  }
+  
+
+  .show-messages-button {
+    font-size: 16px; /* Veličina slova */
+    padding: 8px 12px; /* Unutrašnji razmak */
+    border: none; /* Bez ivica */
+    border-radius: 5px; /* Zaobljeni uglovi */
+    background-color: var(--primary-color); /* Zelena boja pozadine */
+    color: white; /* Bela boja teksta */
+    cursor: pointer; /* Pokazivač miša */
+    transition: background-color 0.3s ease; /* Efekat prelaza */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Blaga senka */
+    font-weight: 500; /* Blago zadebljani tekst */
+}
+
+.show-messages-button:hover {
+    background-color: #008768; /* Tamnija zelena pri hover efektu */
+}
