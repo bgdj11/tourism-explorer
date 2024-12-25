@@ -3,13 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TouristProfile } from './model/tourist-profile.model';
 import { environment } from '../../env/environment';
+import {Coupon} from "../feature-modules/marketplace/model/coupon";
+
+class PagedResult<T> {
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class TouristProfileService {
   private apiUrl = environment.apiHost + 'tourist/profiles'; // API endpoint
-
+  private apiUrlCup = `${environment.apiHost}author/coupon`;
   constructor(private http: HttpClient) {}
 
   getTouristProfile(username: string): Observable<TouristProfile> {
@@ -18,5 +22,9 @@ export class TouristProfileService {
 
   syncCompletedEncounters(username: string): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/${username}/sync-completed-encounters`, {});
+  }
+
+  getAllCoupons(page: number, pageSize: number): Observable<PagedResult<Coupon>> {
+    return this.http.get<PagedResult<Coupon>>(`${this.apiUrlCup}?page=${page}&pageSize=${pageSize}`);
   }
 }

@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef, OnInit, HostListener } from '@angular
 import { COLORS, KEY, LEVEL, POINTS, COLS, ROWS, BLOCK_SIZE } from './Constants/constants';
 import { Piece, IPiece } from './piece.component';
 import { TetrisService} from "./tetris.service";
+import {AuthService} from "../../infrastructure/auth/auth.service";
+import {User} from "../../infrastructure/auth/model/user.model";
 
 @Component({
   selector: 'xp-tetris',
@@ -26,13 +28,18 @@ export class TetrisComponent implements OnInit {
   gameOverFlag = false; // Da li je igra završena
   finalScore = 0;
   finalLines = 0;
+  user: User;
+  scoreSaved = false; // Ensures score is saved only once
 
-  constructor(private service: TetrisService) {}
+  constructor(private service: TetrisService, private authService: AuthService) {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
+  }
 
   ngOnInit() {
     this.initBoard();
     this.initNext();
-    this.resetGame();
   }
 
   initBoard() {
@@ -60,6 +67,7 @@ export class TetrisComponent implements OnInit {
 
   resetGame() {
     this.gameOverFlag = false; // Sakrij pop-up
+    this.scoreSaved = false;
     this.points = 0;
     this.lines = 0;
     this.level = 0;
@@ -71,12 +79,9 @@ export class TetrisComponent implements OnInit {
     this.animate();
   }
 
-  play() {
-    this.resetGame();
-    this.animate();
-  }
 
   animate(now = 0) {
+    if (this.gameOverFlag) return; // Stop animation if game over
     const deltaTime = now - this.lastTime;
     if (deltaTime > this.dropInterval) {
       this.lastTime = now;
@@ -108,11 +113,40 @@ export class TetrisComponent implements OnInit {
   }
 
   gameOver() {
-    this.gameOverFlag = true; // Aktiviraj pop-up
-    this.finalScore = this.points; // Sačuvaj statistiku
+    this.gameOverFlag = true;
+    this.finalScore = this.points;
     this.finalLines = this.lines;
 
-    // Zaustavi animaciju igre
+    if (!this.scoreSaved) {
+      this.scoreSaved = true; // Mark as saved to prevent duplicate requests
+      const gameId = 2; // Replace with your actual gameId
+      const userId = this.user?.id;
+
+      if (userId) {
+        // Save the player's score
+        this.service.saveScore(gameId, userId, this.finalScore).subscribe(
+          response => {
+            console.log('Score saved successfully:', response);
+
+            // Automatically award a coupon after saving the score
+            this.service.awardTopScorerCoupon().subscribe(
+              couponResponse => {
+                console.log('Coupon awarded:', couponResponse);
+                alert(couponResponse.message || 'Coupon awarded successfully!');
+              },
+              error => {
+                console.error('Error awarding coupon:', error);
+              }
+            );
+          },
+          error => {
+            console.error('Failed to save score:', error);
+          }
+        );
+      } else {
+        console.error('User ID is not available. Cannot save the score.');
+      }
+    }
     cancelAnimationFrame(this.requestId);
   }
 
@@ -181,6 +215,7 @@ export class TetrisComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
+    if (this.gameOverFlag) return; // Prevent input during game over
     if (event.keyCode === KEY.LEFT || event.keyCode === KEY.RIGHT || event.keyCode === KEY.DOWN) {
       let p = { ...this.piece };
       p.x += event.keyCode === KEY.LEFT ? -1 : event.keyCode === KEY.RIGHT ? 1 : 0;
@@ -190,5 +225,9 @@ export class TetrisComponent implements OnInit {
         this.piece.move(p);
       }
     }
+  }
+  exitGame() {
+    this.gameOverFlag = false; // Hide the "Game Over" pop-up
+    cancelAnimationFrame(this.requestId); // Stop game animations
   }
 }

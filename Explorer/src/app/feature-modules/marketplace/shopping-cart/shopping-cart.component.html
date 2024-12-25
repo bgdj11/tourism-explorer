@@ -1,11 +1,11 @@
 <div class="shopping-cart" *ngIf="shoppingCart">
     <h2>Shopping Cart</h2>
-  
+
     <!-- Prikazujemo grešku učitavanja ako postoji -->
     <div *ngIf="errorMessage" class="error-message">
       <p>{{ errorMessage }}</p>
     </div>
-  
+
     <div *ngIf="shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0">
       <ul>
         <!-- Iteriramo kroz shopingItems -->
@@ -16,7 +16,7 @@
             <button (click)="removeTour(item.tourId)">Remove</button>
           </div>
         </li>
-    
+
         <!-- Iteriramo kroz shopingBoundles (pakete) -->
         <li *ngFor="let bundle of shoppingCart.shopingBundles">
           <div class="cart-item">
@@ -36,7 +36,7 @@
           Unesi promo kod i ostvari pogodnosti.
         </div>
       </div>
-  
+
       <div *ngIf="showCouponForm" class="coupon-form">
         <label for="couponCode">Promo kod:</label>
         <input type="text" id="couponCode" [(ngModel)]="couponCode" />
@@ -45,6 +45,7 @@
           <button (click)="clearCoupon()">Izbriši</button>
         </div>
       </div>
+
       <!-- Ukupna cena -->
       <div class="total-price">
         <p><strong>Total Price:</strong> {{ shoppingCart.totalPrice | currency }}</p>
@@ -54,25 +55,25 @@
     <div>
       <button *ngIf="shoppingCart && shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0" (click)="checkout()">Checkout</button>
     </div>
-  
+
     <!-- Poruka kada je korpa prazna -->
     <ng-template #emptyCart>
       <p>Your shopping cart is empty.</p>
     </ng-template>
   </div>
-  
+
   <!-- Prikazujemo grešku brisanja ako postoji -->
   <div *ngIf="removeErrorMessage" class="error-message">
     <p>{{ removeErrorMessage }}</p>
   </div>
-  
+
   <!-- Poruka kada shopping kartica nije učitana -->
   <div *ngIf="!shoppingCart && !errorMessage">
     <p>Loading your shopping cart...</p>
   </div>
-  
+
   <!-- Poruka kada korisnik nije ulogovan -->
   <div *ngIf="!touristId && !shoppingCart">
     <p>You must be logged in to view your shopping cart.</p>
   </div>
-  
+
