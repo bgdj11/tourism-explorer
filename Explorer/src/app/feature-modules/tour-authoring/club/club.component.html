@@ -47,6 +47,7 @@
       <div class="club-info">
         <h4>{{ cl.name }}</h4>
         <p>{{ cl.description }}</p>
+        <xp-available-clubs [clubs]="availableClubs" [clubId]="cl.id ?? 0" [ownerClubId]="cl.ownerId ?? 0"></xp-available-clubs>
         <div class="club-actions">
           <button *ngIf="cl.ownerId === currentUserId && cl.id !== undefined" (click)="deleteClub(cl.id!)">Delete</button>
           <button *ngIf="cl.ownerId === currentUserId" (click)="editClub(cl)">Edit</button>
@@ -125,9 +126,5 @@
       <button type="submit">Update</button>
       <button type="button" (click)="editingClub = null">Cancel</button>
     </form>
-  </div>
-  <div id="available-clubs">
-    <h3>Available Clubs to Join </h3>
-    <xp-available-clubs [clubs]="availableClubs"></xp-available-clubs>
   </div>
 </div>
