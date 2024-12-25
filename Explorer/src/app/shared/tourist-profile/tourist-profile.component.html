@@ -2,10 +2,6 @@
   <p>Loading tourist profile...</p>
 </div>
 
-<div *ngIf="errorMessage" class="error-container">
-  <p class="error">{{ errorMessage }}</p>
-</div>
-
 <div *ngIf="profile && !isLoading" class="profile-container">
   <h1>Tourist Profile</h1>
 
@@ -33,10 +29,6 @@
 
   <div *ngIf="isLoadingCoupons" class="loading-container">
     <p>Loading coupons...</p>
-  </div>
-
-  <div *ngIf="errorMessage" class="error-container">
-    <p class="error">{{ errorMessage }}</p>
   </div>
 
   <div *ngIf="coupons.length > 0 && !isLoadingCoupons" class="coupons-container">
