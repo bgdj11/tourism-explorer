@@ -96,7 +96,6 @@ import { catchError, map, of, switchMap } from 'rxjs';
     return this.http.get<PagedResults<TourDTO>>(environment.apiHost + 'tourist/pubishledtourss')
   }
 
-
   getPurchasedTours(touristId: number): Observable<TourDTO[]> {
   return this.http.get<TourDTO[]>(`${environment.apiHost}tourist/tokens/purchased-tours?touristId=${touristId}`);
   }
@@ -104,7 +103,6 @@ import { catchError, map, of, switchMap } from 'rxjs';
   getAllTourists(): Observable<UserDto[]> {
     return this.http.get<UserDto[]>(`${environment.apiHost}tourist/allTourists`);
   }
-
 
   getFollowedTourists(page: number, pageSize: number): Observable<PagedResults<FollowersDto>> {
   const currentUserId = this.authService.user$.value.id;
