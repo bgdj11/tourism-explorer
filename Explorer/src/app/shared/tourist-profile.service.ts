@@ -24,7 +24,7 @@ export class TouristProfileService {
     return this.http.post<void>(`${this.apiUrl}/${username}/sync-completed-encounters`, {});
   }
 
-  getAllCoupons(page: number, pageSize: number): Observable<PagedResult<Coupon>> {
-    return this.http.get<PagedResult<Coupon>>(`${this.apiUrlCup}?page=${page}&pageSize=${pageSize}`);
+  getCouponsByIds(couponIds: number[]): Observable<Coupon[]> {
+    return this.http.post<Coupon[]>(`${this.apiUrlCup}/get-by-ids`, couponIds);
   }
 }

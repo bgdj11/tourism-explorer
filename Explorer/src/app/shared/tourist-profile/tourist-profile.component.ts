@@ -37,6 +37,7 @@ export class TouristProfileComponent implements OnInit {
       next: (profile) => {
         this.profile = profile;
         this.isLoading = false;
+        this.loadCoupons(); // Učitaj kupone nakon što se profil učita
       },
       error: (err) => {
         this.errorMessage = 'Failed to load tourist profile.';
@@ -67,10 +68,15 @@ export class TouristProfileComponent implements OnInit {
   }
 
   loadCoupons(): void {
-    this.touristProfileService.getAllCoupons(1, 10).subscribe(
-      (pagedResult: any) => {
-        this.coupons = pagedResult.results; // Use results directly from the response
-        this.totalCouponsCount = pagedResult.totalCount; // Use totalCount directly from the response
+    if (!this.profile || !this.profile.couponIds || this.profile.couponIds.length === 0) {
+      this.isLoadingCoupons = false;
+      this.coupons = [];
+      return;
+    }
+
+    this.touristProfileService.getCouponsByIds(this.profile.couponIds).subscribe(
+      (coupons) => {
+        this.coupons = coupons;
         this.isLoadingCoupons = false;
       },
       (error) => {
