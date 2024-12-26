@@ -1,4 +1,7 @@
 import { Component, HostListener } from '@angular/core';
+import { SpaceInvadersService } from './space-invaders.service';
+import { AuthService } from '../../infrastructure/auth/auth.service';
+import { User } from '../../infrastructure/auth/model/user.model';
 
 interface Enemy {
   x: number;
@@ -17,15 +20,23 @@ export class SpaceInvadersComponent {
   interval: any; // Interval za neprijatelje
   gameTime = 0; // Vreme trajanja nivoa
   gameTimer: any; // Tajmer za brojanje vremena igre
+  finalScore = 0; // Krajnji rezultat
+  user: User; // Trenutni korisnik
+  gameOverFlag = false; // Da li je igra završena
 
-  constructor() {
+  constructor(private service: SpaceInvadersService, private authService: AuthService) {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
     this.startGame();
   }
 
   startGame() {
+    this.gameOverFlag = false;
+    this.gameTime = 0;
+    this.enemies = [];
     this.generateEnemies();
     this.interval = setInterval(() => this.moveEnemies(), 500);
-    setInterval(() => this.gameTime++, 1000);
     this.gameTimer = setInterval(() => this.gameTime++, 1000);
   }
 
@@ -45,8 +56,8 @@ export class SpaceInvadersComponent {
     }
   }
 
-
   moveEnemies() {
+    if (this.gameOverFlag) return;
     for (const enemy of this.enemies) {
       enemy.x += 10;
       if (enemy.x > 550) enemy.x = 0;
@@ -55,7 +66,7 @@ export class SpaceInvadersComponent {
 
   // Fajerovanje projektila
   fireProjectile() {
-    if (!this.projectile.active) {
+    if (!this.projectile.active && !this.gameOverFlag) {
       this.projectile.x = this.player.x + 22;
       this.projectile.y = 370;
       this.projectile.active = true;
@@ -92,12 +103,49 @@ export class SpaceInvadersComponent {
   checkGameOver() {
     if (this.enemies.length === 0) {
       clearInterval(this.gameTimer); // Zaustavi tajmer igre
+      this.finalScore = this.gameTime; // Postavi krajnji rezultat
+      this.gameOverFlag = true;
       alert(`Kraj igre! Vreme trajanja: ${this.gameTime} sekundi`);
+      this.endGame();
+    }
+  }
+
+  endGame() {
+    clearInterval(this.gameTimer);
+    clearInterval(this.interval);
+    this.gameOverFlag = true;
+
+    const gameId = 1; // ID igre
+
+    if (this.user?.id) {
+      // Sačuvaj rezultat igrača
+      this.service.saveScore(gameId, this.user.id, this.finalScore).subscribe(
+        response => {
+          console.log('Score saved successfully:', response);
+
+          // Automatski dodeli kupon nakon čuvanja rezultata
+          this.service.awardTopScorerCoupon().subscribe(
+            couponResponse => {
+              console.log('Coupon awarded:', couponResponse);
+              alert(couponResponse.message || 'Coupon awarded successfully!');
+            },
+            error => {
+              console.error('Error awarding coupon:', error);
+            }
+          );
+        },
+        error => {
+          console.error('Failed to save score:', error);
+        }
+      );
+    } else {
+      console.error('User ID is not available. Cannot save the score.');
     }
   }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
+    if (this.gameOverFlag) return;
     if (event.key === 'ArrowLeft' && this.player.x > 0) {
       this.player.x -= 15;
     } else if (event.key === 'ArrowRight' && this.player.x < 550) {
@@ -105,5 +153,9 @@ export class SpaceInvadersComponent {
     } else if (event.key === ' ') {
       this.fireProjectile();
     }
+  }
+
+  restartGame() {
+    this.startGame();
   }
 }
