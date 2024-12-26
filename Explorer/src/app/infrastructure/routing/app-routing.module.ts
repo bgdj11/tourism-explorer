@@ -34,6 +34,8 @@ import { BundleComponent } from 'src/app/feature-modules/tour-authoring/bundle/b
 import { PacagesPublComponent } from 'src/app/feature-modules/marketplace/pacages-publ/pacages-publ.component';
 import { MyPacagesComponent } from 'src/app/feature-modules/marketplace/my-pacages/my-pacages.component';
 import {TetrisComponent} from "../../feature-modules/tetris/tetris.component";
+import {MemoryGameComponent} from "../../feature-modules/memory-game/memory-game.component";
+
 
 
 const routes: Routes = [
@@ -72,6 +74,7 @@ const routes: Routes = [
   {path: 'coupon', component: CouponComponent, canActivate: [AuthGuard],},
   { path: 'space-invaders', component: SpaceInvadersComponent },
   {path: 'tetris', component: TetrisComponent},
+  {path: 'memory-game', component: MemoryGameComponent},
   { path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
   {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],}
