@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { TranslateService } from '@ngx-translate/core';  // Import TranslateService
+import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'xp-navbar',
@@ -11,9 +14,12 @@ import { TranslateService } from '@ngx-translate/core';  // Import TranslateServ
 export class NavbarComponent implements OnInit {
 
   user: User | undefined;
+  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
+  isSidenavOpened = false;
 
   constructor(
     private authService: AuthService,
+    private router: Router,
     private translateService: TranslateService  // Inject TranslateService
   ) {}
 
@@ -31,4 +37,19 @@ export class NavbarComponent implements OnInit {
   onLogout(): void {
     this.authService.logout();
   }
+
+  toggleSidenav(): void {
+    console.log("USAO U METODU!")
+    this.isSidenavOpened = !this.isSidenavOpened;
+
+    const sidenavElement = document.querySelector('.meninav');
+    if (sidenavElement) {
+      if (this.isSidenavOpened) {
+        sidenavElement.classList.add('opened');
+      } else {
+        sidenavElement.classList.remove('opened');
+      }
+    }
+  }
+
 }

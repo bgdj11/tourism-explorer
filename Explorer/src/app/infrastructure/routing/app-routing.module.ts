@@ -38,7 +38,7 @@ import {TetrisComponent} from "../../feature-modules/tetris/tetris.component";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
-  {path: '', component: HomeComponent },
+  {path: '', component: HomePageComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
@@ -54,7 +54,7 @@ const routes: Routes = [
   {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
-  {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]},
+  {path: 'location-simulator', component: LocationSimulatorComponent, canActivate: [AuthGuard]},
   {path: 'editUserAccount',component: UserAccountComponent},
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
   {path: 'tour-search', component: TourSearchComponent},
@@ -70,9 +70,9 @@ const routes: Routes = [
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'tourist-profile', component: TouristProfileComponent, canActivate: [AuthGuard],},
   {path: 'coupon', component: CouponComponent, canActivate: [AuthGuard],},
-  { path: 'space-invaders', component: SpaceInvadersComponent },
+  {path: 'space-invaders', component: SpaceInvadersComponent },
   {path: 'tetris', component: TetrisComponent},
-  { path: 'bundle', component: BundleComponent },
+  {path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
   {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],}
 

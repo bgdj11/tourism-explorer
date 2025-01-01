@@ -1,46 +1,201 @@
 .navbar {
-    background-color: white; 
-    color: #004D3B;
+    background-color: #004D3B; 
+    display: flex;             
+    align-items: center;       
     justify-content: space-between;
-    padding: 10px 20px;
-}
-.navbar-left {
+    width: 100%;   
+    height: 80px;            
+    padding: 0 16px;           
+  }
+  
+  .meni-button {
+    background-color: none !important;  
+    border: none !important;               
+    padding: 0 !important;                
+    margin-right: 16px;                    
+  }
+  
+  .meni-button .mat-icon {
+    color: white !important;    
+    font-size: 24px !important; 
+    transition: transform 0.3s ease;  
+  }
+  
+  .meni-button:hover .mat-icon {
+    transform: scale(1.2) !important; 
+  }
+  
+  .meni-button:focus, .meni-button:active {
+    background-color: none !important;
+    box-shadow: none !important;           
+  }
+  
+.hover-trigger {
+    position: fixed;
+    top: 64px; 
+    left: 0;
+    width: 20px; 
+    height: calc(100vh - 64px);
+    background-color: transparent; 
+    z-index: 999; 
+  }
+  
+  .meninav {
+    width: 250px;
+    background-color: #004D3B;
+    color: white;
+    position: fixed;
+    height: 100%;
+    z-index: 1100;
+    transform: translateX(-100%); 
+    transition: transform 0.3s ease; 
+  }
+  
+  .meninav.opened {
+    transform: translateX(0); 
+  }
+  
+  .meninav a {
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    color: white;
+  }
+  
+  .meninav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .btn {
     display: flex;
+    flex-direction: column;
     align-items: center;
-}
-.navbar-right {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-.logo {
-    width: 50px;
+    justify-content: center;
+    background-color: #004D3B; 
+    border: none; 
+    padding: 0; 
+    cursor: pointer; 
     margin-right: 10px;
-}
-/* Custom styles for raised buttons */
-.mat-raised-button {
-    background-color: transparent; 
-    color: #004D3B; 
-    border: none; 
-}
-.mat-raised-button:hover {
-    background-color: #bbe6e4 !important;  
-}
-/* Custom styles for normal buttons */
-.mat-button:hover {
-    background-color: #bbe6e4 !important; 
-}
-.custom-button {
-    background-color: transparent; 
-    color: #004D3B; 
-    border: none; 
-}
+  }
+  
+  .btn mat-icon {
+    font-size: 25px;
+    color: white; 
+    transition: transform 0.5s ease;
+  }
 
-#buttons {
-    width: auto;
-    margin-left: auto;
-}
-.custom-button:hover{
-    background-color: #bbe6e4 !important; 
-}
+  .btn:hover mat-icon {
+    transform: scale(1.5); 
+  }
+  
+  .btn .button-text {
+    margin-top: 8px; 
+    font-size: 14px;
+    color: white; 
+    transition: transform 0.5s ease;
+  }
 
+  .btn:hover .button-text {
+    transform: scale(1.3); 
+  }
+  
+  .btn:focus {
+    outline: none; 
+  }
+  
+  .right-side {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 100%; 
+  }
+  
+  .profile-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+  }
+  
+  .profile-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-profile {
+    position: absolute;
+    top: 100%; 
+    left: -150px; 
+    display: none;
+    flex-direction: column; 
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 215px;
+    margin-top: 5px;
+  }
+  
+  .dropdown-profile.show {
+    display: flex; 
+  }
+  
+  .dropdown-profile a {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    padding: 10px 15px; 
+    color: black; 
+    text-decoration: none; 
+    font-size: 18px; 
+  }
+  
+  .dropdown-profile a:hover {
+    background-color: #f1f1f1; 
+  }
+  
+  .dropdown-profile mat-icon {
+    font-size: 22px; 
+    color: black; 
+  }
+
+  .profile-dropdown:hover .dropdown-profile {
+    display: flex;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%; 
+    left: 0px; 
+    display: none;
+    flex-direction: column; 
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 215px;
+    margin-top: 5px;
+  }
+  
+  .dropdown-menu.show {
+    display: flex; 
+  }
+  
+  .dropdown-menu a {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    padding: 10px 15px; 
+    color: black; 
+    text-decoration: none; 
+    font-size: 18px;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #f1f1f1; 
+  }
+  
+  .profile-dropdown:hover .dropdown-menu {
+    display: flex;
+  }
+
+  

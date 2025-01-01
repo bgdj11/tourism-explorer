@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { HomePageComponent } from './home-page/home-page.component';
 import { ToursViewComponent } from './tours-view/tours-view.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +34,9 @@ import { ToursViewComponent } from './tours-view/tours-view.component';
     ReactiveFormsModule,
     SharedModule,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    MatIconModule,
+    MatSidenavModule
   ],
   exports: [
     NavbarComponent,
