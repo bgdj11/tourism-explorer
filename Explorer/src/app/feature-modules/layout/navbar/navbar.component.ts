@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
-import { TranslateService } from '@ngx-translate/core';  // Import TranslateService
+import { TranslateService } from '@ngx-translate/core';  
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'xp-navbar',
@@ -21,15 +20,26 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private translateService: TranslateService  // Inject TranslateService
-  ) {}
+  ) {
+     this.translateService.addLangs(['en', 'sr']);
+     this.translateService.setDefaultLang('en');
+  }
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
+
+    this.checkIfUserExists();
+
+    const browserLang = this.translateService.getBrowserLang();
+    this.translateService.use(browserLang?.match(/en|sr/) ? browserLang : 'en');
   }
 
-  // Change the language dynamically
+  private checkIfUserExists(): void {
+    this.authService.checkIfUserExists();
+  }
+
   changeLanguage(lang: string): void {
     this.translateService.use(lang);
   }

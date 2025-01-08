@@ -37,7 +37,7 @@
             <span>Create encounter</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/start-tour'">
-            <span>Start tour</span>
+            <span>{{ 'NAVBAR.START_TOUR' | translate }}</span>
           </a>
           <a *ngIf="user && (user.role === 'author' || user.role === 'administrator')" mat-button [routerLink]="'/tour-problems'">
             <span>Tour problems</span>
@@ -75,10 +75,17 @@
             <mat-icon>account_circle</mat-icon>
             <span>My account</span>
           </a>
-          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/followers'">
-            <mat-icon>language</mat-icon>
-            <span>Language</span>
-          </a>
+          <div class="dropdown">
+            <a class="dropdown-item">
+              <mat-icon>language</mat-icon>
+              <span>Language</span>
+              <span class="arrow">&#x25B6;</span> 
+              <div class="submenu">
+                <button (click)="changeLanguage('en')">English</button>
+                <button (click)="changeLanguage('sr')">Српски</button>
+              </div>
+            </a>
+          </div>
           <a *ngIf="user && user.username !== ''" mat-button (click)="onLogout()">
             <mat-icon>logout</mat-icon>
             <span>{{ 'NAVBAR.LOGOUT' | translate }}</span>

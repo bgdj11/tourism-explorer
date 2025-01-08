@@ -46,22 +46,21 @@
     <h1>Make your voice heard</h1>
 </div>
 <div class="rating">
-    <img src="assets/rateUs.jpg" alt="Rate us Image" class="rating-image" />
+    <img src="assets/travel.jpg" alt="Rate us Image" class="rating-image" />
     <div class="stats-wrapper">
-        <div class="stats">
-            <div class="stat">
-                <p>Travellers served</p>
-                <h2>2.000.000+</h2>
-            </div>
-            <div class="stat">
-                <p>Tours</p>
-                <h2>300+</h2>
-            </div>
-            <div class="stat">
-                <p>Countries</p>
-                <h2>100+</h2>
-            </div>
+        <div class="stat">
+            <p>Grade</p>
+            <h2 id="stat-grade">0</h2>
         </div>
+        <div class="stat">
+            <p>Tours</p>
+            <h2 id="stat-tours">0</h2>
+        </div>
+        <div class="stat">
+            <p>Countries</p>
+            <h2 id="stat-countries">0</h2>
+        </div>
+          
     </div>  
     <button class="rating-button" [routerLink]="['/app-rating']">Rate us</button>
 </div>

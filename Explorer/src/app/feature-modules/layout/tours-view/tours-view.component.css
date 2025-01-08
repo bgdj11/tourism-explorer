@@ -1,26 +1,26 @@
 .tour-slider {
   position: relative;
-  width: 100%; /* Puna širina */
-  height: 500px; /* Visina slidera */
-  overflow: hidden; /* Sakrij višak sadržaja */
+  width: 100%; 
+  height: 500px; 
+  overflow: hidden; 
   display: flex;
-  align-items: center; /* Centriraj slider vertikalno */
+  align-items: center; 
 }
 
 .tour-container {
   display: flex;
-  flex-wrap: nowrap; /* Sprečava prelazak u novi red */
-  justify-content: flex-start; /* Poravnaj kartice levo */
+  flex-wrap: nowrap; 
+  justify-content: flex-start; 
   align-items: center;
-  overflow: hidden; /* Sakrij višak kartica */
-  width: calc(100% - 100px); /* Oduzmi prostor za strelice */
-  margin: 0 auto; /* Centriraj u okviru slidera */
+  overflow: hidden; 
+  width: calc(100% - 100px); 
+  margin: 0 auto; 
 }
 
 .tour-card {
-  flex: 0 0 auto; /* Kartica zauzima svoju fiksnu širinu */
-  width: 400px; /* Širina kartice */
-  height: 450px; /* Visina kartice */
+  flex: 0 0 auto; 
+  width: 400px; 
+  height: 450px; 
   margin: 15px;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -78,7 +78,7 @@
 .tour-details button {
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  left: 12px;
   z-index: 3;
   padding: 10px 15px;
 }
