@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="buttons-row">
+    <button class="game-button" [routerLink]="['/game-menu/space-invaders']">
+      <img src="assets/space_inv.jpg" alt="Space Invaders" />
+      <span>Space Invaders</span>
+    </button>
+    <button class="game-button" [routerLink]="['/game-menu/tetris']">
+      <img src="assets/tetris.jpeg" alt="Tetris" />
+      <span>Tetris</span>
+    </button>
+    <button class="game-button" [routerLink]="['/game-menu/memory-game']">
+      <img src="assets/memory_game.jpg" alt="Memory Game" />
+      <span>Memory Game</span>
+    </button>
+  </div>
+
+  <!-- Router outlet za prikazivanje igrica -->
+  <div class="game-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
