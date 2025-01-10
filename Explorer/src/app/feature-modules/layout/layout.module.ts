@@ -15,6 +15,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { ToursViewComponent } from './tours-view/tours-view.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { RatingDialogComponent } from './rating-dialog/rating-dialog.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     TourSearchComponent,
     HomePageComponent,
     ToursViewComponent,
+    RatingDialogComponent
   ],
   imports: [
     CommonModule,

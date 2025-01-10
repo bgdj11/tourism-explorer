@@ -1,6 +1,6 @@
 <div class="home-container">
     <video autoplay muted loop class="background-video">
-        <source src="assets/world.mp4" type="video/mp4" />
+        <source src="assets/world.mp4" type="video/mp4"/>
         Your browser does not support the video tag.
     </video>
     <div class="slogan-container">
@@ -62,7 +62,8 @@
         </div>
           
     </div>  
-    <button class="rating-button" [routerLink]="['/app-rating']">Rate us</button>
+    <button class="rating-button" (click)="openReviewModal()">Rate us</button>
+    <xp-rating-dialog (reviewSubmitted)="handleReview($event)"></xp-rating-dialog>
 </div>
 
 <div class="icons">

@@ -1,6 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AppRatingComponent } from '../app-rating/app-rating.component';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { RatingDialogComponent } from '../rating-dialog/rating-dialog.component';
 
 @Component({
   selector: 'xp-home-page',
@@ -8,8 +7,11 @@ import { AppRatingComponent } from '../app-rating/app-rating.component';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements AfterViewInit {
+
+  @ViewChild(RatingDialogComponent) reviewModal: RatingDialogComponent | undefined;
   
   ngAfterViewInit() {
+    console.log(this.reviewModal);
     const stats = [
       { id: 'stat-grade', endValue: 4.8 },
       { id: 'stat-tours', endValue: 300 },
@@ -58,4 +60,18 @@ export class HomePageComponent implements AfterViewInit {
   formatNumber(value: number): string {
     return value.toLocaleString(); 
   }
+
+  openReviewModal() {
+    console.log(this.reviewModal);
+    if (this.reviewModal) {
+      this.reviewModal.openModal();
+      console.log('OTVORI MODALNI PROZOR!!!');
+    }
+  }
+
+  handleReview(review: { rating: number; comment: string }) {
+    console.log('Recenzija je poslana:', review);
+    // Možeš poslati podatke na server ili dalje obraditi
+  }
+
 }
