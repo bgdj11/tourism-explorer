@@ -31,7 +31,7 @@
         <button  mat-button class="custom-button" [routerLink]="['space-invaders']">Game</button>
         <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['tetris']">Tetris game</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['bundle']">Bundle</button>
-
+        <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['accomodation']">Add accomodation</button>
         <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['paceges-publ']">Pacages</button>
 
 

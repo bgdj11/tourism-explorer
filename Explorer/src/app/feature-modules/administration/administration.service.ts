@@ -10,6 +10,7 @@ import {Encounter} from "./model/encounter.model";
 import {TourProblem, ProblemComment} from "../marketplace/model/tour-problem";
 import {TourDTO} from "../tour-authoring/model/tour.model";
 import { User } from '../../infrastructure/auth/model/user.model';
+import { AccomodationDTO } from '../tour-authoring/model/accomodation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +117,13 @@ export class AdministrationService {
 
   markEncounterAsReviewed(id: number): Observable<void> {
     return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/mark-reviewed`, {});
+  }
+  createAccomodation(accomodation: AccomodationDTO): Observable<AccomodationDTO> {
+    console.log("USAO")
+    return this.http.post<AccomodationDTO>(`${environment.apiHost}admin/accomodations`, accomodation)
+  }
+  getAllAccomodations(page: number, pageSize: number): Observable<PagedResults<AccomodationDTO>> {
+    return this.http.get<PagedResults<AccomodationDTO>>(`${environment.apiHost}admin/accomodations`)
+
   }
 }

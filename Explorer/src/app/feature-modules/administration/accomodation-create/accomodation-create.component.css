@@ -1,0 +1,48 @@
+.accomodation-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  
+  .form-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .form-row {
+    margin-bottom: 16px;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .list-container {
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .mat-header-cell, .mat-cell {
+    padding: 8px;
+  }
+  
+  .mat-icon-button {
+    margin-right: 8px;
+  }
+  .mapa {
+    width: 80% !important; 
+    height: 300px !important; 
+    display: block; /* Ako je potrebno osigurati da zauzima blok element */
+    margin: 100px;
+  }

@@ -1,4 +1,5 @@
 import { Equipment } from "../../administration/model/equipment.model";
+import { AccomodationDTO } from "./accomodation.model";
 import { CheckpointDTO } from "./checkpoint.model";
 import { DailyAgendaDTO } from "./DailyAgendaDTO.model";
 import { EquipmentDTO } from "./equipment.model";
@@ -19,5 +20,6 @@ export interface TourDTO {
   tourCheckpoints?: CheckpointDTO[];
   travelTimes?: TravelTimeDTO[];
   dailyAgendas?: DailyAgendaDTO[];
+  accomodations?: AccomodationDTO[];
   authorId: number;
 }

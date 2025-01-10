@@ -34,6 +34,7 @@ import { BundleComponent } from 'src/app/feature-modules/tour-authoring/bundle/b
 import { PacagesPublComponent } from 'src/app/feature-modules/marketplace/pacages-publ/pacages-publ.component';
 import { MyPacagesComponent } from 'src/app/feature-modules/marketplace/my-pacages/my-pacages.component';
 import {TetrisComponent} from "../../feature-modules/tetris/tetris.component";
+import { AccomodationComponent } from 'src/app/feature-modules/administration/accomodation-create/accomodation-create.component';
 
 
 const routes: Routes = [
@@ -74,7 +75,8 @@ const routes: Routes = [
   {path: 'tetris', component: TetrisComponent},
   { path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
-  {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],}
+  {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],},
+  {path: 'accomodation', component: AccomodationComponent}
 
 ];
 

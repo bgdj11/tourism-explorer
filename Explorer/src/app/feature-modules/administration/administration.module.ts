@@ -20,6 +20,9 @@ import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AccomodationComponent } from './accomodation-create/accomodation-create.component';
+import { MapComponent } from 'src/app/shared/map/map.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -30,7 +33,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     UserAccountComponent,
     UserAccountFormComponent,
     EncounterComponent,
-    TourProblemsComponent
+    TourProblemsComponent,
+    AccomodationComponent
   ],
   imports: [
     CommonModule,
@@ -46,12 +50,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    SharedModule
   ],
   providers: [MatDatepickerModule],
   exports: [
     EquipmentComponent,
     EquipmentFormComponent,
+    AccomodationComponent
 ]
 })
 export class AdministrationModule { }
