@@ -115,5 +115,18 @@
   .coupon-actions button:last-child:hover {
     background-color: #c82333;
   }
+  .tour-price {
+    font-size: 1rem;
+  }
+  .tour-price s {
+    color: #999;
+    margin-right: 8px;
+  }
+  
+  .discount-price {
+    color: #e63946; /* Crvena za isticanje nove cene */
+    font-weight: bold;
+  }
+  
   
   

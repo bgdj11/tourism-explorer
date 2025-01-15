@@ -83,7 +83,7 @@ export class MarketplaceService {
   
   checkout(touristId: number): Observable<any> {
     return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
-    }
+  }
 
   addSale(tourSale: TourSale): Observable<TourSale> {
       return this.http.post<TourSale>(environment.apiHost + 'author/tourSale', tourSale);
@@ -151,12 +151,17 @@ export class MarketplaceService {
   
     addBundleToCart(touristId: number, shoppingCartBundleDTO: ShoppingCartBundleDTO): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/addboundle/${touristId}`, shoppingCartBundleDTO);
-      }
-      removeBundleFromCart(touristId: number, bundleId: number): Observable<any> {
-        return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove-bundle/${touristId}/${bundleId}`);
-        }
+    }
 
-        getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
-          return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
-        }
+    removeBundleFromCart(touristId: number, bundleId: number): Observable<any> {
+      return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove-bundle/${touristId}/${bundleId}`);
+    }
+
+    getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
+      return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
+    }
+
+    
+
+
 }
