@@ -52,7 +52,7 @@
         <p class="problem-description"><strong>Description:</strong> {{ problem.description }}</p>
         <div *ngIf="problem.problemComments.length > 0">
             <p class="comment-comment">Comments:</p>
-            <div *ngFor="let comment of problemComments" class="comment-section">             
+            <div *ngFor="let comment of problemComments[problem.id!]" class="comment-section">             
               <p class="comment-date" style=" color: gray;  font-style: italic;">{{ comment.commentedAt | date:'short' }}</p>
               <p class="comment-meta" style=" color: gray; font-style: italic;">
                 {{ comment.userRole || 'Loading...' }}
@@ -72,7 +72,7 @@
                   </textarea>
                 <button class="comment-section-button"
                   [disabled]="!commentText"
-                  (click)="submitComment(problem.id!)">
+                  (click)="submitComment(problem)">
                   Submit
                 </button>
               </div>

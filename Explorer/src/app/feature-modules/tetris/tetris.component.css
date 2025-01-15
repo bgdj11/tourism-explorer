@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center; /* Centriranje po horizontali */
   align-items: center;     /* Centriranje po vertikali */
-  height: 100vh;           /* Visina ekrana */
+  height: 70vh;           /* Visina ekrana */
   background-color: #f0f0f0;
   gap: 40px;
 }
