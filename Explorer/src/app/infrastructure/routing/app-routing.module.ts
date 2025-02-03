@@ -51,7 +51,7 @@ const routes: Routes = [
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
-  {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
+  {path: 'tour-preferences', component: TourPreferencesComponent},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'location-simulator', component: LocationSimulatorComponent, canActivate: [AuthGuard]},

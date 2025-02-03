@@ -1,5 +1,8 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { RatingDialogComponent } from '../rating-dialog/rating-dialog.component';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'xp-home-page',
@@ -9,9 +12,18 @@ import { RatingDialogComponent } from '../rating-dialog/rating-dialog.component'
 export class HomePageComponent implements AfterViewInit {
 
   @ViewChild(RatingDialogComponent) reviewModal: RatingDialogComponent | undefined;
+  user: User | undefined;
+  isLoggedIn = true; 
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
+  }
   
   ngAfterViewInit() {
-    console.log(this.reviewModal);
     const stats = [
       { id: 'stat-grade', endValue: 4.8 },
       { id: 'stat-tours', endValue: 300 },
@@ -62,16 +74,34 @@ export class HomePageComponent implements AfterViewInit {
   }
 
   openReviewModal() {
-    console.log(this.reviewModal);
-    if (this.reviewModal) {
-      this.reviewModal.openModal();
-      console.log('OTVORI MODALNI PROZOR!!!');
+    if (this.user?.username) {
+      if (this.reviewModal) {
+        this.reviewModal.openModal();
+      }
+    } else {
+      this.isLoggedIn = false; 
     }
   }
 
-  handleReview(review: { rating: number; comment: string }) {
-    console.log('Recenzija je poslana:', review);
-    // Možeš poslati podatke na server ili dalje obraditi
+  closeModal() {
+    this.isLoggedIn = true; 
   }
 
+  navigateToLogin() {
+    this.isLoggedIn = true; 
+    this.router.navigate(['/login']); 
+  }
+  
+  handleReview(review: { rating: number; comment: string }) {
+    console.log('Recenzija je poslata:', review);
+  }
+
+  joinClub() {
+    if (!this.user?.username) {
+      this.isLoggedIn = false; 
+    } else {
+      this.router.navigate(['/allclubs']); 
+    }
+  }
+  
 }

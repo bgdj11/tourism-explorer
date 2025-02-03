@@ -66,6 +66,22 @@
     <xp-rating-dialog (reviewSubmitted)="handleReview($event)"></xp-rating-dialog>
 </div>
 
+<!-- Custom Modal -->
+<div class="custom-modal" *ngIf="!isLoggedIn">
+    <div class="modal-content">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <div class="modal-message">
+        To continue, please log in.
+      </div>
+      <button class="login-btn" (click)="navigateToLogin()">
+        <div class="log-icon">
+            <mat-icon>lock_open</mat-icon>
+        </div>
+        Login</button>
+    </div>
+</div>
+  
+
 <div class="icons">
     <div class="icon-container">
       <mat-icon>comment</mat-icon>
@@ -110,7 +126,7 @@
         <p class="blog-text">
             Your story could spark someone's next unforgettable journey!
         </p>
-        <button class="blog-button" [routerLink]="['/allclubs']">Join now</button>
+        <button class="blog-button" (click)="joinClub()">Join now</button>
     </div>
     <img src="assets/club.jpg" alt="Rate us Image" class="blog-image" />
 </div>

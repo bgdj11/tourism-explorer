@@ -1,4 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { LayoutService } from '../layout.service';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { AppRating } from '../model/appRating.model';
 
 @Component({
   selector: 'xp-rating-dialog',
@@ -7,7 +11,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class RatingDialogComponent {
   isModalVisible = false;
-
+  user: User | undefined;
   review = {
     rating: 1,
     comment: '',
@@ -15,6 +19,14 @@ export class RatingDialogComponent {
 
   stars = [false, false, false, false, false]; 
   hoveredStars = [false, false, false, false, false]; 
+
+  constructor(private service: LayoutService, private authService: AuthService){}
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
+  }
 
   @Output() reviewSubmitted = new EventEmitter<{ rating: number; comment: string }>();
 
@@ -41,6 +53,17 @@ export class RatingDialogComponent {
 
   submitReview() {
     console.log(this.review);
+    const rating: AppRating = {
+      rating: this.review.rating || 0,
+      comment: this.review.comment || "",
+      timeCreated: new Date(),
+      userPostedId: this.user?.id || 0
+    };
+    console.log(rating);
+    this.service.addRating(rating).subscribe({
+      next: (_) => {  }
+    });
+  
     if (this.review.rating && this.review.comment) {
       this.reviewSubmitted.emit(this.review);
       this.closeModal();
