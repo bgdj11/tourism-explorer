@@ -4,6 +4,7 @@ import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { empty } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'xp-shopping-cart',
@@ -122,23 +123,28 @@ export class ShoppingCartComponent implements OnInit {
         console.log('Response after execution of method: ', response);
         //this.loadShoppingCart();
       },
-      (err) => {
+      (err: HttpErrorResponse) => {
         console.log('An error occured while applying a coupon: ', err);
 
-        switch(err.status){
-          case 400:
-            alert('Invalid request.');
-            break;
-          case 404:
-            alert('Invalid coupon code.');
-            break;
-          case 500:
-            alert('Something went wrong. Please try again later.');
-            break;
-        default:
-            alert('An unexpected error occurred. Please contact support.');
-        }
+        let errorMessage = 'An unexpected error occurred. Please contact support.';
+
+        if (err.error && err.error.message) {
+          errorMessage = err.error.message;
+        } else {
+          switch (err.status) {
+            case 400:
+              errorMessage = 'Invalid request.';
+              break;
+            case 404:
+              errorMessage = 'Invalid coupon code.';
+              break;
+            case 500:
+              errorMessage = 'Something went wrong. Please try again later.';
+              break;
+          }
       }
+      alert(errorMessage);
+    }
     );
   }
 

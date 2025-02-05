@@ -13,6 +13,7 @@ export interface ShoppingCartItemDTO {
   tourName: string;
   tourPrice: number;
   tourPriceWithDiscount?: number;
+  usedCouponCode?: string;
 }
 
 export interface ShoppingCartBundleDTO {
