@@ -38,7 +38,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SpaceInvadersComponent,
     TetrisComponent,
     MemoryGameComponent,
-    GameMenuComponent
+    GameMenuComponent,
+    
   ],
   imports: [
     BrowserModule,

@@ -12,6 +12,8 @@ export interface ShoppingCartItemDTO {
   tourId: number;
   tourName: string;
   tourPrice: number;
+  tourPriceWithDiscount?: number;
+  usedCouponCode?: string;
 }
 
 export interface ShoppingCartBundleDTO {

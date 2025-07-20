@@ -35,9 +35,13 @@ export class RegistrationComponent {
 
     if (this.registrationForm.valid) {
       this.authService.register(registration).subscribe({
-        next: () => {
-          this.router.navigate(['home']);
+        next: (response) => {
+          alert(response.body.message || 'You have successfully registered. Check your email to verify your account.')
+          //this.router.navigate(['home']);
         },
+        error: (err) => {
+          alert(err.message);
+        }
       });
     }
   }

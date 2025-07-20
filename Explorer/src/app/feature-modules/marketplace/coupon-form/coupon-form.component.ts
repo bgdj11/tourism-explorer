@@ -110,7 +110,9 @@ export class CouponFormComponent implements OnChanges {
         discountPercentage: this.couponForm.value.discountPercentage || 0,
         expiryDate: this.couponForm.value.expiryDate ? new Date(this.couponForm.value.expiryDate).toISOString() : "",
         tourId,
-        authorId: this.user?.id || 0,
+        authorId: this.user?.id,
+        recipientId: undefined,
+        isPublic: false
       };
   
       this.service.createCoupon(coupon).subscribe({
@@ -158,6 +160,7 @@ export class CouponFormComponent implements OnChanges {
         expiryDate: rawDate ? new Date(rawDate).toISOString() : "",
         tourId,
         authorId: this.user?.id || 0,
+        isPublic: false
       };
 
       this.service.updateCoupon(coupon).subscribe({

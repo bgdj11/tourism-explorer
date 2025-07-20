@@ -4,6 +4,8 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { MarketplaceService } from '../marketplace.service';
 import { Coupon } from '../model/coupon';
 import { TourDTO } from '../../tour-authoring/model/tour.model';
+import { Observable } from 'rxjs';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'xp-coupon',
@@ -34,7 +36,7 @@ export class CouponComponent implements OnInit {
 
   getCoupons(page: number, pageSize: number): void {
     this.service.getCoupons(page, pageSize).subscribe(response => {
-      this.coupons = response.results;
+      this.coupons = response.results.filter(c => c.authorId === this.user?.id)
   
       // Dodajte naziv ture ako je lista `tours` dostupna
       this.coupons.forEach(coupon => {
@@ -92,4 +94,20 @@ export class CouponComponent implements OnInit {
     })
   }
 
+  makeCouponPublic(id: number): void{
+    this.service.publishCoupon(id).subscribe({
+      next: (response) => {
+        console.log(response)
+        alert(response.message || 'Publish successfully.');
+      },
+      error: (err: HttpErrorResponse) => {
+        let errorMessage = 'Failed to publish the coupon. Please try again later.';
+        if(err.error && err.error.message){
+          errorMessage = err.error.message;
+        }
+        alert(errorMessage);
+      }
+    })
+
+  }
 }
