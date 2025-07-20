@@ -117,7 +117,7 @@ export class ShoppingCartComponent implements OnInit {
     this.service.applyCoupon(this.touristId, this.couponCode).subscribe(
       (response: ShoppingCartDTO) => {
         alert('Coupon has successfully been applied.');
-        this.couponCode = '';
+        //this.couponCode = '';
         this.shoppingCart = response;
         this.isCouponAccepted = true;
         console.log('Response after execution of method: ', response);
@@ -148,11 +148,27 @@ export class ShoppingCartComponent implements OnInit {
     );
   }
 
-  clearCoupon(){
+  clearCoupon(): void{
     this.couponCode = '';
     this.errorMessage = null;
-    alert('Coupon is not used.');
+    //alert('Coupon is not used.');
     this.showCouponForm = !this.showCouponForm;
+  }
+
+  cancelCoupon(): void{
+    this.service.cancelUsedCoupon(this.touristId, this.couponCode).subscribe({
+      next: (response) =>{
+        this.shoppingCart = response;
+        alert('Coupon is canceled.');
+      },
+      error: (err: HttpErrorResponse) =>{
+        let errorMessage = "Something went wrong. Please try again later.";
+        if(err.error && err.error.message){
+          errorMessage = err.error.message;
+        }
+        alert(errorMessage);
+      }
+    });
   }
 
 

@@ -134,12 +134,21 @@ export class MarketplaceService {
       return this.http.delete<void>(environment.apiHost + `author/coupon/${id}`);
     }
 
+    publishCoupon(id: number): Observable<any>{
+      return this.http.patch<any>(environment.apiHost + `author/coupon/${id}`, {} );
+    }
+
     applyCoupon(touristId: number | null, couponCode: string): Observable<ShoppingCartDTO> {
       const url = `${environment.apiHost}tourist/shoppingcart/${touristId}/apply-coupon?couponCode=${couponCode}`;
   
-  // Ako nema potrebe za dodatnim podacima u telu zahteva, možete poslati prazan objekat
-      const body = {};  // Možete dodati telo zahteva ako je potrebno
+      const body = {};  
 
+      return this.http.post<ShoppingCartDTO>(url, body);
+    }
+    
+    cancelUsedCoupon(touristId: number | null, couponCode: string): Observable<ShoppingCartDTO> {
+      const url = `${environment.apiHost}tourist/shoppingcart/${touristId}/cancel-coupon?couponCode=${couponCode}`;
+      const body = {};
       return this.http.post<ShoppingCartDTO>(url, body);
     }
     
