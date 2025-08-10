@@ -5,8 +5,14 @@
     padding: 10px 20px;
 }
 .navbar-left {
+    position: relative;
     display: flex;
     align-items: center;
+    gap: 10px;
+}
+.navbar-left button.custom-button {
+    position: relative;
+    z-index: 10;
 }
 .navbar-right {
     display: flex;
@@ -16,6 +22,8 @@
 .logo {
     width: 50px;
     margin-right: 10px;
+    position: relative;
+    z-index: 1;
 }
 /* Custom styles for raised buttons */
 .mat-raised-button {
