@@ -25,6 +25,8 @@ import {NgOptimizedImage} from "@angular/common";
 import { TetrisComponent } from './feature-modules/tetris/tetris.component';
 import { MemoryGameComponent } from './feature-modules/memory-game/memory-game.component';
 import { GameMenuComponent } from './feature-modules/game-menu/game-menu.component';
+import { LightsOutComponent } from './feature-modules/lights-out/lights-out.component';
+import { MastermindComponent } from './feature-modules/mastermind/mastermind.component';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,6 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TetrisComponent,
     MemoryGameComponent,
     GameMenuComponent,
+    LightsOutComponent,
+    MastermindComponent,
     
   ],
   imports: [
