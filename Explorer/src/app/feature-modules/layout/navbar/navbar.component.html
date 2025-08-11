@@ -48,7 +48,6 @@
         <button  mat-button class="custom-button" [routerLink]="['game-menu']">Game</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['bundle']">Bundle</button>
 
-        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['paceges-publ']">Pacages</button>
 
         <button *ngIf="user && user.role ==='tourist'" mat-button class="custom-button" [routerLink]="['available-coupons']">Coupons</button>
 
