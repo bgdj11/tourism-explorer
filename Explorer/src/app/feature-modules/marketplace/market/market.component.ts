@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 export class MarketComponent implements OnInit {
   tours: TourDTO[] = [];
   checkpointNames: { [tourId: number]: string } = {};
+  checkpointImages: { [tourId: number]: string } = {};
   currentPage: number = 1;
   pageSize: number = 100;
   totalCount: number = 0;
@@ -43,8 +44,6 @@ export class MarketComponent implements OnInit {
       this.loadTours();
       this.getSales();
       this.isOnSaleChecked = false;
-      this.filteredTours = [...this.tours];
-      this.filterToursBySales();
     });
   }
 
@@ -152,6 +151,9 @@ export class MarketComponent implements OnInit {
         this.tours = data.results.filter(tour => tour.status === 1);
         this.totalCount = data.totalCount;
 
+      this.filteredTours = [...this.tours];
+      this.filterToursBySales()
+
         // Load checkpoint names for each tour
         this.tours.forEach(tour => {
           this.reportFormVisible[tour.id] = false;
@@ -169,20 +171,24 @@ export class MarketComponent implements OnInit {
           };
 
           this.service.getCheckpointIdsByTourId(tour.id).subscribe(
-            (checkpointIds) => {
-              if (checkpointIds.length > 0) {
-                this.service.getCheckpointById(checkpointIds[0]).subscribe(
-                  (checkpoint) => {
-                    this.checkpointNames[tour.id] = checkpoint.checkpointName as string;
-                  },
-                  (error) => console.error(`Error fetching checkpoint:`, error)
-                );
-              } else {
-                this.checkpointNames[tour.id] = 'Nema CheckPoint';
-              }
-            },
-            (error) => console.error(`Error fetching checkpoint IDs:`, error)
-          );
+          (checkpointIds) => {
+            if (checkpointIds.length > 0) {
+              this.service.getCheckpointById(checkpointIds[0]).subscribe(
+                (checkpoint) => {
+                  this.checkpointNames[tour.id] = checkpoint.checkpointName as string;
+                  this.checkpointImages[tour.id] = checkpoint.image 
+                    ? checkpoint.image 
+                    : 'assets/default-tour.jpg'; 
+                },
+                (error) => console.error(`Error fetching checkpoint:`, error)
+              );
+            } else {
+              this.checkpointNames[tour.id] = 'Nema CheckPoint';
+              this.checkpointImages[tour.id] = 'assets/default-tour.jpg';
+            }
+          },
+          (error) => console.error(`Error fetching checkpoint IDs:`, error)
+        );
 
           this.tourService.getTourReviews(tour.id).subscribe(
             (data) => {             
