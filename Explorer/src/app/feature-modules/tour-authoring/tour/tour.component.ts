@@ -179,7 +179,7 @@ export class TourComponent implements OnInit {
   }
 
   loadAccomodations(): void {
-    this.adminService.getAllAccomodations(this.currentPage, this.pageSize).subscribe(
+    this.adminService.getAllAccomodations().subscribe(
       (data) => {
         this.allAccomodations = data.results
         console.log(this.allAccomodations)

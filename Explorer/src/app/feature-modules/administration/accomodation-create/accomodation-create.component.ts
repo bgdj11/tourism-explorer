@@ -7,6 +7,7 @@ import { BehaviorSubject } from "rxjs";
 import { User } from "../../../infrastructure/auth/model/user.model";
 import { AccomodationDTO, AccomodationType } from '../../tour-authoring/model/accomodation.model';
 import { MapComponent } from 'src/app/shared/map/map.component';
+import { PagedResults } from 'src/app/shared/model/paged-results.model';
 
 @Component({
   selector: 'app-accomodation-create',
@@ -17,6 +18,8 @@ export class AccomodationComponent implements OnInit {
     accomodationForm! : FormGroup
     image: string | null = null;
     isAccomodationContext: boolean = true;
+    accomodations: AccomodationDTO[] = [];
+    currentImageIndexes: number[] = [];
     @ViewChild("mapa") mapa!: MapComponent;
     categories = [
         {label: 'Hotel', value: AccomodationType.HOTEL},
@@ -27,9 +30,34 @@ export class AccomodationComponent implements OnInit {
     }
     ngOnInit(): void {
         this.initializeForm();
-        
+        this.getAccomodations();
+       
+    }
+    showPrevImage(accIndex: number) {
+        if (this.accomodations[accIndex].images.length > 0) {
+          this.currentImageIndexes[accIndex] =
+            (this.currentImageIndexes[accIndex] - 1 + this.accomodations[accIndex].images.length) %
+            this.accomodations[accIndex].images.length;
+        }
     }
 
+showNextImage(accIndex: number) {
+  if (this.accomodations[accIndex].images.length > 0) {
+    this.currentImageIndexes[accIndex] =
+      (this.currentImageIndexes[accIndex] + 1) % this.accomodations[accIndex].images.length;
+  }
+}
+    getAccomodations(): void {
+        this.adminService.getAllAccomodations().subscribe({
+          next: (result: PagedResults<AccomodationDTO>) => {
+            this.accomodations = result.results;
+            this.currentImageIndexes = this.accomodations.map(() => 0);
+
+          },
+          error: () => {
+          }
+        })
+      }
     initializeForm(): void {
         this.accomodationForm = this.fb.group({
           name: [''],

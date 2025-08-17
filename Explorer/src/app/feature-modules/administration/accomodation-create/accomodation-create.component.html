@@ -1,4 +1,23 @@
 <div class="accomodation-page">
+  <h1 class="page-title">Available Accomodations</h1>
+  <div class="accomodation-container" *ngIf="accomodations.length > 0;">
+    <div *ngFor="let accomodation of accomodations; let i = index" class="accomodation-card">
+      <h2 class="accomodation-name">{{ accomodation.name }}</h2>
+      <p class="accomodation-description">{{ accomodation.description }}</p>
+      <p><strong>Location:</strong> {{ accomodation.city }}</p>
+      <p><strong>Contact:</strong> {{ accomodation.contactNumber }}</p>
+      <div class="image-container">
+        <button (click)="showPrevImage(i)" class="arrow-btn">&#8592;</button>
+      <img
+        *ngIf="accomodation.images.length > 0"
+        [src]="accomodation.images[currentImageIndexes[i]]"
+        alt="{{ accomodation.name }}"
+        class="accImg"
+      />
+      <button (click)="showNextImage(i)" class="arrow-btn">&#8594;</button>
+    </div>
+      </div>
+  </div>
     <!-- Forma za kreiranje ili uređivanje Encounter-a -->
     <div class="form-container">
       <h2>Create New Accomodation</h2>

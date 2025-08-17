@@ -122,7 +122,7 @@ export class AdministrationService {
     console.log("USAO")
     return this.http.post<AccomodationDTO>(`${environment.apiHost}admin/accomodations`, accomodation)
   }
-  getAllAccomodations(page: number, pageSize: number): Observable<PagedResults<AccomodationDTO>> {
+  getAllAccomodations(): Observable<PagedResults<AccomodationDTO>> {
     return this.http.get<PagedResults<AccomodationDTO>>(`${environment.apiHost}admin/accomodations`)
 
   }
