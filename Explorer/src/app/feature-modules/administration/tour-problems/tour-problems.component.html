@@ -1,3 +1,6 @@
+<div style="margin-top: 10px;" *ngIf="loggedInUserRole === 'administrator'">
+  <button type="button" routerLink="/tour-problems-statistics" mat-raised-button class="custom-save-button" style="background-color: darkolivegreen; color: white;"><mat-icon>pie_chart</mat-icon>Statistics</button>
+</div>
 <div class="tour-problems-container" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="tourProblems.length > 0; else noProblems">
       <div *ngFor="let problem of tourProblems" class="tour-problem-card"
