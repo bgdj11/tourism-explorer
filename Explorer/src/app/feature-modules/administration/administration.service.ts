@@ -10,6 +10,7 @@ import {Encounter} from "./model/encounter.model";
 import {TourProblem, ProblemComment} from "../marketplace/model/tour-problem";
 import {TourDTO} from "../tour-authoring/model/tour.model";
 import { User } from '../../infrastructure/auth/model/user.model';
+import { AuthorStatsDto } from './model/author-stats-dto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +117,9 @@ export class AdministrationService {
 
   markEncounterAsReviewed(id: number): Observable<void> {
     return this.http.post<void>(`${environment.apiHost}administrator/encounters/${id}/mark-reviewed`, {});
+  }
+
+  getAuthorStats(): Observable<AuthorStatsDto[]> {
+    return this.http.get<AuthorStatsDto[]>(environment.apiHost + 'tourProblem/author-stats');
   }
 }
