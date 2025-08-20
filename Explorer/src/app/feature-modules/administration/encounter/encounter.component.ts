@@ -127,6 +127,28 @@ export class EncounterComponent implements OnInit {
     }
   }
 
+  // lak mapping za klase (prikaz)
+  statusClass(status: EncounterStatus | string): string {
+    // očekujem 'DRAFT' | 'ACTIVE' | 'ARCHIVED'
+    switch (String(status)) {
+      case 'ACTIVE': return 'badge success';
+      case 'DRAFT': return 'badge info';
+      case 'ARCHIVED': return 'badge danger';
+      default: return 'badge';
+    }
+  }
+
+  typeClass(type: EncounterType | string): string {
+    // očekujem 'SOCIAL' | 'LOCATION' | 'MISC'
+    switch (String(type)) {
+      case 'SOCIAL': return 'badge';
+      case 'LOCATION': return 'badge warn';
+      case 'MISC': return 'badge info';
+      default: return 'badge';
+    }
+  }
+
+
   editEncounter(encounter: Encounter): void {
     this.isEditing = true;
     this.editingId = encounter.id!;
