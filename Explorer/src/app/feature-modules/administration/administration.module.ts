@@ -25,6 +25,9 @@ import * as echarts from 'echarts';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { TourProblemsStatisticsComponent } from './tour-problems-statistics/tour-problems-statistics.component';
+import {MatCardModule} from "@angular/material/card";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 
 
 @NgModule({
@@ -54,8 +57,11 @@ import { TourProblemsStatisticsComponent } from './tour-problems-statistics/tour
     MatSelectModule,
     MatPaginatorModule,
     RouterModule,
-    NgxEchartsModule.forRoot({ echarts }),
-    HttpClientModule
+    NgxEchartsModule.forRoot({echarts}),
+    HttpClientModule,
+    MatCardModule,
+    MatChipsModule,
+    MatLegacyChipsModule
   ],
   providers: [MatDatepickerModule],
   exports: [
