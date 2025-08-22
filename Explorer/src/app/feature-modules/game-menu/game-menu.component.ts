@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./game-menu.component.css']
 })
 export class GameMenuComponent {
+  ngOnInit(): void {
+    document.body.classList.add('lock-vh');   // zabrani scroll samo na ovoj strani
+  }
 
+  ngOnDestroy(): void {
+    document.body.classList.remove('lock-vh'); // vrati normalno ponašanje
+  }
 }

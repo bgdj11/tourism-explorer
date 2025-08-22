@@ -1,161 +1,172 @@
-import { Component, HostListener } from '@angular/core';
+import {
+  Component, HostListener, OnInit, AfterViewInit, OnDestroy,
+  ElementRef, ViewChild
+} from '@angular/core';
 import { SpaceInvadersService } from './space-invaders.service';
 import { AuthService } from '../../infrastructure/auth/auth.service';
 import { User } from '../../infrastructure/auth/model/user.model';
 
-interface Enemy {
-  x: number;
-  y: number;
-}
+
+interface Enemy { x: number; y: number; }
 
 @Component({
   selector: 'app-space-invaders',
   templateUrl: './space-invaders.component.html',
   styleUrls: ['./space-invaders.component.css']
 })
-export class SpaceInvadersComponent {
-  player = { x: 275 }; // Player pozicija
-  enemies: Enemy[] = []; // Lista neprijatelja sa eksplicitnim tipom
-  projectile = { x: 0, y: 0, active: false }; // Projektil
-  interval: any; // Interval za neprijatelje
-  gameTime = 0; // Vreme trajanja nivoa
-  gameTimer: any; // Tajmer za brojanje vremena igre
-  finalScore = 0; // Krajnji rezultat
-  user: User; // Trenutni korisnik
-  gameOverFlag = false; // Da li je igra završena
+export class SpaceInvadersComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('stageWrap', { static: true }) stageWrapRef!: ElementRef<HTMLElement>;
+  @ViewChild('stage',     { static: true }) stageRef!:     ElementRef<HTMLElement>;
 
-  constructor(private service: SpaceInvadersService, private authService: AuthService) {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-    });
-    this.startGame();
+  readonly baseWidth  = 600;
+  readonly baseHeight = 420;
+
+  // OVE dimenzije direktno vežemo u HTML – zato niko spolja ne može da ih pregazi
+  readonly playerW = 44;
+  readonly playerH = 36;
+  readonly enemySize = 40;
+  readonly projW = 5;
+  readonly projH = 15;
+
+  player = { x: (this.baseWidth - this.playerW) / 2 };
+  readonly playerBottom = 10;
+
+  enemies: Enemy[] = [];
+  projectile = { x: 0, y: 0, active: false };
+
+  interval: any;
+  gameTimer: any;
+  gameTime = 0;
+  finalScore = 0;
+  user?: User;
+  gameOverFlag = false;
+
+  private ro?: ResizeObserver;
+
+  constructor(
+    private service: SpaceInvadersService,
+    private auth: AuthService
+  ){
+    this.auth.user$.subscribe(u => this.user = u);
   }
 
-  startGame() {
+  ngOnInit(){ this.startGame(); }
+
+  ngAfterViewInit(): void {
+    const wrap = this.stageWrapRef.nativeElement;
+    const stage = this.stageRef.nativeElement;
+    const recalc = () => {
+      const scale = Math.min(wrap.clientWidth  / this.baseWidth,
+        wrap.clientHeight / this.baseHeight) * 0.98;
+      stage.style.setProperty('--scale', String(scale));
+    };
+    recalc();
+    this.ro = new ResizeObserver(recalc);
+    this.ro.observe(wrap);
+  }
+
+  ngOnDestroy(){ this.clearTimers(); this.ro?.disconnect(); }
+
+  // ---- GAME ----
+  startGame(){
     this.gameOverFlag = false;
     this.gameTime = 0;
     this.enemies = [];
+    this.player.x = (this.baseWidth - this.playerW) / 2;
+
     this.generateEnemies();
-    this.interval = setInterval(() => this.moveEnemies(), 500);
-    this.gameTimer = setInterval(() => this.gameTime++, 1000);
+    this.interval   = setInterval(() => this.moveEnemies(), 500);
+    this.gameTimer  = setInterval(() => this.gameTime++, 1000);
   }
+  restartGame(){ this.clearTimers(); this.startGame(); }
+  private clearTimers(){ clearInterval(this.interval); clearInterval(this.gameTimer); }
 
-  generateEnemies() {
-    const initialX = 250; // Početna pozicija X (u sredini)
-    const initialY = 50;  // Početna pozicija Y
-    const xSpacing = 100;  // Razmak između neprijatelja u horizontalnoj osi
-    const ySpacing = 100;  // Razmak između neprijatelja u vertikalnoj osi
-
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 3; j++) {
-        this.enemies.push({
-          x: initialX + i * xSpacing,
-          y: initialY + j * ySpacing
-        });
+  generateEnemies(){
+    const cols = 5, rows = 3;
+    const margin = Math.max(12, Math.floor((this.baseWidth - cols * this.enemySize) / (cols + 1)));
+    const step = this.enemySize + margin;
+    const startX = margin, startY = 40;
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        this.enemies.push({ x: startX + i*step, y: startY + j*step });
       }
     }
   }
 
-  moveEnemies() {
-    if (this.gameOverFlag) return;
-    for (const enemy of this.enemies) {
-      enemy.x += 10;
-      if (enemy.x > 550) enemy.x = 0;
+  moveEnemies(){
+    if(this.gameOverFlag) return;
+    const maxX = this.baseWidth - this.enemySize;
+    for(const e of this.enemies){
+      e.x += 10;
+      if(e.x > maxX) e.x = 0;
     }
   }
 
-  // Fajerovanje projektila
-  fireProjectile() {
-    if (!this.projectile.active && !this.gameOverFlag) {
-      this.projectile.x = this.player.x + 22;
-      this.projectile.y = 370;
-      this.projectile.active = true;
-      const interval = setInterval(() => {
-        this.projectile.y -= 10;
-        this.checkHit();
-        if (this.projectile.y < 0) {
-          this.projectile.active = false;
-          clearInterval(interval);
-        }
-      }, 50);
-    }
+  fireProjectile(){
+    if(this.projectile.active || this.gameOverFlag) return;
+    this.projectile.x = Math.floor(this.player.x + (this.playerW - this.projW)/2);
+    this.projectile.y = Math.floor(this.baseHeight - this.playerH - this.playerBottom - this.projH);
+    this.projectile.active = true;
+    const it = setInterval(()=>{
+      this.projectile.y -= 10;
+      this.checkHit();
+      if(this.projectile.y < 0){
+        this.projectile.active = false;
+        clearInterval(it);
+      }
+    }, 50);
   }
 
-  // Provera da li je projektil pogodio neprijatelja
-  checkHit() {
-    for (let i = 0; i < this.enemies.length; i++) {
-      const enemy = this.enemies[i];
-      if (
-        this.projectile.y < enemy.y + 30 &&
-        this.projectile.y > enemy.y &&
-        this.projectile.x > enemy.x &&
-        this.projectile.x < enemy.x + 40
-      ) {
-        // Ukloni neprijatelja iz liste
-        this.enemies.splice(i, 1);
-        this.projectile.active = false; // Uništi projektil
-        this.checkGameOver(); // Proveri da li je igra gotova
-        break; // Prekini petlju, jer jedan projektil ne može da pogodi više neprijatelja
+  checkHit(){
+    for(let i=0;i<this.enemies.length;i++){
+      const e = this.enemies[i];
+      const hitX = (this.projectile.x + this.projW) > e.x && this.projectile.x < (e.x + this.enemySize);
+      const hitY = (this.projectile.y + this.projH) > e.y && this.projectile.y < (e.y + this.enemySize);
+      if(hitX && hitY){
+        this.enemies.splice(i,1);
+        this.projectile.active = false;
+        this.checkGameOver();
+        break;
       }
     }
   }
 
-  checkGameOver() {
-    if (this.enemies.length === 0) {
-      clearInterval(this.gameTimer); // Zaustavi tajmer igre
-      this.finalScore = this.gameTime; // Postavi krajnji rezultat
+  checkGameOver(){
+    if(this.enemies.length === 0){
+      this.finalScore = this.gameTime;
       this.gameOverFlag = true;
       alert(`Kraj igre! Vreme trajanja: ${this.gameTime} sekundi`);
       this.endGame();
     }
   }
 
-  endGame() {
-    clearInterval(this.gameTimer);
-    clearInterval(this.interval);
-    this.gameOverFlag = true;
-
-    const gameId = 1; // ID igre
-
-    if (this.user?.id) {
-      // Sačuvaj rezultat igrača
-      this.service.saveScore(gameId, this.user.id, this.finalScore).subscribe(
-        response => {
-          console.log('Score saved successfully:', response);
-
-          // Automatski dodeli kupon nakon čuvanja rezultata
-          this.service.awardTopScorerCoupon().subscribe(
-            couponResponse => {
-              console.log('Coupon awarded:', couponResponse);
-              alert(couponResponse.message || 'Coupon awarded successfully!');
-            },
-            error => {
-              console.error('Error awarding coupon:', error);
-            }
-          );
-        },
-        error => {
-          console.error('Failed to save score:', error);
-        }
-      );
-    } else {
-      console.error('User ID is not available. Cannot save the score.');
-    }
+  endGame(){
+    this.clearTimers();
+    const userId = this.user?.id;
+    if(!userId) return;
+    const gameId = 1;
+    this.service.saveScore(gameId, userId, this.finalScore).subscribe({
+      next: () => {
+        this.service.awardTopScorerCoupon().subscribe({
+          next: r => alert(r.message || 'Coupon awarded successfully!'),
+          error: e => console.error('Error awarding coupon:', e)
+        });
+      },
+      error: e => console.error('Failed to save score:', e)
+    });
   }
 
   @HostListener('document:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
-    if (this.gameOverFlag) return;
-    if (event.key === 'ArrowLeft' && this.player.x > 0) {
-      this.player.x -= 15;
-    } else if (event.key === 'ArrowRight' && this.player.x < 550) {
-      this.player.x += 15;
-    } else if (event.key === ' ') {
+  handleKeyDown(e: KeyboardEvent){
+    if(this.gameOverFlag) return;
+    const maxLeft = 0, maxRight = this.baseWidth - this.playerW;
+    if(e.key === 'ArrowLeft'){
+      this.player.x = Math.max(maxLeft, this.player.x - 15);
+    }else if(e.key === 'ArrowRight'){
+      this.player.x = Math.min(maxRight, this.player.x + 15);
+    }else if(e.key === ' '){
       this.fireProjectile();
     }
   }
-
-  restartGame() {
-    this.startGame();
-  }
 }
+

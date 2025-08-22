@@ -1,13 +1,37 @@
-<div class="game-container">
-  <div id="player" [ngStyle]="{'left.px': player.x}">
-    <img src="assets/spaceship.png" alt="Player" height="200" width="200">
-  </div>
-  <div class="enemy" *ngFor="let enemy of enemies" [ngStyle]="{'top.px': enemy.y, 'left.px': enemy.x}">
-    <img src="assets/enemy.png" alt="Enemy" height="200" width="200">
-  </div>
-  <div id="projectile" *ngIf="projectile.active" [ngStyle]="{'top.px': projectile.y, 'left.px': projectile.x}"></div>
+<div #root class="si">
+  <div #stageWrap class="stage-wrap">
+    <div #stage class="stage" [style.width.px]="baseWidth" [style.height.px]="baseHeight">
+      <!-- HUD -->
+      <div class="hud">
+        <div class="chip">Time: {{ gameTime }}s</div>
+        <button class="btn primary" (click)="restartGame()">Restart</button>
+      </div>
 
-  <div class="game-time">
-    Time: {{ gameTime }} sec
+      <!-- Player: SADA eksplicitno vežemo dimenzije -->
+      <div id="player"
+           [style.left.px]="player.x"
+           [style.bottom.px]="playerBottom"
+           [style.width.px]="playerW"
+           [style.height.px]="playerH">
+        <img src="assets/spaceship.png" alt="Player">
+      </div>
+
+      <!-- Enemies: i ovde eksplicitno -->
+      <div class="enemy"
+           *ngFor="let enemy of enemies"
+           [style.left.px]="enemy.x"
+           [style.top.px]="enemy.y"
+           [style.width.px]="enemySize"
+           [style.height.px]="enemySize">
+        <img src="assets/enemy.png" alt="Enemy">
+      </div>
+
+      <!-- Projectile (nije neophodno, ali može i on eksplicitno) -->
+      <div id="projectile" *ngIf="projectile.active"
+           [style.left.px]="projectile.x"
+           [style.top.px]="projectile.y"
+           [style.width.px]="projW"
+           [style.height.px]="projH"></div>
+    </div>
   </div>
 </div>
