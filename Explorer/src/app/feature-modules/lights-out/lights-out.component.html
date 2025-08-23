@@ -1,20 +1,31 @@
-<div class="lights-out-container">
-    <h2>Lights Out</h2>
-    <div class="grid">
-      <div
-        class="cell"
-        *ngFor="let row of grid; let i = index"
-        [style.--row]="i"
-      >
-        <button
-          *ngFor="let cell of row; let j = index"
-          [class.on]="cell"
-          [class.off]="!cell"
-          (click)="toggle(i, j)"
-        >
-        </button>
+<div #root class="lo">
+  <div class="panel">
+    <header class="head">
+      <h2>LIGHTS&nbsp;OUT</h2>
+      <div class="sub">Toggle tiles to turn all lights off</div>
+    </header>
+
+    <section #boardWrap class="board">
+      <div class="grid">
+        <div
+          class="row"
+          *ngFor="let row of grid; let i = index"
+          [style.--row]="i">
+          <button
+            class="tile"
+            *ngFor="let cell of row; let j = index"
+            [class.on]="cell"
+            [class.off]="!cell"
+            (click)="toggle(i, j)"
+            [attr.aria-pressed]="cell"
+            [attr.aria-label]="'Toggle tile '+i+','+j">
+          </button>
+        </div>
       </div>
-    </div>
-    <button (click)="restartGame()">Restart</button>
+    </section>
+
+    <section class="controls">
+      <button class="btn primary" (click)="restartGame()">Restart</button>
+    </section>
+  </div>
 </div>
-  

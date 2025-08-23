@@ -1,110 +1,150 @@
-/* Glavni kontejner */
-.container {
-  display: flex;
-  justify-content: center; /* Centriranje po horizontali */
-  align-items: center;     /* Centriranje po vertikali */
-  height: 70vh;           /* Visina ekrana */
-  background-color: #f0f0f0;
-  gap: 40px;
+/* host zauzima celu play-area */
+:host{ display:block; width:100%; height:100%; }
+
+/* bazni font kao kod Mastermind-a */
+:host{
+  font: 600 clamp(14px, 1.2vmin + .2rem, 18px)/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #0b1120;
 }
 
-/* Tabla za Tetris */
-.tetris-wrapper {
-  border: 5px solid #333; /* Okvir oko tabele */
-  background-color: black;
-  width: 300px;
-  height: 600px; /* Fiksna veličina table */
-  display: flex;
+.container{
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 240px;  /* malo širi sidebar da stanu “chipovi” */
+  column-gap: 16px;
+  row-gap: 16px;
+  align-items: stretch;      /* tabla popunjava punu visinu */
   justify-content: center;
-  align-items: center;
 }
 
-.game-board {
-  display: block;
+/* >>> CRNI PANEL OKO TABLE (jasno gde je igra) */
+.tetris-wrapper{
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
+  padding: 8px;                      /* luft izmedju okvira i canvasa */
+  background: #000;                  /* crni panel */
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 6px #000;  /* “okvir” */
 }
+.game-board{ display:block; background:#000; }
 
-/* Desna kolona sa statistikama */
-.right-column {
+/* --- Desna kolona --- */
+.right-column{
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  gap: 12px;
+  align-items: stretch;
+  text-align: left;
+}
+
+.title{
+  margin: 0 0 4px 0;
+  font-size: clamp(20px, 2.2vmin + .5rem, 28px);
+  font-weight: 900;
+  letter-spacing: .6px;
   text-align: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #333;
 }
 
-.right-column h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+/* chip-ovi za statistiku */
+.stats{ display: grid; gap: 8px; }
+.stat{
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(248, 250, 252, .75);
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.label{ color: #475569; font-weight: 700; }
+.value{
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .3px;
 }
 
-.right-column p {
-  margin: 10px 0;
-}
-
-.play-button {
-  background-color: #4caf50;
-  color: white;
-  font-size: 16px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.play-button:hover {
-  background-color: #45a049;
-}
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
+/* Next preview box */
+.next-wrap{
+  display: grid; gap: 6px;
+  background: rgba(248, 250, 252, .75);
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+  border-radius: 10px;
+  padding: 8px;
   align-items: center;
+  justify-items: center;
+  min-height: 120px;
+}
+.next-title{
+  font-weight: 800; color:#0f172a; font-size: .95em;
+}
+.next{
+  width: 100%;
+  max-width: 140px;    /* zadrži razumnu širinu u sidebaru */
+  aspect-ratio: 1 / 1; /* kvadratni prikaz; canvas će se CSS-skallirati */
+  image-rendering: pixelated;
+}
+
+/* “Play” dugme – isto kao Mastermind “primary” */
+.play-button{
+  margin-top: 4px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;                 /* preuzima isti font */
+  font-weight: 800;
+  background: #22c55e;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, .25);
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+}
+.play-button:hover{ filter: brightness(.96); }
+.play-button:active{ transform: translateY(1px); }
+
+/* Overlay / popup */
+.overlay{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.8);
+  display: grid; place-items: center;
   z-index: 1000;
 }
-
-.popup {
-  background: white;
+.popup{
+  background: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(15,23,42,.18);
 }
-
-.popup h2 {
+.popup h2{
   margin: 0 0 10px;
-  color: red;
+  color: #ef4444;
+  font-weight: 900;
 }
-
-.popup p {
-  margin: 5px 0;
-  font-size: 16px;
+.popup p{ margin: 6px 0; }
+.popup-buttons{
+  display: flex; justify-content: center; gap: 10px; margin-top: 16px;
 }
-
-.popup-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+.close-button{
+  background: #e2e8f0; color:#0f172a;
+  border: none; padding: 10px 16px;
+  font: inherit; font-weight: 800;
+  border-radius: 999px; cursor: pointer;
 }
+.close-button:hover{ filter: brightness(.96); }
 
-.close-button {
-  background-color: #ccc;
-  color: #333;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.close-button:hover {
-  background-color: #bbb;
+/* Responsive: sidebar ispod table */
+@media (max-width: 900px){
+  .container{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;   /* tabla zauzme visinu, sidebar ispod */
+    align-items: stretch;
+  }
+  .right-column{
+    width: auto;
+    align-items: center;
+    text-align: center;
+  }
+  .stats{ width: min(420px, 100%); }
+  .next-wrap{ width: min(420px, 100%); }
 }

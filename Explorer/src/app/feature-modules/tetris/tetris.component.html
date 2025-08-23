@@ -5,14 +5,33 @@
   </div>
 
   <!-- Right column for stats -->
-  <div class="right-column">
-    <h1>TETRIS</h1>
-    <p>Score: {{ points }}</p>
-    <p>Lines: {{ lines }}</p>
-    <p>Level: {{ level }}</p>
-    <canvas #next class="next"></canvas>
-    <button *ngIf="!gameOverFlag" (click)="resetGame()" class="play-button">Play</button>
-  </div>
+  <aside class="right-column">
+    <h1 class="title">TETRIS</h1>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="label">Score</span>
+        <span class="value">{{ points }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Lines</span>
+        <span class="value">{{ lines }}</span>
+      </div>
+      <div class="stat">
+        <span class="label">Level</span>
+        <span class="value">{{ level }}</span>
+      </div>
+    </div>
+
+    <div class="next-wrap">
+      <div class="next-title">Next</div>
+      <canvas #next class="next"></canvas>
+    </div>
+
+    <button *ngIf="!gameOverFlag" (click)="resetGame()" class="play-button">
+      Play
+    </button>
+  </aside>
 </div>
 
 <!-- GAME OVER pop-up -->
