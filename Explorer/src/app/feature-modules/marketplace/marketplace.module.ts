@@ -19,6 +19,7 @@ import { CouponComponent } from './coupon/coupon.component';
 import { CouponFormComponent } from './coupon-form/coupon-form.component';
 import { PacagesPublComponent } from './pacages-publ/pacages-publ.component';
 import { MyPacagesComponent } from './my-pacages/my-pacages.component';
+import { ExchangeCalculatorComponent } from './course/exchange-calculator.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { MyPacagesComponent } from './my-pacages/my-pacages.component';
     CouponComponent,
     CouponFormComponent,
     PacagesPublComponent,
-    MyPacagesComponent
+    MyPacagesComponent,
+    ExchangeCalculatorComponent
   ],
   imports: [
     CommonModule,
