@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { MemoryGameService } from './memory-game.service';
 import { AuthService } from '../../infrastructure/auth/auth.service';
 import { User } from '../../infrastructure/auth/model/user.model';
@@ -8,25 +15,90 @@ import { User } from '../../infrastructure/auth/model/user.model';
   templateUrl: './memory-game.component.html',
   styleUrls: ['./memory-game.component.css']
 })
-export class MemoryGameComponent implements OnInit {
+export class MemoryGameComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('board', { static: true }) boardRef!: ElementRef<HTMLElement>;
+
   cards: { image: string; flipped: boolean; matched: boolean }[] = [];
   flippedCards: number[] = [];
   lockBoard: boolean = false;
-  gameTime = 0; // Vreme trajanja igre u sekundama
-  gameTimer: any; // Interval za brojanje vremena igre
-  user: User; // Trenutni korisnik
-  gameOverFlag = false; // Da li je igra završena
-  finalScore = 0; // Krajnji rezultat (vreme igre)
 
-  constructor(private memoryGameService: MemoryGameService, private authService: AuthService) {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-    });
+  gameTime = 0;
+  gameTimer: any;
+  user: User;
+  gameOverFlag = false;
+  finalScore = 0;
+
+  // ---- mreža / skaliranje (4x4) ----
+  private cols = 4;
+  private rows = 4;
+  private gap = 12;        // px razmak između kartica
+  private minCard = 64;    // min veličina kvadrata
+
+  // >>> novo: uvek skupi kvadrat za X% + par px rezerve
+  private scale = 0.84;   // još mrvu manje da ne “kači” dno
+  private safetyPx = 12;  // malo rezerve po visini
+
+
+  private ro?: ResizeObserver;
+
+  constructor(
+    private memoryGameService: MemoryGameService,
+    private authService: AuthService,
+    private el: ElementRef<HTMLElement>
+  ) {
+    this.authService.user$.subscribe(user => (this.user = user));
   }
 
   ngOnInit() {
     this.initializeGame();
   }
+
+  ngAfterViewInit(): void {
+    const playArea = this.el.nativeElement.closest('.play-area') as HTMLElement | null;
+
+    const recalc = () => {
+      if (!playArea || !this.boardRef) return;
+
+      // unutrašnje dimenzije (bez paddinga)
+      const cs = getComputedStyle(playArea);
+      const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      const padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+      const availW = playArea.clientWidth  - padX;
+      const availH = playArea.clientHeight - padY - this.safetyPx;
+
+      // ADAPTIVNI GAP (isti koristimo u računu i u CSS-u)
+      const isShort  = availH < 720;
+      const isNarrow = availW < 900;
+      const gap = (isShort || isNarrow) ? 10 : 12;
+
+      // kartica koja maksimalno staje uz taj 'gap'
+      const cardByW = (availW - (this.cols - 1) * gap) / this.cols;
+      const cardByH = (availH - (this.rows - 1) * gap) / this.rows;
+      const raw = Math.min(cardByW, cardByH);
+
+      // namerno smanji za skalu
+      const card = Math.max(this.minCard, Math.floor(raw * this.scale));
+
+      // upiši u CSS varijable
+      const board = this.boardRef.nativeElement;
+      board.style.setProperty('--cols', String(this.cols));
+      board.style.setProperty('--rows', String(this.rows));
+      board.style.setProperty('--gap', `${gap}px`);
+      board.style.setProperty('--card', `${card}px`);
+    };
+
+
+    recalc();
+    this.ro = new ResizeObserver(recalc);
+    if (playArea) this.ro.observe(playArea);
+  }
+
+  ngOnDestroy(): void {
+    this.ro?.disconnect();
+    this.stopTimer();
+  }
+
+  // ---------------- GAME LOGIC ----------------
 
   initializeGame() {
     const images = [
@@ -50,9 +122,7 @@ export class MemoryGameComponent implements OnInit {
   startTimer() {
     this.gameTime = 0;
     this.gameOverFlag = false;
-    this.gameTimer = setInterval(() => {
-      this.gameTime++;
-    }, 1000);
+    this.gameTimer = setInterval(() => this.gameTime++, 1000);
   }
 
   stopTimer() {
@@ -61,28 +131,21 @@ export class MemoryGameComponent implements OnInit {
 
   flipCard(index: number) {
     if (this.lockBoard || this.cards[index].flipped || this.gameOverFlag) return;
-
     this.cards[index].flipped = true;
     this.flippedCards.push(index);
-
-    if (this.flippedCards.length === 2) {
-      this.checkForMatch();
-    }
+    if (this.flippedCards.length === 2) this.checkForMatch();
   }
 
   checkForMatch() {
     this.lockBoard = true;
-    const [firstIndex, secondIndex] = this.flippedCards;
+    const [i, j] = this.flippedCards;
 
-    if (this.cards[firstIndex].image === this.cards[secondIndex].image) {
-      this.cards[firstIndex].matched = true;
-      this.cards[secondIndex].matched = true;
+    if (this.cards[i].image === this.cards[j].image) {
+      this.cards[i].matched = true;
+      this.cards[j].matched = true;
       this.checkGameOver();
     } else {
-      setTimeout(() => {
-        this.cards[firstIndex].flipped = false;
-        this.cards[secondIndex].flipped = false;
-      }, 1000);
+      setTimeout(() => { this.cards[i].flipped = false; this.cards[j].flipped = false; }, 1000);
     }
 
     this.flippedCards = [];
@@ -90,8 +153,7 @@ export class MemoryGameComponent implements OnInit {
   }
 
   checkGameOver() {
-    const unmatchedCards = this.cards.filter(card => !card.matched);
-    if (unmatchedCards.length === 0) {
+    if (this.cards.every(c => c.matched)) {
       this.stopTimer();
       this.finalScore = this.gameTime;
       this.gameOverFlag = true;
@@ -101,27 +163,16 @@ export class MemoryGameComponent implements OnInit {
   }
 
   endGame() {
-    const gameId = 3; // ID igre za Memory Game
-
+    const gameId = 3;
     if (this.user?.id) {
       this.memoryGameService.saveScore(gameId, this.user.id, this.finalScore).subscribe(
-        response => {
-          console.log('Score saved successfully:', response);
-
-          // Dodela kupona nakon čuvanja rezultata
+        () => {
           this.memoryGameService.awardTopScorerCoupon().subscribe(
-            couponResponse => {
-              console.log('Coupon awarded:', couponResponse);
-              alert(couponResponse.message || 'Kupon je uspešno dodeljen!');
-            },
-            error => {
-              console.error('Error awarding coupon:', error);
-            }
+            r => alert(r.message || 'Kupon je uspešno dodeljen!'),
+            e => console.error('Error awarding coupon:', e)
           );
         },
-        error => {
-          console.error('Failed to save score:', error);
-        }
+        e => console.error('Failed to save score:', e)
       );
     } else {
       console.error('User ID is not available. Cannot save the score.');

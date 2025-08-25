@@ -139,16 +139,34 @@ export class TourProblemsComponent implements OnInit {
     );
   }
 
-  SaveDeadline(problem: TourProblem): void {
+  SaveDeadline(problem: TourProblem & { tourName?: string, touristUsername?: string }): void {
     problem.resolvingDue = this.due;
     this.due = undefined;
     this.service.updateProblem(problem).subscribe(
       (updatedProblem) => {
         console.log('Problem marked as resolved:', updatedProblem);
+        const messageRequest: SendMessageRequest = {
+              senderId: this.loggedInUserId,
+              followerId: problem.authorId,
+              content: `Postavljen Vam je rok za resavanje problema na turi ${problem.tourName}`,
+              //resourceUrl: `${problem.id!}`  
+              resourceUrl: 'tour-problems'
+              //resourceType: this.resourceType || undefined
+            };
+        
+            this.exService.sendMessageToFollower(messageRequest).subscribe(
+              (response) => {
+                console.log('Poruka i notifikacija su poslati:', response);
+              },
+              (error: any) => {
+                console.error('Greška prilikom slanja poruke:', error);
+              }
+            );
       },
       (error) => {
         console.error('Error updating problem:', error);
-      }
+      },
+      
     );
   }
 
@@ -176,11 +194,11 @@ export class TourProblemsComponent implements OnInit {
           if(this.loggedInUserRole ==='author'){
             this.follower = problem.touristId;
           }
-          if(this.loggedInUserRole ==='tourist'){
+          if(this.loggedInUserRole ==='tourist' || this.loggedInUserRole ==='administrator'){
             this.follower = problem.authorId;
           }
 
-          if(this.loggedInUserRole ==='author' || this.loggedInUserRole ==='tourist'){
+          if(this.loggedInUserRole ==='author' || this.loggedInUserRole ==='tourist' || this.loggedInUserRole ==='administrator'){
             const messageRequest: SendMessageRequest = {
               senderId: this.loggedInUserId,
               followerId: this.follower,

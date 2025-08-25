@@ -5,6 +5,12 @@ import { LocationSimulatorComponent } from './location-simulator/location-simula
 import { TouristProfileComponent } from './tourist-profile/tourist-profile.component';
 import {RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatCardModule} from "@angular/material/card";
+import {MatListModule} from "@angular/material/list";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 
@@ -17,7 +23,13 @@ import {MatButtonModule} from "@angular/material/button";
   imports: [
     CommonModule,
     RouterLink,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatListModule,
+    MatChipsModule,
+    MatProgressBarModule
   ],
   exports: [MapComponent]
 })

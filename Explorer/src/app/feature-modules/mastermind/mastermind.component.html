@@ -1,66 +1,73 @@
-<div class="mastermind-container">
-    <h2>Mastermind Game</h2>
-  
-    <div class="colors-selection">
-      <h3>Select Colors</h3>
-      <div class="colors-list">
-        <div 
-          class="color-circle" 
+<div #root class="mm">
+  <div class="panel">
+    <header class="head">
+      <h2>MASTERMIND</h2>
+      <div class="sub">Attempt {{ currentAttempt + 1 }} / {{ maxAttempts }}</div>
+    </header>
+
+    <section class="palette">
+      <h3 class="section-title">Select Colors</h3>
+      <div class="row scroll-x">
+        <button
+          class="color"
           *ngFor="let color of colors"
-          [style.backgroundColor]="color"
+          [style.--c]="color"
           (click)="selectColor(color)"
-          [class.disabled]="gameOver"
-          title="Click to select color"
-        ></div>
+          [disabled]="gameOver"
+          [title]="color">
+        </button>
       </div>
-    </div>
-  
-    <div class="guesses-history">
-      <h3>Guesses</h3>
-      <div *ngFor="let guessObj of guesses; let i = index" class="guess-row" [class.current]="i === currentAttempt">
+    </section>
+
+    <section class="board">
+      <h3 class="section-title">Guesses</h3>
+
+      <div
+        class="guess-row"
+        *ngFor="let guessObj of guesses; let i = index"
+        [class.current]="i === currentAttempt">
+
         <div class="guess-list">
-          <div 
-            class="color-circle" 
+          <button
+            class="color slot"
             *ngFor="let c of guessObj.guess; let j = index"
-            [style.backgroundColor]="c ? c : '#ddd'"
-            (click)="i === currentAttempt && c ? removeColor(j) : null"
-            [class.clickable]="i === currentAttempt && c"
+            [style.--c]="c || '#e2e8f0'"
+            [class.empty]="!c"
             [title]="i === currentAttempt && c ? 'Click to remove' : ''"
-          ></div>
+            (click)="i === currentAttempt && c ? removeColor(j) : null">
+          </button>
         </div>
+
         <div class="feedback-list">
-          <div 
-            class="feedback-dot" 
-            *ngFor="let f of guessObj.feedback"
-            [class.black]="f === 'black'"
-            [class.white]="f === 'white'"
-            [class.gray]="f === 'gray'"
-          ></div>
+          <span class="peg"
+                *ngFor="let f of guessObj.feedback"
+                [class.black]="f === 'black'"
+                [class.white]="f === 'white'"
+                [class.gray]="f === 'gray'"></span>
         </div>
       </div>
-    </div>
-    <div class="secret-code" *ngIf="showSecretCode">
-        <h4>Secret Code:</h4>
-        <div class="guess-list">
-          <div 
-            class="color-circle secret" 
-            *ngFor="let c of secretCode"
-            [style.backgroundColor]="c"
-            title="{{ c }}"
-          ></div>
+    </section>
+
+    <section class="controls">
+      <div class="message" *ngIf="message">{{ message }}</div>
+
+      <div class="btns" *ngIf="!gameOver">
+        <button class="btn primary"
+                (click)="submitGuess()"
+                [disabled]="guesses[currentAttempt].guess.includes(null)">Submit Guess</button>
+        <button class="btn ghost" (click)="resetGame()">Reset</button>
+      </div>
+
+      <div class="secret" *ngIf="showSecretCode">
+        <h4>Secret Code</h4>
+        <div class="row">
+          <span class="color reveal"
+                *ngFor="let c of secretCode"
+                [style.--c]="c"
+                [title]="c"></span>
         </div>
-    </div>
-    <button 
-    *ngIf="!gameOver"
-    (click)="submitGuess()" 
-    [disabled]="
-      guesses[currentAttempt].guess.includes(null)
-    "
-    >
-        Submit Guess
-    </button>
-  
-    <div class="game-message" *ngIf="message">{{ message }}</div>
-    <button *ngIf="gameOver" (click)="resetGame()">Restart Game</button>
+        <button class="btn primary" (click)="resetGame()">Play Again</button>
+      </div>
+    </section>
+  </div>
 </div>
-  

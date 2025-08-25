@@ -20,6 +20,14 @@ import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NgxEchartsModule } from 'ngx-echarts';
+import * as echarts from 'echarts';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { TourProblemsStatisticsComponent } from './tour-problems-statistics/tour-problems-statistics.component';
+import {MatCardModule} from "@angular/material/card";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
 
 
 @NgModule({
@@ -30,7 +38,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     UserAccountComponent,
     UserAccountFormComponent,
     EncounterComponent,
-    TourProblemsComponent
+    TourProblemsComponent,
+    TourProblemsStatisticsComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +55,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    RouterModule,
+    NgxEchartsModule.forRoot({echarts}),
+    HttpClientModule,
+    MatCardModule,
+    MatChipsModule,
+    MatLegacyChipsModule
   ],
   providers: [MatDatepickerModule],
   exports: [

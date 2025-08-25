@@ -38,7 +38,7 @@ import {MemoryGameComponent} from "../../feature-modules/memory-game/memory-game
 import {GameMenuComponent} from "../../feature-modules/game-menu/game-menu.component";
 import { LightsOutComponent } from '../../feature-modules/lights-out/lights-out.component';
 import { MastermindComponent } from '../../feature-modules/mastermind/mastermind.component';
-
+import { TourProblemsStatisticsComponent } from 'src/app/feature-modules/administration/tour-problems-statistics/tour-problems-statistics.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -67,6 +67,7 @@ const routes: Routes = [
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'tour-problems-statistics', component: TourProblemsStatisticsComponent, canActivate: [AuthGuard],},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'sales', component: TourSaleComponent, canActivate: [AuthGuard],},
   {path: 'home-page', component: HomePageComponent},

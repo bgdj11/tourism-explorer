@@ -5,4 +5,7 @@
   margin-top: 20px; /* da budu malo ispod navbar-a 
 } 
 */
+.content {
+  padding-top: 70px; /* visina navbara */
+}
 
