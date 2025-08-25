@@ -39,6 +39,7 @@ import {GameMenuComponent} from "../../feature-modules/game-menu/game-menu.compo
 import { LightsOutComponent } from '../../feature-modules/lights-out/lights-out.component';
 import { MastermindComponent } from '../../feature-modules/mastermind/mastermind.component';
 import { TourProblemsStatisticsComponent } from 'src/app/feature-modules/administration/tour-problems-statistics/tour-problems-statistics.component';
+import { ExchangeCalculatorComponent } from 'src/app/feature-modules/marketplace/course/exchange-calculator.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -78,6 +79,8 @@ const routes: Routes = [
   { path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
   {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],},
+  {path: 'exchange-calculator', component: ExchangeCalculatorComponent, canActivate: [AuthGuard],},
+
   {
     path: 'game-menu',
     component: GameMenuComponent,

@@ -11,6 +11,7 @@ import { ShoppingCartBundleDTO, ShoppingCartDTO, ShoppingCartItemDTO } from './m
 import { TourSale } from './model/tour-sale.model';
 import { Coupon } from './model/coupon';
 import { BundleDTO } from './model/pacages-publ';
+import { ExchangeRateDTO } from './model/course';
 
 @Injectable({
   providedIn: 'root'
@@ -169,6 +170,21 @@ export class MarketplaceService {
     getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
       return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
     }
+
+private exchangeUrl = environment.apiHost + 'tourist/exchange';
+
+getAllCurrencies(): Observable<{ [key: string]: string }> {
+  return this.http.get<{ [key: string]: string }>(`${this.exchangeUrl}/currencies`);
+}
+
+convertCurrency(amount: number, fromCurrency: string, toCurrency: string): Observable<ExchangeRateDTO> {
+  let params = new HttpParams()
+    .set('amount', amount.toString())
+    .set('fromCurrency', fromCurrency)
+    .set('toCurrency', toCurrency);
+
+  return this.http.get<ExchangeRateDTO>(`${this.exchangeUrl}/convert`, { params });
+}
 
     
 
