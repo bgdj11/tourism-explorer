@@ -199,3 +199,14 @@ hr {
 button[type="button"]:hover {
     background-color: #aaa;
 }
+
+button:hover {
+    background-color: #008768;
+}
+
+button:disabled {
+    background-color: black; /* Crna pozadina */
+    color: white; /* Bela boja teksta */
+    cursor: not-allowed; /* Onemogućen kursor */
+    opacity: 0.7; /* Prozirnost */
+}

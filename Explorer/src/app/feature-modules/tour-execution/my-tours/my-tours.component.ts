@@ -73,6 +73,12 @@ export class MyToursComponent implements OnInit {
     );
   }
 
+
+getFirstCheckpoint(tour: TourDTO) {
+  return (tour.tourCheckpoints && tour.tourCheckpoints.length > 0) ? tour.tourCheckpoints[0] : null;
+}
+
+
   getCheckpointsByTourId(tourId: number) {
     // First, get the list of checkpoint IDs for this tour
     return this.tourService.getCheckpointIdsByTourId(tourId).pipe(

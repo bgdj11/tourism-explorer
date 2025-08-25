@@ -123,4 +123,16 @@
     border-radius: 8px;
     width: 250px;
   }
+  .mat-tooltip {
+    z-index: 10000 !important;
+  }
+  .published {
+    background-color: #28a745 !important; 
+    color: white !important;
+  }
+  
+  .unpublished {
+    background-color: #007bff !important; 
+    color: white !important;
+  }
     

@@ -9,6 +9,7 @@ import {MatIcon, MatIconModule} from '@angular/material/icon';
 import { MatOptionModule } from '@angular/material/core';   
 import { MatSelectModule } from '@angular/material/select';  
 import { MatListModule } from '@angular/material/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -21,7 +22,8 @@ import { MatListModule } from '@angular/material/list';
     MatTableModule,
     MatIconModule,
     MatOptionModule,    
-    MatSelectModule   
+    MatSelectModule,
+    MatTooltipModule
 
   ],
   exports: [
@@ -35,7 +37,8 @@ import { MatListModule } from '@angular/material/list';
     MatIcon,
     MatSelectModule,   
     MatOptionModule,
-    MatListModule    
+    MatListModule,
+    MatTooltipModule   
   ]
 })
 export class MaterialModule { }

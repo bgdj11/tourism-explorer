@@ -4,6 +4,8 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { TranslateService } from '@ngx-translate/core';  
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { TourExecutionService } from '../../tour-execution/tour.execution.service';
+import { NotificationDto } from '../../tour-execution/model/notifications'; 
 
 @Component({
   selector: 'xp-navbar',
@@ -13,10 +15,15 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 
   user: User | undefined;
+
   @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
   isSidenavOpened = false;
+  notifications: NotificationDto[] = [];
+  isNotificationDropdownOpen: boolean = false;
+  notificationsNum: number = 0;
 
   constructor(
+    private exService: TourExecutionService,
     private authService: AuthService,
     private router: Router,
     private translateService: TranslateService  // Inject TranslateService
@@ -29,7 +36,6 @@ export class NavbarComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
-
     this.checkIfUserExists();
 
     const browserLang = this.translateService.getBrowserLang();
@@ -38,6 +44,7 @@ export class NavbarComponent implements OnInit {
 
   private checkIfUserExists(): void {
     this.authService.checkIfUserExists();
+    this.getNotificationsNumber();
   }
 
   changeLanguage(lang: string): void {
@@ -46,6 +53,7 @@ export class NavbarComponent implements OnInit {
 
   onLogout(): void {
     this.authService.logout();
+    this.notifications.forEach((notification) => this.markAsRead(notification.id));
   }
 
   toggleSidenav(): void {
@@ -61,5 +69,53 @@ export class NavbarComponent implements OnInit {
       }
     }
   }
+
+  getNotificationsNumber(): void {
+    this.exService.getNotificationsForUser(this.user!.id).subscribe(
+      (data: NotificationDto[]) => {
+        this.notifications = data;
+        this.notificationsNum = this.notifications.length;
+      },
+      (error: any) => {
+        console.error('Greška prilikom dobijanja notifikacija:', error);
+        this.notifications = []; 
+        this.notificationsNum = 0;
+      }
+    );
+  }
+
+  getNotifications(): void {
+    if (!this.isNotificationDropdownOpen) {
+      this.exService.getNotificationsForUser(this.user!.id).subscribe(
+        (data: NotificationDto[]) => {
+          this.notifications = data;
+          this.notificationsNum = 0;
+        },
+        (error: any) => {
+          console.error('Greška prilikom dobijanja notifikacija:', error);
+          this.notifications = []; 
+        }
+      );
+    }
+    this.isNotificationDropdownOpen = !this.isNotificationDropdownOpen; // Prebaci stanje padajuće liste
+  }
+  
+  // Metoda za označavanje notifikacije kao pročitan
+  markAsRead(notificationId: number): void {
+    this.exService.markNotificationAsRead(notificationId).subscribe(
+      response => {
+        // Nakon što je notifikacija označena kao pročitana, ažuriraj stanje
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification) {
+          notification.isRead = true;
+        }
+      },
+      error => {
+        console.error('Greška pri označavanju notifikacije kao pročitan:', error);
+      }
+    );
+  }
+
+  
 
 }

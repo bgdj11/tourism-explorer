@@ -4,4 +4,5 @@ export interface TouristProfile {
   xp: number; // Current XP
   level: number; // Calculated level
   completedEncountersIds: number[]; // List of completed encounter IDs
+  couponIds: number[];
 }

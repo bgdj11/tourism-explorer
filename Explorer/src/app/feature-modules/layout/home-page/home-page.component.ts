@@ -15,6 +15,16 @@ export class HomePageComponent implements AfterViewInit {
   user: User | undefined;
   isLoggedIn = true; 
 
+  games = [
+    { img: 'assets/tetris.jpeg', link: '/game-menu/tetris' },
+    { img: 'assets/space_inv.jpg', link: '/game-menu/space-invaders' },
+    { img: 'assets/memory_game.jpg', link: '/game-menu/memory-game' },
+    { img: 'assets/m4.jpg', link: '/game-menu/mastermind' },
+    { img: 'assets/lightsout.jfif', link: '/game-menu/lights-out' }
+  ];
+
+  startIndex = 0;
+
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
@@ -102,6 +112,23 @@ export class HomePageComponent implements AfterViewInit {
     } else {
       this.router.navigate(['/allclubs']); 
     }
+  }
+
+  get visibleGames() {
+    return [
+      this.games[this.startIndex],
+      this.games[(this.startIndex + 1) % this.games.length],
+      this.games[(this.startIndex + 2) % this.games.length]
+    ];
+  }
+
+  next() {
+    this.startIndex = (this.startIndex + 1) % this.games.length;
+  }
+
+  prev() {
+    this.startIndex =
+      (this.startIndex - 1 + this.games.length) % this.games.length;
   }
   
 }

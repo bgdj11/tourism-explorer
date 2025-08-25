@@ -1,0 +1,66 @@
+<div class="mastermind-container">
+    <h2>Mastermind Game</h2>
+  
+    <div class="colors-selection">
+      <h3>Select Colors</h3>
+      <div class="colors-list">
+        <div 
+          class="color-circle" 
+          *ngFor="let color of colors"
+          [style.backgroundColor]="color"
+          (click)="selectColor(color)"
+          [class.disabled]="gameOver"
+          title="Click to select color"
+        ></div>
+      </div>
+    </div>
+  
+    <div class="guesses-history">
+      <h3>Guesses</h3>
+      <div *ngFor="let guessObj of guesses; let i = index" class="guess-row" [class.current]="i === currentAttempt">
+        <div class="guess-list">
+          <div 
+            class="color-circle" 
+            *ngFor="let c of guessObj.guess; let j = index"
+            [style.backgroundColor]="c ? c : '#ddd'"
+            (click)="i === currentAttempt && c ? removeColor(j) : null"
+            [class.clickable]="i === currentAttempt && c"
+            [title]="i === currentAttempt && c ? 'Click to remove' : ''"
+          ></div>
+        </div>
+        <div class="feedback-list">
+          <div 
+            class="feedback-dot" 
+            *ngFor="let f of guessObj.feedback"
+            [class.black]="f === 'black'"
+            [class.white]="f === 'white'"
+            [class.gray]="f === 'gray'"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="secret-code" *ngIf="showSecretCode">
+        <h4>Secret Code:</h4>
+        <div class="guess-list">
+          <div 
+            class="color-circle secret" 
+            *ngFor="let c of secretCode"
+            [style.backgroundColor]="c"
+            title="{{ c }}"
+          ></div>
+        </div>
+    </div>
+    <button 
+    *ngIf="!gameOver"
+    (click)="submitGuess()" 
+    [disabled]="
+      guesses[currentAttempt].guess.includes(null)
+    "
+    >
+        Submit Guess
+    </button>
+  
+    <div class="game-message" *ngIf="message">{{ message }}</div>
+    <button *ngIf="gameOver" (click)="resetGame()">Restart Game</button>
+</div>
+  

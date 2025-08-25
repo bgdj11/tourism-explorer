@@ -34,6 +34,10 @@ import { BundleComponent } from 'src/app/feature-modules/tour-authoring/bundle/b
 import { PacagesPublComponent } from 'src/app/feature-modules/marketplace/pacages-publ/pacages-publ.component';
 import { MyPacagesComponent } from 'src/app/feature-modules/marketplace/my-pacages/my-pacages.component';
 import {TetrisComponent} from "../../feature-modules/tetris/tetris.component";
+import {MemoryGameComponent} from "../../feature-modules/memory-game/memory-game.component";
+import {GameMenuComponent} from "../../feature-modules/game-menu/game-menu.component";
+import { LightsOutComponent } from '../../feature-modules/lights-out/lights-out.component';
+import { MastermindComponent } from '../../feature-modules/mastermind/mastermind.component';
 
 
 const routes: Routes = [
@@ -74,8 +78,19 @@ const routes: Routes = [
   {path: 'tetris', component: TetrisComponent},
   {path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
-  {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],}
-
+  {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],},
+  {
+    path: 'game-menu',
+    component: GameMenuComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'space-invaders', component: SpaceInvadersComponent },
+      { path: 'tetris', component: TetrisComponent },
+      { path: 'memory-game', component: MemoryGameComponent },
+      { path: 'mastermind', component: MastermindComponent },
+      { path: 'lights-out', component: LightsOutComponent }
+    ]
+  },
 ];
 
 @NgModule({

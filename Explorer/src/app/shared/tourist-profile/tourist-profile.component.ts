@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TouristProfileService } from '../tourist-profile.service';
 import { TouristProfile } from '../model/tourist-profile.model';
 import { AuthService } from '../../infrastructure/auth/auth.service';
+import {Coupon} from "../../feature-modules/marketplace/model/coupon";
 
 @Component({
   selector: 'xp-tourist-profile',
@@ -13,6 +14,9 @@ export class TouristProfileComponent implements OnInit {
   isLoading = true; // Indikator učitavanja
   errorMessage: string | null = null; // Poruka o grešci
   syncMessage: string | null = null; // Poruka za sinhronizaciju
+  coupons: Coupon[] = [];
+  isLoadingCoupons = true;
+  totalCouponsCount = 0;
 
   constructor(
     private touristProfileService: TouristProfileService,
@@ -21,7 +25,7 @@ export class TouristProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const username = this.authService.user$.value?.username; // Preuzimanje username-a iz AuthService
-
+    this.loadCoupons();
     if (!username) {
       this.errorMessage = 'Username is not available.';
       this.isLoading = false;
@@ -33,6 +37,7 @@ export class TouristProfileComponent implements OnInit {
       next: (profile) => {
         this.profile = profile;
         this.isLoading = false;
+        this.loadCoupons(); // Učitaj kupone nakon što se profil učita
       },
       error: (err) => {
         this.errorMessage = 'Failed to load tourist profile.';
@@ -60,5 +65,25 @@ export class TouristProfileComponent implements OnInit {
         console.error(err); // Logovanje greške za analizu
       }
     });
+  }
+
+  loadCoupons(): void {
+    if (!this.profile || !this.profile.couponIds || this.profile.couponIds.length === 0) {
+      this.isLoadingCoupons = false;
+      this.coupons = [];
+      return;
+    }
+
+    this.touristProfileService.getCouponsByIds(this.profile.couponIds).subscribe(
+      (coupons) => {
+        this.coupons = coupons;
+        this.isLoadingCoupons = false;
+      },
+      (error) => {
+        this.errorMessage = 'Failed to load coupons.';
+        console.error('Error fetching coupons:', error);
+        this.isLoadingCoupons = false;
+      }
+    );
   }
 }

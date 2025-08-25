@@ -137,16 +137,19 @@
     </div>
     <h1>Play, win and get your coupon!</h1>
 </div>
-<div class="game">
-    <div class="game-card">
-        <img src="assets/t1.png" alt="Tetris Image" class="game-image" />
-        <button class="card-button" [routerLink]="['/tetris']">Play now</button>
+<div class="game-slider">
+  <button class="arrow-btn left" (click)="prev()">&#8249;</button>
+
+  <div class="game-container">
+    <div *ngFor="let game of visibleGames" class="game-card">
+      <img [src]="game.img" alt="Game Image" class="game-image" />
+      <button class="card-button" [routerLink]="[game.link]">Play now</button>
     </div>
-    <div class="game-card">
-        <img src="assets/si2.jpg" alt="SpaceInvaders Image" class="game-image" />
-        <button class="card-button" [routerLink]="['/space-invaders']">Play now</button>
-    </div>
+  </div>
+
+  <button class="arrow-btn right" (click)="next()">&#8250;</button>
 </div>
+
 
 <div class="footer-background">
     <p class="footer-text">
