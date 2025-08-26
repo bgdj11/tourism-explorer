@@ -5,4 +5,5 @@ export interface CheckpointDTO {
   checkpointName?: string;
   checkpointDescription?: string;
   image?: string;
+  secret?: string;
 }

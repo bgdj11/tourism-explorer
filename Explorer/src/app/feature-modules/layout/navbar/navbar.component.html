@@ -49,9 +49,6 @@
           <a *ngIf="user && (user.role === 'administrator')" mat-button [routerLink]="['accomodation']">
             <span>Add accomodations</span>
           </a>
-          <a *ngIf="user && (user.role === 'author')" mat-button [routerLink]="['author']">
-            <span>Manage Tours</span>
-          </a>
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/sales'">
             <span>{{ 'NAVBAR.SALES' | translate }}</span>
           </a>
