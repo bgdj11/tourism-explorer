@@ -15,6 +15,7 @@ import { EncounterDTO } from 'src/app/shared/model/encounter';
 import { Encounter } from '../administration/model/encounter.model';
 import { BundleDTO } from './model/bundle.model';
 import { BundleTourDTO } from './model/bundleTour.model';
+import { AccomodationDTO } from './model/accomodation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,12 @@ export class TourManagementService {
   updateTour(tour: TourDTO): Observable<TourDTO> {
     return this.http.put<TourDTO>(`${this.apiUrl}/${tour.id}`, tour);
   }
-
+  addAccomodations(tourId: number, accomodations: AccomodationDTO[]): Observable<TourDTO>{
+    return this.http.post<TourDTO>(`${this.apiUrl}/${tourId}/addAccomodation`, accomodations);
+  }
+  removeAccomodation(tourId: number, accomodation: AccomodationDTO): Observable<TourDTO> {
+    return this.http.put<TourDTO>(`${this.apiUrl}/${tourId}/removeAccomodation`, accomodation);
+  }
   deleteTour(tourId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${tourId}`);
   }
@@ -72,6 +78,7 @@ export class TourManagementService {
   addNewDailyAgenda(newDailyAgenda: DailyAgendaDTO, tourId: number): Observable<DailyAgendaDTO> {
     return this.http.post<DailyAgendaDTO>(this.apiUrl + '/' + tourId + '/addNewDailyAgenda', newDailyAgenda);
   }
+  
   createCheckpoint(checkpoint: CheckpointDTO, tourId: number): Observable<CheckpointDTO> {
     console.log(checkpoint)
     return this.http.post<CheckpointDTO>(`${this.apiUrl}/${tourId}/checkpoint`,checkpoint);

@@ -283,7 +283,61 @@
     </div>
   </ng-template>
 
-
+ <!-- Modal za izbor smestaja -->
+ <ng-template #accomodationModal let-modal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Accommodation</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <ul class="list-group">
+            <li *ngFor="let accomodation of allAccomodations" class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <input class="large-checkbox"
+                    type="checkbox" 
+                    [checked]="isSelected(accomodation)" 
+                    (change)="toggleSelection(accomodation, $event)" 
+                  />
+                <div style="font-size: 1.2rem; font-weight: bold;">
+                  {{ accomodation.name }} - {{ accomodation.city }}
+                </div>
+                <button class="btn btn-link" (click)="openPhotoModal(accomodation.images)">Show Photos</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-primary" (click)="addSelectedAccomodation()">Add Selected Accommodation</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #photoModal let-modal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Accommodation Photos</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closePhotoModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedImages && selectedImages.length > 0; else noImages">
+          <div *ngFor="let image of selectedImages" class="mb-3">
+            <img [src]="image" alt="Accommodation Image" class="img-fluid" />
+          </div>
+        </div>
+        <ng-template #noImages>
+          <p>No images available for this accommodation.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
   <div *ngIf="selectedTour" class="row mt-5">
     <div class="row mb-4">
         <div class="col-md-6">
@@ -421,6 +475,41 @@
                 </table>
             </div>
         </div>
+        <div class="col-md-6">
+          <h4 class="text-center">Accomodations for {{ selectedTour.name }}</h4>
+          <div class="table-responsive">
+              <table class="table table-hover table-bordered table-second">
+              <thead class="table-dark text-center">
+              <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Contact Number</th>
+                  <button class="btn btn-primary"  (click)="openAccomodationModal()">
+                  <fa-icon [icon]="faPlus" [style.width]="40" [style.height]="20"></fa-icon>
+                  </button>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let accomodation of selectedTour.accomodations; let j = index">
+                  <td>{{j + 1}}</td>
+                  <td>{{ accomodation.name }}</td>
+                  <td>{{ accomodation.description }}</td>
+                  <td>{{ accomodation.latitude }}</td>
+                  <td>{{ accomodation.longitude }}</td>
+                  <td>{{ accomodation.contactNumber }}</td>
+                  <td class="text-center"> <!-- Dodana ikona za edit -->
+                    <button class="btn btn-danger btn-sm mx-1" (click)="removeAccomodation(accomodation); $event.stopPropagation();">
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  </td>
+              </tr>
+              </tbody>
+              </table>
+          </div>
+      </div>
     </div>
 
     <div class="row justify-content-center">

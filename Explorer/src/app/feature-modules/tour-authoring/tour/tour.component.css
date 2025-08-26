@@ -214,6 +214,12 @@ button[disabled]:hover {
   background-color: #004D3B; 
   color: white;
 }
-
+.large-checkbox {
+  width: 15px;
+  height: 15px;
+  transform: scale(1.5); /* Adjust scale as needed */
+  margin-right: 10px; /* Add some spacing between the checkbox and text */
+  cursor: pointer; /* Optional: Add a pointer cursor for better UX */
+}
 
 

@@ -6,6 +6,7 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 import {EncounterDTO} from "../model/encounter";
 import { Renderer2 } from '@angular/core';
 import { EncounterService } from '../encounter.service';
+import { AccomodationDTO } from 'src/app/feature-modules/tour-authoring/model/accomodation.model';
 
 @Component({
   selector: 'xp-map',
@@ -16,9 +17,13 @@ export class MapComponent implements AfterViewInit {
   map: any;
   private markers: L.Marker[] = [];
   private userMarker: L.Marker | null = null;
+  accomodationMarker: L.Marker | null = null;
+  private accomodationMarkers: L.Marker[] = [];
   private currentLengthInKm: number;
   private currentLocation: { lat: number, lng: number } | null = null;
+  private currentAccomodationLocation: { lat: number, lng: number } | null = null;
   singleMarker: L.Marker | null = null;
+  accomodationComponent: boolean = false
   private routeControl: any;
   private completedEncounters: EncounterDTO[] = [];
   private savedEncounters: EncounterDTO[] = [];
@@ -31,10 +36,10 @@ export class MapComponent implements AfterViewInit {
   @Input() isModalMap: boolean = false;
   @Input() initialCheckpoint: {lat?: number, lng?: number} = {};
   @Input() encounters: EncounterDTO[] = [];
-
+  @Input() isAccomodationContext = false;
   @Output() mapClick = new EventEmitter<{ lat: number, lng: number }>();
   @Output() searchResult = new EventEmitter<{ lat: number, lng: number }>();
-
+ 
   @Output() locationSelected = new EventEmitter<{ lat: number, lng: number }>();
 
   constructor(private mapService: MapService, private renderer: Renderer2, private encounterService: EncounterService) {
@@ -63,7 +68,7 @@ export class MapComponent implements AfterViewInit {
     tiles.addTo(this.map);
 
     this.registerOnClick()
-
+    this.addAccomodationOnClick()
   }
   ngAfterViewInit(): void {
     console.log("Modal map component after view init...");
@@ -111,6 +116,25 @@ export class MapComponent implements AfterViewInit {
         console.error("Search failed.");
       },
     });
+  }
+  showAccomodation(accomodations: AccomodationDTO[]): void {
+    console.log("Accomodations: ", accomodations)
+    const accomodationIcon = L.icon({
+      iconUrl: 'assets/house.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+    
+    this.markers.forEach(marker => this.map.removeLayer(marker));
+    this.markers = [];
+    accomodations.forEach(accomodation => {
+      const marker = L.marker([accomodation.latitude, accomodation.longitude], { icon: accomodationIcon })
+          .addTo(this.map);
+          this.markers.push(marker);     
+    });
+    
+    
   }
   // prima niz lat,long [lat,long] ,
   setRoute(waypoints: { lat: number, lng: number }[]): Promise<number> {
@@ -161,7 +185,12 @@ export class MapComponent implements AfterViewInit {
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
   });
-
+  private accomodationIcon = L.icon({
+    iconUrl: 'assets/house.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
   public setEncounterMarkers(encounters: EncounterDTO[]): void {
     const encounterIcon = L.icon({
       iconUrl: 'assets/encounter.png',
@@ -281,7 +310,17 @@ export class MapComponent implements AfterViewInit {
     }
     this.currentLocation = { lat, lng };
   }
-
+  public setAccomodationLocation(lat: number, lng: number): void {
+    
+    if (this.accomodationMarker) {
+      console.log("IF")
+      this.accomodationMarker.setLatLng([lat, lng]);
+    } else {
+      console.log("ELSE")
+      this.accomodationMarker = L.marker([lat, lng], { icon: this.accomodationIcon }).addTo(this.map);
+    }
+    this.currentAccomodationLocation = { lat, lng };
+  }
   getCurrentLocation(): { lat: number, lng: number } | null {
     return this.currentLocation;
   }
@@ -289,6 +328,9 @@ export class MapComponent implements AfterViewInit {
 // dobijem nazad lat long kad kliknem na mapu
   registerOnClick(): void {
     this.map.on('click', (e: any) => {
+      if(this.isAccomodationContext){
+        return
+      }
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
@@ -314,6 +356,39 @@ export class MapComponent implements AfterViewInit {
         }
       }
       this.mapClick.emit({ lat, lng });
+    });
+  }
+
+  addAccomodationOnClick(): void {
+    
+    this.map.on('click', (e: any) => {
+      if (!this.isAccomodationContext) {
+        return; // Do nothing if not in AccomodationComponent context
+      }
+      const coord = e.latlng;
+      const lat = coord.lat;
+      const lng = coord.lng;
+      console.log("MAPA KLIKNUTA")
+      
+        // Ako je korisnik turista, koristi `setUserLocation` za jedinstveni marker
+        this.setAccomodationLocation(lat, lng);
+        this.locationSelected.emit({ lat, lng });
+      
+        /*console.log("ODE")
+        // Ako je mapa u modalnom dijalogu, koristi jedinstveni marker
+       
+          // Inače, dodaj novi marker kao i ranije
+          const marker = new L.Marker([lat, lng]).addTo(this.map);
+          this.markers.push(marker);
+
+          marker.on('click', () => {
+            this.map.removeLayer(marker);
+            this.markers = this.markers.filter(m => m !== marker);
+          });*/
+        
+      
+      this.mapClick.emit({ lat, lng });
+      this.locationSelected.emit({ lat, lng });
     });
   }
 
