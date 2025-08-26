@@ -11,7 +11,7 @@
     "RATE_US": "Rate Us",
     "SET_PREFERENCES": "Set Tour Preferences",
     "BLOGS": "Blogs",
-    "EDIT_ACCOUNT": "Edit User Account",
+    "EDIT_ACCOUNT": "Edit UserPACKAGES_PUBL Account",
     "MY_EQUIPMENT": "My Equipment",
     "LOCATION_SIMULATOR": "Location Simulator",
     "CLUB": "Club",
@@ -21,7 +21,17 @@
     "TOURS_MARKET": "Tours Market",
     "TOUR_PROBLEMS": "Tour Problems",
     "PACAGES_PUBL": "Pacages",
-    "PACAGES_MY": "My Pacages"
+    "PACAGES_MY": "My Pacages",
+    "CREATE_ENCOUNTER": "Create Encounter",
+    "CARD": "Card",
+    "PROFILE": "Profile",
+    "LANGUAGE": "Language",
+    "LOG_IN_OR_SIGN_UP": "Log in or sign up",
+    "CART": "Cart",
+    "SALES": "Sales",
+    "COUPON": "Coupon",
+    "BUNDLE": "Bundles",
+    "MY_ACCOUNT": "My account"
   },
   "RATINGS": {
     "TITLE": "Ratings",
@@ -33,6 +43,7 @@
   },
   "SLOGAN": "Do More with Explorer",
   "DISCOVER": "Discover",
+  "EXPLORE_WITH_US": "Explore with us",
   "SEARCH": {
     "INPUT_LABEL": "Input distance (in km):",
     "BUTTON_SEARCH": "Search",
@@ -58,5 +69,50 @@
     "USER_PROFILE": "User Profile Picture",
     "COMMENT": "Comment",
     "NO_REVIEWS": "No reviews available for this tour"
+  },
+  "FROM_THE_BLOG_SECTION": {
+    "FROM_THE_BLOG": "From the Blog",
+    "EXPLORE": "EXPLORE",
+    "TEXT1": " amazing travel blogs and get inspired!",
+    "TEXT2.1": "Not sure where to go next?",
+    "READ": "READ",
+    "TEXT2.2": " a post and maybe you'll discover your next dream destination.",
+    "SHARE": "SHARE",
+    "TEXT3": " your thoughts in the comments and connect with other travelers!",
+    "VIEW_MORE": "View More"
+  },
+  "MAKE_YOU_VOICE_HEARD_SECTION":{
+    "MAKE_YOU_VOICE_HEARD": "Make Your Voice Heard",
+    "GRADE": "Grade",
+    "TOURS": "Tours",
+    "COUNTRIES": "Countries",
+    "RATE_US": "Rate Us"
+  },
+  "WHAT_TRAVELLERS_SAY_SECTION": {
+    "WHAT_TRAVELLERS_SAY": "What travellers say",
+    "TRAVELER": "traveller",
+    "TEXT1": "Explorer made our trip unforgettable with personalized local tours. We’ll never do large group tours again!",
+    "TEXT2": "Explorer has so many exciting things! I won a coupon playing a game and ended up on the best trip of my life!",
+    "TEXT3": "Our tour was one of the most delightful experiences this group of world travellers has ever had!"
+  },
+  "MAKE_NEW_FRIENDSHIPS_SECTION":{
+    "MAKE_NEW_FRIENDSHIPS": "Make New Friendships",
+    "SHARE":"SHARE",
+    "TEXT1.1": " your travel adventures and inspire others! Join a",
+    "CLUB":"CLUB",
+    "TEXT1.2": " and discover the world through new friendships!",
+    "CONNECT":"CONNECT",
+    "TEXT1.3": "share stories, and create unforgettable travel memories.",
+    "TEXT2": "Your story could spark someone's next unforgettable journey!",
+    "JOIN_NOW": "join now"
+  },
+  "PLAY_SECTION": {
+    "PLAY_WIN_AND_GET_YOUR_COUPON": "Play, win and get your coupon!",
+    "PLAY_NOW": "Play Now"
+  },
+  "FOOTER_SECTION": {
+    "ABOUT_US": "About Us",
+    "CONTACT": "Contact",
+    "TEXT": "2024 Explorer. Made in Novi Sad, Serbia."
   }
 }
