@@ -30,7 +30,8 @@
     "CART": "Korpa",
     "SALES": "Prodaja",
     "COUPON": "Kupon",
-    "BUNDLE": "Paketi"
+    "BUNDLE": "Paketi",
+    "MY_ACCOUNT": "Moj nalog"
   },
   "RATINGS": {
     "TITLE": "Ocene",

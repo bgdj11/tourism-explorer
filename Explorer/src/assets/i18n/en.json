@@ -11,7 +11,7 @@
     "RATE_US": "Rate Us",
     "SET_PREFERENCES": "Set Tour Preferences",
     "BLOGS": "Blogs",
-    "EDIT_ACCOUNT": "Edit User Account",
+    "EDIT_ACCOUNT": "Edit UserPACKAGES_PUBL Account",
     "MY_EQUIPMENT": "My Equipment",
     "LOCATION_SIMULATOR": "Location Simulator",
     "CLUB": "Club",
@@ -27,10 +27,11 @@
     "PROFILE": "Profile",
     "LANGUAGE": "Language",
     "LOG_IN_OR_SIGN_UP": "Log in or sign up",
-    "CART": "Korpa",
-    "SALES": "Prodaja",
-    "COUPON": "Kupon",
-    "BUNDLE": "Paketi"
+    "CART": "Cart",
+    "SALES": "Sales",
+    "COUPON": "Coupon",
+    "BUNDLE": "Bundles",
+    "MY_ACCOUNT": "My account"
   },
   "RATINGS": {
     "TITLE": "Ratings",
