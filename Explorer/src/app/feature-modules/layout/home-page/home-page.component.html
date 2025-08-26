@@ -4,8 +4,8 @@
         Your browser does not support the video tag.
     </video>
     <div class="slogan-container">
-        <h1 class="slogan">Do More with Explorer</h1>
-        <button class="discover-btn" [routerLink]="['/tour-preferences']">Discover</button>
+        <h1 class="slogan">{{'SLOGAN' | translate}}</h1>
+        <button class="discover-btn" [routerLink]="['/tour-preferences']">{{'DISCOVER' | translate}}</button>
     </div>    
 </div>
 
@@ -14,7 +14,7 @@
     <div class="icon-container">
       <mat-icon>explore</mat-icon>
     </div>
-    <h1>Explore with us</h1>
+    <h1>{{'EXPLORE_WITH_US' | translate}}</h1>
 </div>
 <div class="tours">
     <xp-tours-view></xp-tours-view>
@@ -24,18 +24,18 @@
     <div class="icon-container">
       <mat-icon>newspaper</mat-icon>
     </div>
-    <h1>From the blog</h1>
+    <h1>{{'FROM_THE_BLOG_SECTION.FROM_THE_BLOG' | translate}}</h1>
 </div>
 <div class="blog">
     <img src="assets/blog.jpeg" alt="Blog Image" class="blog-image" />
     <div class="green-background">
         <p class="blog-text">
-            <span class="highlight">EXPLORE</span> amazing travel blogs and get inspired! Not sure where to go next? <span class="highlight">READ</span> a post and maybe you'll discover your next dream destination. 
+            <span class="highlight">{{'FROM_THE_BLOG_SECTION.EXPLORE' | translate}}</span> {{'FROM_THE_BLOG_SECTION.TEXT1' | translate}} {{'FROM_THE_BLOG_SECTION.TEXT2.1' | translate}} <span class="highlight">{{'FROM_THE_BLOG_SECTION.READ' | translate}}</span>{{'FROM_THE_BLOG_SECTION.TEXT2.2' | translate}}
         </p>
         <p class="blog-text">
-            <span class="highlight">SHARE</span> your thoughts in the comments and connect with other travelers!
+            <span class="highlight">{{'FROM_THE_BLOG_SECTION.SHARE' | translate}}</span> {{'FROM_THE_BLOG_SECTION.TEXT3' | translate}}
         </p>
-        <button class="blog-button" [routerLink]="['/blog']">View more</button>
+        <button class="blog-button" [routerLink]="['/blog']">{{'FROM_THE_BLOG_SECTION.VIEW_MORE' | translate}}</button>
     </div>
 </div>
 
@@ -43,26 +43,26 @@
     <div class="icon-container">
       <mat-icon>grade</mat-icon>
     </div>
-    <h1>Make your voice heard</h1>
+    <h1>{{'MAKE_YOU_VOICE_HEARD_SECTION.MAKE_YOU_VOICE_HEARD' | translate}}</h1>
 </div>
 <div class="rating">
     <img src="assets/travel.jpg" alt="Rate us Image" class="rating-image" />
     <div class="stats-wrapper">
         <div class="stat">
-            <p>Grade</p>
+            <p>{{'MAKE_YOU_VOICE_HEARD_SECTION.GRADE' | translate}}</p>
             <h2 id="stat-grade">0</h2>
         </div>
         <div class="stat">
-            <p>Tours</p>
+            <p>{{'MAKE_YOU_VOICE_HEARD_SECTION.TOURS' | translate}}</p>
             <h2 id="stat-tours">0</h2>
         </div>
         <div class="stat">
-            <p>Countries</p>
+            <p>{{'MAKE_YOU_VOICE_HEARD_SECTION.COUNTRIES' | translate}}</p>
             <h2 id="stat-countries">0</h2>
         </div>
           
     </div>  
-    <button class="rating-button" (click)="openReviewModal()">Rate us</button>
+    <button class="rating-button" (click)="openReviewModal()">{{'MAKE_YOU_VOICE_HEARD_SECTION.RATE_US' | translate}}</button>
     <xp-rating-dialog (reviewSubmitted)="handleReview($event)"></xp-rating-dialog>
 </div>
 
@@ -86,28 +86,28 @@
     <div class="icon-container">
       <mat-icon>comment</mat-icon>
     </div>
-    <h1>What travellers say</h1>
+    <h1>{{'WHAT_TRAVELLERS_SAY_SECTION.WHAT_TRAVELLERS_SAY' | translate}}</h1>
 </div>
 <div>
     <div class="comments-content">
         <div class="comments-card">
             <img src="assets/comment.png" class="comment-image" />
-            <p class="quote">"Explorer made our trip unforgettable with personalized local tours. We’ll never do large group tours again!"</p>            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="quote">"{{'WHAT_TRAVELLERS_SAY_SECTION.TEXT1' | translate}}"</p><div class="stars">⭐⭐⭐⭐⭐</div>
             <p class="author">Marko D.</p>
-            <p class="description">traveller</p>
+            <p class="description">{{'WHAT_TRAVELLERS_SAY_SECTION.TRAVELER' | translate}}</p>
         </div>
         <div class="comments-card">
             <img src="assets/comment.png" class="comment-image" />
-            <p class="quote">"Explorer has so many exciting things! I won a coupon playing a game and ended up on the best trip of my life!"</p>            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="quote">"{{'WHAT_TRAVELLERS_SAY_SECTION.TEXT2' | translate}}"</p><div class="stars">⭐⭐⭐⭐⭐</div>
             <p class="author">Luka L.</p>
-            <p class="description">traveller</p>
+            <p class="description">{{'WHAT_TRAVELLERS_SAY_SECTION.TRAVELER' | translate}}</p>
         </div>
         <div class="comments-card">
             <img src="assets/comment.png" class="comment-image" />
-            <p class="quote">"Our tour was one of the most delightful experiences this group of world travellers has ever had!"</p>
+            <p class="quote">"{{'WHAT_TRAVELLERS_SAY_SECTION.TEXT3' | translate}}"</p>
             <div class="stars">⭐⭐⭐⭐⭐</div>
             <p class="author">Ana T.</p>
-            <p class="description">traveller</p>
+            <p class="description">{{'WHAT_TRAVELLERS_SAY_SECTION.TRAVELER' | translate}}</p>
         </div>
     </div>
 </div>
@@ -116,17 +116,17 @@
     <div class="icon-container">
       <mat-icon>groups</mat-icon>
     </div>
-    <h1>Make new friendships</h1>
+    <h1>{{'MAKE_NEW_FRIENDSHIPS_SECTION.MAKE_NEW_FRIENDSHIPS' | translate}}</h1>
 </div>
 <div class="blog">
     <div class="club-background">
         <p class="blog-text">
-            <span class="highlight">SHARE</span> your travel adventures and inspire others! Join a <span class="highlight">CLUB</span> and discover the world through new friendships! <span class="highlight">CONNECT</span>, share stories, and create unforgettable travel memories.
+            <span class="highlight">{{'MAKE_NEW_FRIENDSHIPS_SECTION.SHARE' | translate}}</span> {{'MAKE_NEW_FRIENDSHIPS_SECTION.TEXT1.1' | translate}} <span class="highlight">{{'MAKE_NEW_FRIENDSHIPS_SECTION.CLUB' | translate}}</span> {{'MAKE_NEW_FRIENDSHIPS_SECTION.TEXT1.2' | translate}} <span class="highlight">{{'MAKE_NEW_FRIENDSHIPS_SECTION.CONNECT' | translate}}</span>, {{'MAKE_NEW_FRIENDSHIPS_SECTION.TEXT1.3' | translate}}
         </p>
         <p class="blog-text">
-            Your story could spark someone's next unforgettable journey!
+            {{'MAKE_NEW_FRIENDSHIPS_SECTION.TEXT2' | translate}}
         </p>
-        <button class="blog-button" (click)="joinClub()">Join now</button>
+        <button class="blog-button" (click)="joinClub()">{{'MAKE_NEW_FRIENDSHIPS_SECTION.JOIN_NOW' | translate}}</button>
     </div>
     <img src="assets/club.jpg" alt="Rate us Image" class="blog-image" />
 </div>
@@ -135,7 +135,7 @@
     <div class="icon-container">
       <mat-icon>sports_esports</mat-icon>
     </div>
-    <h1>Play, win and get your coupon!</h1>
+    <h1>{{'PLAY_SECTION.PLAY_WIN_AND_GET_YOUR_COUPON' | translate}}</h1>
 </div>
 <div class="game-slider">
   <button class="arrow-btn left" (click)="prev()">&#8249;</button>
@@ -143,7 +143,7 @@
   <div class="game-container">
     <div *ngFor="let game of visibleGames" class="game-card">
       <img [src]="game.img" alt="Game Image" class="game-image" />
-      <button class="card-button" [routerLink]="[game.link]">Play now</button>
+      <button class="card-button" [routerLink]="[game.link]">{{'PLAY_SECTION.PLAY_NOW' | translate}}</button>
     </div>
   </div>
 
@@ -153,14 +153,14 @@
 
 <div class="footer-background">
     <p class="footer-text">
-        About us
+        {{'FOOTER_SECTION.ABOUT_US' | translate}}
     </p>
     <p class="footer-text">
-        Contact us
+        {{'FOOTER_SECTION.CONTACT' | translate}}
     </p>
     <div class="horizontal-line">
         <p class="footer-text" style="margin-top: 50px;">
-            2024 Explorer. Made in Novi Sad, Serbia.
+            {{'FOOTER_SECTION.TEXT' | translate}}
         </p>
     </div>
 </div>

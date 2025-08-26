@@ -6,19 +6,19 @@
         <div class="dropdown-menu">
           <a mat-button [routerLink]="'/home-page'">
             <mat-icon>home</mat-icon>
-            <span>Home</span>
+            <span>{{'NAVBAR.HOME' | translate}}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/mytours'">
             <mat-icon>tour</mat-icon>
-            <span>My Tours</span>
+            <span>{{'NAVBAR.MY_TOURS' | translate}}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/followers'">
             <mat-icon>people</mat-icon>
-            <span>Followers</span>
+            <span>{{'NAVBAR.FOLLOWERS' | translate}}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/market'">
             <mat-icon>shopping_basket</mat-icon>
-            <span>Market</span>
+            <span>{{'NAVBAR.TOURS_MARKET' | translate}}</span>
           </a>
 
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/author'">
@@ -29,60 +29,66 @@
             <span>{{ 'NAVBAR.MANAGE_OBJECTS' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/equipment'">
-            <span>Manage equipment</span>
+            <span>{{ 'NAVBAR.MANAGE_EQUIPMENT' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/accounts'">
-            <span>Manage account</span>
+            <span>{{ 'NAVBAR.MANAGE_ACCOUNTS' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/app-rating'">
-            <span>Ratings</span>
+            <span>{{ 'NAVBAR.RATINGS' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/encounter'">
-            <span>Create encounter</span>
+            <span>{{ 'NAVBAR.CREATE_ENCOUNTER' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/start-tour'">
             <span>{{ 'NAVBAR.START_TOUR' | translate }}</span>
           </a>
           <a *ngIf="user && (user.role === 'author' || user.role === 'administrator')" mat-button [routerLink]="'/tour-problems'">
-            <span>Tour problems</span>
+            <span>{{ 'NAVBAR.TOUR_PROBLEMS' | translate }}</span>
+          </a>
+          <a *ngIf="user && (user.role === 'administrator')" mat-button [routerLink]="['accomodation']">
+            <span>Add accomodations</span>
+          </a>
+          <a *ngIf="user && (user.role === 'author')" mat-button [routerLink]="['author']">
+            <span>Manage Tours</span>
           </a>
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/sales'">
-            <span>Sales</span>
+            <span>{{ 'NAVBAR.SALES' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/coupon'">
-            <span>Coupon</span>
+            <span>{{ 'NAVBAR.COUPON' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/bundle'">
-            <span>Bundle</span>
+            <span>{{ 'NAVBAR.BUNDLE' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/paceges-publ'">
-            <span>Pacages</span>
+            <span>{{ 'NAVBAR.PACAGES_PUBL' | translate }}</span>
           </a>
         </div>
       </div>
     <div class="right-side">
       <button class="btn" [routerLink]="['/shopping-cart']">
         <mat-icon>shopping_cart</mat-icon>
-        <span class="button-text">Card</span>
+        <span class="button-text">{{ 'NAVBAR.CART' | translate }}</span>
       </button>
       <div class="profile-dropdown">
         <button class="btn profile-btn">
           <mat-icon>person</mat-icon>
-          <span class="button-text">Profile</span>
+          <span class="button-text">{{ 'NAVBAR.PROFILE' | translate }}</span>
         </button>
         <div class="dropdown-profile">
           <a *ngIf="user && user.username === ''" mat-button [routerLink]="'/login'">
             <mat-icon>login</mat-icon>
-            <span>Log in or sign up</span>
+            <span>{{ 'NAVBAR.LOG_IN_OR_SIGN_UP' | translate }}</span>
           </a>
           <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/tourist-profile'">
             <mat-icon>account_circle</mat-icon>
-            <span>My account</span>
+            <span>{{ 'NAVBAR.MY_ACCOUNT' | translate }}</span>
           </a>
           <div class="dropdown">
             <a class="dropdown-item">
               <mat-icon>language</mat-icon>
-              <span>Language</span>
+              <span>{{ 'NAVBAR.LANGUAGE' | translate }}</span>
               <span class="arrow">&#x25B6;</span> 
               <div class="submenu">
                 <button (click)="changeLanguage('en')">English</button>
@@ -148,6 +154,10 @@
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['coupon']">Coupon</button>
         <button  mat-button class="custom-button" [routerLink]="['game-menu']">Game</button>
         <button *ngIf="user && user.role === 'author'" mat-button class="custom-button" [routerLink]="['bundle']">Bundle</button>
+
+        <button *ngIf="user && user.role === 'administrator'" mat-button class="custom-button" [routerLink]="['accomodation']">Add accomodation</button>
+        <button *ngIf="user && user.role === 'tourist'" mat-button class="custom-button" [routerLink]="['paceges-publ']">Pacages</button>
+
 
 
         <button *ngIf="user && user.role ==='tourist'" mat-button class="custom-button" [routerLink]="['available-coupons']">Coupons</button>

@@ -14,6 +14,8 @@ import { DailyAgendaDTO } from '../model/DailyAgendaDTO.model';
 import { EncounterDTO } from 'src/app/shared/model/encounter';
 import { Encounter } from '../../administration/model/encounter.model';
 import { Tour } from '../../tour-execution/model/review.model';
+import { AccomodationDTO } from '../model/accomodation.model';
+import { AdministrationService } from '../../administration/administration.service';
 
 @Component({
   selector: 'xp-tour',
@@ -30,6 +32,9 @@ export class TourComponent implements OnInit {
   selectedTourTravelTimes: TravelTimeDTO[] = [];
   selectedTourDailyAgendas: DailyAgendaDTO[] = [];
   encounters: Encounter[] = []; 
+  allAccomodations: AccomodationDTO[] = [];
+  selectedAccomodations: AccomodationDTO[] = [];
+  selectedImages: string[] = [];
   selectedTour: any = null;
   lengthInKm: number;
   totalCount: number = 0;
@@ -56,6 +61,7 @@ export class TourComponent implements OnInit {
     equipments: [],
     tourCheckpoints: [],
     travelTimes: [],
+    
     authorId: 0
   };
   newCheckpoint: CheckpointDTO = {
@@ -100,15 +106,19 @@ export class TourComponent implements OnInit {
   @ViewChild('modalMap') modalMapComponent!: MapComponent;
   @ViewChild("mapa") mapa!: MapComponent;
   @ViewChild('encounterModal') encounterModal!: TemplateRef<any>;
+  @ViewChild('accomodationModal') accomodationModal!: TemplateRef<any>;
+  @ViewChild('photoModal') photoModal!: TemplateRef<any>;
 
   private modalRef!: NgbModalRef;
+  private photosModalRef!: NgbModalRef;
   tagsInput: string = '';
 
   constructor(
     private tourService: TourManagementService,
     private modalService: NgbModal,
     private router: Router, // Inject Router
-    private authService: AuthService
+    private authService: AuthService,
+    private adminService: AdministrationService
   ) {
     this.loadAvailableEquipment();
     //this.loadEncounters();
@@ -127,7 +137,8 @@ export class TourComponent implements OnInit {
   }
   selectTour(tour: any): void {
     this.selectedTour = tour;
-    console.log("Selected tour status: " + this.selectedTour.status)
+    this.mapa.showAccomodation(this.selectedTour.accomodations)
+    console.log("Selected tour status: ",this.selectedTour)
     this.selectedTourCheckpoints = tour.tourCheckpoints;
     this.getEquipmentByTourId(tour.id);
     this.loadEncounters();
@@ -161,8 +172,19 @@ export class TourComponent implements OnInit {
   
   ngOnInit(): void {
     this.loadTours();
+    this.loadAccomodations();
     this.authService.user$.subscribe(user => {
       this.userId = user.id;});
+      
+  }
+
+  loadAccomodations(): void {
+    this.adminService.getAllAccomodations().subscribe(
+      (data) => {
+        this.allAccomodations = data.results
+        console.log(this.allAccomodations)
+      }
+    )
   }
 
   loadTours(): void {
@@ -528,7 +550,22 @@ export class TourComponent implements OnInit {
   
     this.modalRef = this.modalService.open(this.encounterModal, { size: 'lg' });
   }
+  openAccomodationModal(): void {
+    this.modalRef = this.modalService.open(this.accomodationModal, { size: 'lg' });
+  }
+  openPhotoModal(images: string[]): void {
+    this.photosModalRef = this.modalService.open(this.photoModal, { size: 'lg' });
+    this.selectedImages = images;
+    const photoModal = document.querySelector('#photoModal');
+    if (photoModal) {
+      photoModal.classList.add('show');
+    }
+  }
 
+  // Method to close the photo modal
+  closePhotoModal(): void {
+    this.photosModalRef.close();
+  }
   createEncounter(): void {
     if (!this.newEncounter.name || !this.newEncounter.description) {
       console.error('Ime i opis su obavezni!');
@@ -606,7 +643,54 @@ export class TourComponent implements OnInit {
     });
   }
   
+  // Method to check if an accommodation is already selected
+  isSelected(accomodation: any): boolean {
+    console.log("Selected acc: ", this.selectedTour.accomodations.includes(accomodation));
+    return this.selectedTour.accomodations.some((a: { id: any }) => a.id === accomodation.id);
+  }
 
+  // Method to toggle selection of an accommodation
+  toggleSelection(accomodation: any, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedAccomodations.push(accomodation);
+      
+    } else {
+      this.selectedAccomodations = this.selectedAccomodations.filter(
+        (selected) => selected !== accomodation
+      );
+      
+    }
+  }
+
+  // Placeholder for adding selected accommodations
+  addSelectedAccomodation(): void {
+    
+    this.tourService.addAccomodations(this.selectedTour.id,this.selectedAccomodations).subscribe(() => {
+      this.selectedAccomodations.forEach(accomodation => {
+        this.selectedTour.accomodations.push(accomodation);
+      });
+      this.selectedAccomodations = []
+      console.log("Selected ACC: ", this.selectedAccomodations)
+    }
+      
+    )
+  }
+  removeAccomodation(accomodation: any): void {
+    // Filter out the removed accommodation
+      
+    this.tourService.removeAccomodation(this.selectedTour.id, accomodation).subscribe(() => {
+      
+      this.selectedTour.accomodations = this.selectedTour.accomodations.filter(
+        (selected: AccomodationDTO) => selected.id !== accomodation.id
+      )
+      console.log("Selected TOUR: ", this.selectedTour)
+   
+}   
+    );
+    
+  }
+  
   areLocationsEqual(
     loc1: { latitude: number | undefined; longitude: number | undefined },
     loc2: { latitude: number | undefined; longitude: number | undefined }
