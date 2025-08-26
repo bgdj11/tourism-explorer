@@ -27,7 +27,10 @@
     "PROFILE": "Profil",
     "LANGUAGE": "Jezik",
     "LOG_IN_OR_SIGN_UP": "Prijavi se ili se registruj",
-    "CART": "Korpa"
+    "CART": "Korpa",
+    "SALES": "Prodaja",
+    "COUPON": "Kupon",
+    "BUNDLE": "Paketi"
   },
   "RATINGS": {
     "TITLE": "Ocene",

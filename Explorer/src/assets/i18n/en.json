@@ -24,10 +24,13 @@
     "PACAGES_MY": "My Pacages",
     "CREATE_ENCOUNTER": "Create Encounter",
     "CARD": "Card",
-    "CART": "Cart",
     "PROFILE": "Profile",
     "LANGUAGE": "Language",
-    "LOG_IN_OR_SIGN_UP": "Log in or sign up"
+    "LOG_IN_OR_SIGN_UP": "Log in or sign up",
+    "CART": "Korpa",
+    "SALES": "Prodaja",
+    "COUPON": "Kupon",
+    "BUNDLE": "Paketi"
   },
   "RATINGS": {
     "TITLE": "Ratings",
