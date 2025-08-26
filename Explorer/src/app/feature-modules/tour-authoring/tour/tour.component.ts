@@ -71,6 +71,7 @@ export class TourComponent implements OnInit {
     latitude: undefined,
     longitude: undefined,
     image: undefined,
+    secret: ''
   };
   newTravelTime: TravelTimeDTO = {
     time: 0,

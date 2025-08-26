@@ -205,3 +205,8 @@ app-navbar, .navbar, header.site-header{
   z-index: -1;  /* iza sadržaja */
 }
 .page-under-nav { margin-top: var(--toolbar-h, 64px); }
+
+.modal-dialog {
+  margin-top: 100px !important; /* koliko hoćeš da spustiš */
+}
+

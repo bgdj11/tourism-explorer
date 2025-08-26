@@ -20,7 +20,7 @@ export class StartTourComponent implements OnInit, OnDestroy {
   private executionId: number | null = null;
   private checkIntervalSubscription!: Subscription;
   currentLocation: MapLocation | null = null;
-  TourExecutionStatus = TourExecutionStatus; // <-- OVO dodaj
+  TourExecutionStatus = TourExecutionStatus; 
   encounter: EncounterDTO | null = null;
 
   errorMessage: string | null = null;
@@ -32,6 +32,8 @@ export class StartTourComponent implements OnInit, OnDestroy {
   showReviewForTour = false;
 
   selectedReviewsTourId: number | null = null;
+  tourName: string | null = null;
+
 
   // tabela kolone
   displayedColumns: string[] = ['id', 'name', 'description', 'action'];
@@ -208,6 +210,7 @@ export class StartTourComponent implements OnInit, OnDestroy {
         },
         error: (e) => console.error('Error checking visited checkpoint:', e)
       });
+      
   }
 
   /* ===== Reviews ===== */
@@ -271,8 +274,10 @@ export class StartTourComponent implements OnInit, OnDestroy {
       personn: { userId: this.userId, name: 'string', email: 'test@test.com', surname: 'string' }
     };
   }
+  
 
   /* ===== trackBys ===== */
   trackByVisited = (_: number, v: VisitedCheckpointsDTO) => `${v.checkpointId}-${v.secret}`;
   trackByReview = (_: number, r: TourReview) => r.id;
 }
+

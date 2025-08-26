@@ -5,6 +5,8 @@ import { MarketplaceService } from "../../marketplace/marketplace.service";
 import { TourManagementService } from "../../tour-authoring/tour-management.service";
 import { forkJoin, map, switchMap } from 'rxjs';
 import { TourReviewDTO } from '../../tour-authoring/model/tourReview.model';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'xp-my-tours',
@@ -16,10 +18,11 @@ export class MyToursComponent implements OnInit {
   checkpoints: { [tourId: number]: string[] } = {};
   tourReviews:{ [tourId: number]: TourReviewDTO[]} = {} ;
   avgGrade: {[tourId:number]: number} = {};
-
-  constructor(private tourExecutionService: TourExecutionService, private tourService: TourManagementService) { }
+  userId = 0;
+  constructor(private tourExecutionService: TourExecutionService, private tourService: TourManagementService, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.userId = this.authService.user$.getValue()?.id ?? 0;
     // Učitavanje kupljenih tura kada komponenta bude inicijalizovana
     this.loadPurchasedTours();
   }
@@ -96,5 +99,22 @@ getFirstCheckpoint(tour: TourDTO) {
       })
     );
   }
+
+  startTour(tourId: number): void {
+  if (!this.userId) {
+    alert('User not logged in.');
+    return;
+  }
+  this.tourExecutionService.startTourExecution(tourId, this.userId).subscribe({
+    next: (execution) => {
+      localStorage.setItem('activeTourExecution', JSON.stringify(execution));
+      this.router.navigate(['/start-tour']);
+    },
+    error: (err) => {
+      console.error('Error starting tour:', err);
+      alert('Failed to start the tour.');
+    }
+  });
+}
 
 }
