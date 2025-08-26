@@ -63,6 +63,20 @@
           </a>
         </div>
       </div>
+    <button class="notif_button" *ngIf="user && (user.role === 'author' || user.role === 'tourist')" color="white" (click)="getNotifications()" mat-icon-button>
+        <mat-icon>notifications</mat-icon><span *ngIf="notificationsNum > 0" class="notification-badge">{{ notificationsNum }}</span></button>
+        <div class="notification-dropdown" *ngIf="isNotificationDropdownOpen">
+          <ul>
+              <div style="font-size: small; margin-left: 5px;" *ngIf="notifications.length === 0">
+                  No new notifications
+              </div>
+            <li *ngFor="let notification of notifications">
+              <div [routerLink]="[notification.message.resourceUrl]">
+                  {{ notification.message.content || 'No message available' }}
+              </div>
+            </li>
+          </ul>
+        </div>
     <div class="right-side">
       <button class="btn" [routerLink]="['/shopping-cart']">
         <mat-icon>shopping_cart</mat-icon>
