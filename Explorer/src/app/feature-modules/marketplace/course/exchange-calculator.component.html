@@ -1,0 +1,39 @@
+<div class="exchange-calculator-card">
+  <h2 class="calculator-title">Kalkulator valuta</h2>
+
+  <div class="form-group">
+    <label>Iznos:</label>
+    <input type="number" [(ngModel)]="amount" class="calculator-input" placeholder="Unesi iznos" />
+  </div>
+
+  <div class="form-group">
+    <label>Iz valute:</label>
+    <select [(ngModel)]="fromCurrency" class="calculator-select">
+      <option *ngFor="let key of currencies | keyvalue" [value]="key.key">
+        {{key.key}} - {{key.value}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>U valutu:</label>
+    <select [(ngModel)]="toCurrency" class="calculator-select">
+      <option *ngFor="let key of currencies | keyvalue" [value]="key.key">
+        {{key.key}} - {{key.value}}
+      </option>
+    </select>
+  </div>
+
+  <button (click)="convert()" class="convert-button" [disabled]="loading">
+    <mat-icon>calculate</mat-icon> Konvertuj
+  </button>
+
+  <div *ngIf="loading" class="loading-text">Konvertovanje...</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+
+  <div *ngIf="result" class="result-box">
+    <p>{{ result?.amount }} {{ result?.fromCurrency }} = {{ result?.convertedAmount | number:'1.2-2' }} {{ result?.toCurrency }}</p>
+    <p>Kurs: 1 {{ result?.fromCurrency }} = {{ result?.rate | number:'1.4-4' }} {{ result?.toCurrency }}</p>
+    <p>Datum kursa: {{ result?.date }}</p>
+  </div>
+</div>
