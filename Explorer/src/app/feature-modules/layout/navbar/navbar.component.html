@@ -1,4 +1,101 @@
 <mat-toolbar class="navbar">
+    <div class="profile-dropdown">
+        <button class="btn profile-btn">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <div class="dropdown-menu">
+          <a mat-button [routerLink]="'/home-page'">
+            <mat-icon>home</mat-icon>
+            <span>Home</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/mytours'">
+            <mat-icon>tour</mat-icon>
+            <span>My Tours</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/followers'">
+            <mat-icon>people</mat-icon>
+            <span>Followers</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/market'">
+            <mat-icon>shopping_basket</mat-icon>
+            <span>Market</span>
+          </a>
+
+          <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/author-object'">
+            <span>{{ 'NAVBAR.MANAGE_OBJECTS' | translate }}</span>
+          </a>
+          <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/equipment'">
+            <span>Manage equipment</span>
+          </a>
+          <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/accounts'">
+            <span>Manage account</span>
+          </a>
+          <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/app-rating'">
+            <span>Ratings</span>
+          </a>
+          <a *ngIf="user && user.role === 'administrator'" mat-button [routerLink]="'/encounter'">
+            <span>Create encounter</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/start-tour'">
+            <span>{{ 'NAVBAR.START_TOUR' | translate }}</span>
+          </a>
+          <a *ngIf="user && (user.role === 'author' || user.role === 'administrator')" mat-button [routerLink]="'/tour-problems'">
+            <span>Tour problems</span>
+          </a>
+          <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/sales'">
+            <span>Sales</span>
+          </a>
+          <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/coupon'">
+            <span>Coupon</span>
+          </a>
+          <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/bundle'">
+            <span>Bundle</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/paceges-publ'">
+            <span>Pacages</span>
+          </a>
+        </div>
+      </div>
+    <div class="right-side">
+      <button class="btn" [routerLink]="['/shopping-cart']">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="button-text">Card</span>
+      </button>
+      <div class="profile-dropdown">
+        <button class="btn profile-btn">
+          <mat-icon>person</mat-icon>
+          <span class="button-text">Profile</span>
+        </button>
+        <div class="dropdown-profile">
+          <a *ngIf="user && user.username === ''" mat-button [routerLink]="'/login'">
+            <mat-icon>login</mat-icon>
+            <span>Log in or sign up</span>
+          </a>
+          <a *ngIf="user && user.role === 'tourist'" mat-button [routerLink]="'/tourist-profile'">
+            <mat-icon>account_circle</mat-icon>
+            <span>My account</span>
+          </a>
+          <div class="dropdown">
+            <a class="dropdown-item">
+              <mat-icon>language</mat-icon>
+              <span>Language</span>
+              <span class="arrow">&#x25B6;</span> 
+              <div class="submenu">
+                <button (click)="changeLanguage('en')">English</button>
+                <button (click)="changeLanguage('sr')">Српски</button>
+              </div>
+            </a>
+          </div>
+          <a *ngIf="user && user.username !== ''" mat-button (click)="onLogout()">
+            <mat-icon>logout</mat-icon>
+            <span>{{ 'NAVBAR.LOGOUT' | translate }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+  
+<!--  
     <div class="navbar-left">
        <img src="../../../../assets/bck.jpg" alt="logo" class="logo" />
        <button mat-button class="custom-button" routerLink="/home">{{ 'NAVBAR.HOME' | translate }}</button>
@@ -56,3 +153,4 @@
     </div>
     
 </mat-toolbar>
+-->

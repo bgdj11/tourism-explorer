@@ -5,6 +5,10 @@ import { Encounter, EncounterStatus, EncounterType } from "../model/encounter.mo
 import { AuthService } from "../../../infrastructure/auth/auth.service";
 import { BehaviorSubject } from "rxjs";
 import { User } from "../../../infrastructure/auth/model/user.model";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+
 
 @Component({
   selector: 'app-encounter',
