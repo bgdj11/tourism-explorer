@@ -87,7 +87,7 @@ const routes: Routes = [
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
   {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],},
 
-  {path: 'accomodation', component: AccomodationComponent}
+  {path: 'accomodation', component: AccomodationComponent},
 
   {path: 'exchange-calculator', component: ExchangeCalculatorComponent, canActivate: [AuthGuard],},
 

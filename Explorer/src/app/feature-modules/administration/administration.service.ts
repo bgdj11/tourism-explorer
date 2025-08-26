@@ -129,7 +129,7 @@ export class AdministrationService {
   }
   getAllAccomodations(): Observable<PagedResults<AccomodationDTO>> {
     return this.http.get<PagedResults<AccomodationDTO>>(`${environment.apiHost}admin/accomodations`)
-
+  }
 
 
   getAuthorStats(): Observable<AuthorStatsDto[]> {

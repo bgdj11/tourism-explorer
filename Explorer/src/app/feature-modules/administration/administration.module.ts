@@ -46,7 +46,7 @@ import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
     EncounterComponent,
     TourProblemsComponent,
 
-    AccomodationComponent
+    AccomodationComponent,
 
     TourProblemsStatisticsComponent
 
@@ -67,7 +67,7 @@ import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
     MatSelectModule,
     MatPaginatorModule,
 
-    SharedModule
+    SharedModule,
 
     RouterModule,
     NgxEchartsModule.forRoot({echarts}),
