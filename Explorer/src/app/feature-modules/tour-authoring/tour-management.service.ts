@@ -244,4 +244,10 @@ export class TourManagementService {
     );
   }
 
+  getTourById(id: number): Observable<TourDTO> {
+  return this.http.get<TourDTO>(`${this.apiUrl}/${id}`);
+}
+
+
+
 }

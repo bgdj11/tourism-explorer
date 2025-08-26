@@ -16,7 +16,7 @@ import { ToursViewComponent } from './tours-view/tours-view.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RatingDialogComponent } from './rating-dialog/rating-dialog.component';
-
+import { TourDetailsComponent } from './tour-details/tour-details.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import { RatingDialogComponent } from './rating-dialog/rating-dialog.component';
     TourSearchComponent,
     HomePageComponent,
     ToursViewComponent,
-    RatingDialogComponent
+    RatingDialogComponent,
+    TourDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +47,8 @@ import { RatingDialogComponent } from './rating-dialog/rating-dialog.component';
     AppRatingComponent,
     ToursListComponent,
     TourSearchComponent,
-    HomePageComponent
+    HomePageComponent,
+    TourDetailsComponent
   ]
 })
 export class LayoutModule { }
