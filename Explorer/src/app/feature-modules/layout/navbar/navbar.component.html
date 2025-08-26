@@ -21,6 +21,10 @@
             <span>Market</span>
           </a>
 
+          <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/author'">
+            <span>{{ 'NAVBAR.MANAGE_TOURS' | translate }}</span>
+          </a>
+
           <a *ngIf="user && user.role === 'author'" mat-button [routerLink]="'/author-object'">
             <span>{{ 'NAVBAR.MANAGE_OBJECTS' | translate }}</span>
           </a>
