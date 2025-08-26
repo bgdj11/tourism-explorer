@@ -1,0 +1,161 @@
+/* host zauzima celu play-area */
+:host{ display:block; width:100%; height:100%; }
+
+/* varijable koje puni TS */
+.mm{
+  --dot: 32px;     /* veliki krug */
+  --fdot: 14px;    /* feedback krug */
+  --gap: 10px;     /* razmak */
+  --fs: 16px;      /* font size */
+  --pad: 12px;     /* padding panela */
+
+  width:100%; height:100%;
+  display:grid; place-items:center;
+}
+
+/* PANEL BEZ OKVIRA/BELE POZADINE (transparentno) */
+.panel{
+  width: min(880px, 100%);
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--gap);
+  background: transparent;     /* <<< bez bele pozadine */
+  border-radius: 0;            /* <<< bez zaobljenja ivica */
+  box-shadow: none;            /* <<< bez senke/okvira */
+  padding: var(--pad);
+  box-sizing: border-box;
+  overflow: hidden;
+  font: 600 var(--fs)/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #0b1120;
+}
+
+/* header – veći, bold */
+.head h2{
+  margin: 0;
+  font-size: calc(var(--fs) * 1.75);  /* veće */
+  font-weight: 900;                   /* bold */
+  letter-spacing: .6px;
+}
+.head .sub{
+  margin-top: 2px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* sekcije */
+.section-title{
+  margin: 0 0 6px 0;
+  font-size: calc(var(--fs) * .92);
+  font-weight: 700;
+  color: #0f172a;
+}
+.row{ display:flex; gap: var(--gap); align-items:center; }
+.scroll-x{ overflow-x:auto; padding-bottom:2px; }
+.scroll-x::-webkit-scrollbar{ height:6px; }
+.scroll-x::-webkit-scrollbar-thumb{ background:#cbd5e1; border-radius:999px; }
+
+/* krugovi boja */
+.color{
+  --c: #e2e8f0;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 999px;
+  background: var(--c);
+  border: 2px solid #0f172a;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease, border-color .15s ease;
+  cursor: pointer;
+}
+
+/* HOVER BORDER (ne pomera layout jer je shadow “ring”) */
+.color:hover{
+  transform: scale(1.06);
+  filter: brightness(.96);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.12),
+    0 0 0 clamp(2px, calc(var(--dot)*.12), 4px) rgba(15, 23, 42, .35); /* tamni prsten */
+  border-color: #0b1120;
+}
+
+.color:disabled{ opacity:.45; cursor:default; }
+
+/* prazno mesto u pokušaju */
+.slot.empty{
+  background: #e2e8f0;
+  border-style: dashed;
+  box-shadow: none;
+}
+
+/* tabla pokušaja */
+.board{
+  min-height:0;
+  display:flex; flex-direction:column;
+}
+.guess-row{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  align-items:center;
+  gap: var(--gap);
+  padding: calc(var(--pad) * .35) calc(var(--pad) * .4);
+  border-radius: 12px;
+  margin-bottom: calc(var(--gap) * .7);
+  background: rgba(248, 250, 252, .75);       /* blago transparentno da “diše” preko play-area */
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+.guess-row.current{
+  background: rgba(238, 246, 255, .85);
+  box-shadow: inset 0 0 0 2px #93c5fd;
+}
+
+.guess-list{ display:flex; gap: var(--gap); }
+.feedback-list{ display:flex; gap: calc(var(--gap) * .5); }
+
+.peg{
+  width: var(--fdot);
+  height: var(--fdot);
+  border-radius: 999px;
+  border: 1px solid #0f172a;
+  background: #94a3b8;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15) inset;
+}
+.peg.black{ background:#0f172a; }
+.peg.white{ background:#fff; }
+
+/* kontrole / poruke */
+.controls{
+  display:grid; gap: calc(var(--gap) * .8);
+  justify-items:center;
+}
+.message{ color:#e11d48; font-weight:800; }
+
+.btns{ display:flex; gap: var(--gap); }
+
+.btn{
+  padding: calc(var(--pad)*.35) calc(var(--pad)*.8);
+  border:0; border-radius:999px;
+  font: inherit; font-weight:800;
+  cursor:pointer;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  background:#22c55e; color:#fff;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, .25);
+}
+.btn.primary:hover{ filter: brightness(.96); }
+.btn.primary:disabled{ opacity:.5; cursor:not-allowed; box-shadow:none; }
+
+.btn.ghost{ background:#e2e8f0; color:#0f172a; }
+.btn.ghost:hover{ filter: brightness(.96); }
+
+/* reveal posle igre */
+.secret{ display:grid; gap: var(--gap); justify-items:center; }
+.secret h4{ margin:0; }
+.reveal{
+  width: var(--dot); height: var(--dot);
+  border-radius:999px; border:2px solid #0f172a;
+  background: var(--c);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}

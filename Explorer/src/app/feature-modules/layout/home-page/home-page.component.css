@@ -1,19 +1,70 @@
 .home-container {
-    background-image: url('../../../../assets/bck.jpg'); 
-    background-size: cover;
-    background-position: center;
-    height: calc(100vh - 64px); 
+    position: relative;
+    height: calc(100vh ); 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: relative;
- }
- 
- .slogan-container {
+    overflow: hidden; 
+    margin-top: 0px;
+}
+
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    z-index: -1;
+}
+
+/*
+.background-video {
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    width: 93%;
+    height: auto; 
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: -1;
+}
+*/
+
+ .icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    color: white;
- }
+    gap: 15px; 
+  }
+  
+  .icon-container {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    height: auto;
+    width: auto;
+    overflow: visible;
+  }
+  
+  mat-icon {
+    font-size: 50px; 
+    color: #004D3B; 
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  .slogan-container {
+    position: relative;
+    z-index: 1; 
+    align-items: center;
+}
  
  .slogan {
     color: #ffffff;
@@ -21,11 +72,17 @@
     font-weight: bold;
     margin-bottom: 20px;
  }
- 
- .input-button-group {
-    display: flex; 
-    align-items: stretch;
-    gap: 0; 
+
+ .discover-btn {
+    position: absolute;
+    top: 10px;                  
+    left: 50%;                  
+    transform: translateX(-50%); 
+    border-radius: 10px;
+    margin-top: 40px;
+    font-size: 1.5rem;
+    font-weight: 550;
+    transition: transform 0.5s ease;
 }
 
 .destination-input {
@@ -46,44 +103,35 @@
     font-style: italic; 
 }
 
-.discover-btn {
-    font-size: 16px;
-    background-color: #00a278;
-    color: white;
-    border: none;
-    border-radius: 0 8px 8px 0;
-    cursor: pointer;
-    height: 48px;
-    padding: 0 20px; 
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-}
-
 .discover-btn:hover {
+    color: #ffffff; 
     background-color: #004D3B; 
+    transform: translateX(-50%) scale(1.3); 
 }
-
 .blog {
     display: flex;
     width: 100%;
-    height: 80vh; 
+    height: auto;          /* više nije fiksno 90vh */
     margin-top: 30px;
+    align-items: stretch;   /* centriraj sadržaj vertikalno */
 }
 
 .blog-image {
     width: 60%;
+    max-height: 70vh;      /* slika maksimalno 60% ekrana */
     height: auto; 
-    object-fit: cover; 
+    object-fit: contain;   /* prikaže cijelu sliku bez sečenja */
 }
+
 
 .green-background {
     display: flex;
     justify-content: center; 
     align-items: flex-start; 
     flex-direction: column; 
-    padding-left: 15px; 
+    padding: 20px; 
     background-color: #3c6e46;
+    flex: 1;               /* zauzme istu širinu ako želiš simetriju */
 }
 
 .blog-text {
@@ -112,6 +160,331 @@
 }
 
 div h1 {
-    font-size: 2rem; 
+    font-size: 2.5rem; 
     font-weight: 600; 
+}
+
+.rating {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.rating-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.stats-wrapper {
+    position: absolute;
+    bottom: 20%; 
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 100px; 
+    justify-content: center;
+    align-items: center;
+    z-index: 2; 
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 50px;
+    border-radius: 20px;
+}
+
+.stat h2 {
+    font-size: 4rem; 
+    font-weight: bold;
+    color: #FFD700; 
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.stat p {
+    font-size: 2rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    font-family: 'Helvetica Neue';
+}
+
+.rating-button {
+    position: absolute;
+    bottom: 10%; 
+    left: 50%;
+    z-index: 2; 
+    padding: 11px 18px;
+    transform: translateX(-50%);
+    transition: transform 0.5s ease, scale 0.5s ease; 
+}
+
+.rating-button:hover {
+    transform: translateX(-50%) scale(1.1); 
+}
+
+.club-background {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start; 
+    flex-direction: column; 
+    padding-left: 15px; 
+    background-color: #707070;
+}
+
+.footer-background {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start; 
+    flex-direction: column; 
+    padding-left: 15px; 
+    background: linear-gradient(to bottom, #004D40, #001F1B);
+    height: 300px;
+    position: relative;
+}
+
+.horizontal-line {
+    position: absolute;
+    top: 70%;
+    left: 0;
+    width: 100%; 
+    height: 2px; 
+    background-color: white; 
+}
+
+.footer-text {
+    color: #ffffff; 
+    font-size: 1rem; 
+    font-family: "Helvetica Neue", sans-serif; 
+    line-height: 1.8;
+    text-align: left;
+    margin-left: 15px; 
+    margin-right: 15px;
+}
+
+.game-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  max-width: 1300px; 
+}
+
+.game-container {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
+  width: 1200px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.game-card {
+  flex: 0 0 380px; 
+  height: 450px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.card-button {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  z-index: 10;
+  border: 2px solid #004D3B;
+  transition: transform 0.3s ease;
+}
+
+.card-button:hover {
+  color: #ffffff;
+  background-color: #004D3B;
+  transform: translateX(-50%) scale(1.1);
+}
+
+.arrow-btn {
+  position: absolute; 
+  top: 50%;                     
+  transform: translateY(-50%);  
+  border-radius: 50%;           
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+  background-color: #666;       
+  color: white;                 
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+}
+
+.arrow-btn:hover {
+  background-color: #3a3a3a; 
+}
+
+.arrow-btn.left {
+  left: -4vw;
+}
+
+.arrow-btn.right {
+  right: -4vw;
+}
+
+.comments-content {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.comments-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 350px;
+    max-height: 350px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.quote {
+    color: #004D3B; 
+    font-size: 1.2rem; 
+    font-family: "Helvetica Neue", sans-serif; 
+    line-height: 1.8;
+    text-align: left;
+    margin-left: 20px; 
+    margin-right: 15px;
+}
+
+.stars {
+    color: #FFD700;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.description {
+    color: #777;
+    font-size: 14px;
+}
+
+.comment-image {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+}
+
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5); 
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    width: 300px; 
+    height: auto;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 0px; 
+    right: 0px; 
+    border: none;
+    background: none;
+    font-size: 25px;
+    color: #333; 
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: none;
+  }
+  
+  .close-btn:hover {
+    color: #555; 
+  }
+  
+  .modal-message {
+    margin-top: 20px; 
+    font-size: 20px;
+    line-height: 1.5;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: black;
+  }
+  
+  .login-btn {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    width: 70%; 
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px auto; 
+    margin-top: 20px;
+    background-color: #016252; 
+    color: white;
+    border: none;
+    transition: all 0.3s ease; 
+  }
+  
+  .login-btn:hover {
+    background-color: #004D3B;
+  }
+  
+  .login-btn mat-icon {
+    font-size: 25px; 
+    color: white; 
+    margin-right: 8px; 
+  }
+  
+.navbar-spacer {
+    height: 40px; /* Podešava razmak između navbara i sadržaja ispod, možeš promeniti vrednost */
 }

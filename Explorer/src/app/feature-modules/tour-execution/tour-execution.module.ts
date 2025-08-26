@@ -12,6 +12,7 @@ import { MyToursComponent } from './my-tours/my-tours.component';
 import { FollowersComponent } from './followers/followers.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MarketplaceModule } from '../marketplace/marketplace.module';
+import {MatCardModule} from "@angular/material/card";
 
 
 
@@ -29,7 +30,8 @@ import { MarketplaceModule } from '../marketplace/marketplace.module';
         ReactiveFormsModule,
         FormsModule,
         MatButtonModule,
-        MarketplaceModule
+        MarketplaceModule,
+        MatCardModule
     ],
     exports: [
       MyEquipmentComponent,

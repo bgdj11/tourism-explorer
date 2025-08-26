@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokenStorage } from './jwt/token.service';
 import { environment } from 'src/env/environment';
@@ -31,19 +31,33 @@ export class AuthService {
       );
   }
 
-  register(registration: Registration): Observable<AuthenticationResponse> {
+  register(registration: Registration): Observable<any> {
     return this.http
-    .post<AuthenticationResponse>(environment.apiHost + 'users', registration)
+    .post<any>(environment.apiHost + 'users', registration, {observe: 'response'})
     .pipe(
-      tap((authenticationResponse) => {
-        this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
-        this.setUser();
+      tap((response: HttpResponse<any>) => {
+        if(response.status === 200){
+          console.log('You have successfully registered. Check your email to verify your account.');
+        }
+        //this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
+        //this.setUser();
+      }),
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage: string;
+        if(error.status === 500){
+          errorMessage = 'Unexpected error occurred.';
+        }
+        else if(error.error && error.error.message){
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage) );
+        
       })
     );
   }
 
   logout(): void {
-    this.router.navigate(['/home']).then(_ => {
+    this.router.navigate(['/home-page']).then(_ => {
       this.tokenStorage.clear();
       this.user$.next({username: "", id: 0, role: "" });
       }

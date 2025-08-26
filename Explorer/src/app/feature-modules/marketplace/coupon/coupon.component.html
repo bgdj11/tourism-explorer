@@ -17,16 +17,24 @@
           <p><strong>Tura:</strong> {{ coupon.tourName || 'Sve ture' }}</p>
 
           <div class="coupon-actions">
-              <button color="accent" (click)="deleteCoupon(coupon.id || 0)" mat-icon-button>
-                  <mat-icon>delete</mat-icon>
-              </button>
-              <button color="primary" (click)="onEditCouponClicked(coupon)" mat-icon-button>
-                  <mat-icon>edit</mat-icon>
-              </button>
+            <button color="accent" (click)="deleteCoupon(coupon.id || 0)" mat-icon-button>
+                <mat-icon>delete</mat-icon>
+            </button>
+            <button color="primary" (click)="onEditCouponClicked(coupon)" mat-icon-button>
+              <mat-icon>edit</mat-icon>
+            </button> 
+            <button mat-icon-button
+              [ngClass]="coupon.isPublic ? 'published' : 'unpublished'"
+              (click)="makeCouponPublic(coupon.id || 0)"
+              [matTooltip]="coupon.isPublic ? 'Kupon je vidljiv korisnicima.' : 'Objavi kupon.'">
+                <mat-icon>{{ coupon.isPublic ? 'check_circle' : 'public' }}</mat-icon>  
+            </button>
+              
+              
           </div>
       </div>
   </div>
-
+  
   <!-- Forma za dodavanje/uređivanje kupona -->
   <xp-coupon-form 
       (couponUpdated)="getCoupons(1,10)" 

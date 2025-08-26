@@ -1,45 +1,169 @@
-<div *ngIf="isLoading" class="loading-container">
-  <p>Loading tourist profile...</p>
-</div>
+<!-- tourist-profile.component.html -->
+<div class="profile-page">
 
-<div *ngIf="errorMessage" class="error-container">
-  <p class="error">{{ errorMessage }}</p>
-</div>
+  <!-- Global loading (skeleton) -->
+  <ng-container *ngIf="isLoading; else contentTpl">
+    <div class="skeleton-wrap">
+      <div class="skeleton header"></div>
+      <div class="card-grid">
+        <div class="skeleton card"></div>
+        <div class="skeleton card"></div>
+      </div>
+      <div class="skeleton list"></div>
+    </div>
+  </ng-container>
 
-<div *ngIf="profile && !isLoading" class="profile-container">
-  <h1>Tourist Profile</h1>
+  <ng-template #contentTpl>
+    <!-- Error state -->
+    <div *ngIf="errorMessage" class="error-banner" role="alert">
+      <mat-icon aria-hidden="true">error</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
 
-  <div class="profile-details">
-    <p><strong>Username:</strong> {{ profile.username }}</p>
-    <p><strong>XP:</strong> {{ profile.xp }}</p>
-    <p>
-      <strong>Level:</strong>
-      {{ profile.level }}
-      <span *ngIf="profile.level >= 10" class="badge">Creator</span>
-    </p>
-  </div>
+    <div *ngIf="profile" class="content">
+      <!-- Header / hero -->
+      <mat-card class="hero-card">
+        <div class="hero">
+          <div class="avatar" [attr.aria-label]="'Avatar for ' + profile.username">
+            {{ profile.username | slice:0:1 | uppercase }}
+          </div>
 
-  <div class="completed-encounters">
-    <h2>Completed Encounters</h2>
-    <ul>
-      <li *ngFor="let encounterId of profile.completedEncountersIds" class="encounter-item">
-        <a [routerLink]="['/encounters', encounterId]" class="encounter-link">
-          Encounter ID: {{ encounterId }}
-        </a>
-      </li>
-    </ul>
-    <p *ngIf="profile.completedEncountersIds.length === 0">No encounters completed yet.</p>
-  </div>
+          <div class="title-wrap">
+            <h1 class="title">Tourist Profile</h1>
+            <div class="meta">
+              <span class="username">@{{ profile.username }}</span>
 
-  <div class="sync-container">
-    <button (click)="syncEncounters()">Sync Completed Encounters</button>
-    <p *ngIf="syncMessage" class="sync-message">{{ syncMessage }}</p>
-  </div>
+              <mat-chip-set class="badges" aria-label="Profile badges">
+                <mat-chip *ngIf="profile.level >= 10" color="primary" selected>
+                  <mat-icon>workspace_premium</mat-icon>
+                  Creator
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
 
-  <!-- Button for creating encounters -->
-  <div *ngIf="profile.level >= 10" class="create-encounter-button">
-    <button mat-raised-button color="primary" [routerLink]="['/encounter']">
-      Create Encounter
-    </button>
-  </div>
+          <div class="hero-actions">
+            <button mat-stroked-button (click)="syncEncounters()">
+              <mat-icon>sync</mat-icon>
+              Sync Encounters
+            </button>
+
+            <button *ngIf="profile.level >= 10"
+                    mat-raised-button color="primary"
+                    [routerLink]="['/encounter']">
+              <mat-icon>add_circle</mat-icon>
+              Create Encounter
+            </button>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat">
+            <span class="label">XP</span>
+            <span class="value">{{ profile.xp | number }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Level</span>
+            <span class="value">{{ profile.level }}</span>
+          </div>
+          <div class="stat progress">
+            <span class="label">Progress to next level</span>
+            <mat-progress-bar mode="determinate" [value]="levelProgressPercent"></mat-progress-bar>
+            <span class="hint">{{ levelProgressText }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="syncMessage" class="sync-message">
+          <mat-icon>info</mat-icon>
+          <span>{{ syncMessage }}</span>
+        </div>
+      </mat-card>
+
+      <!-- Completed Encounters -->
+      <mat-card class="section-card">
+        <div class="section-header">
+          <h2>Completed Encounters</h2>
+          <span class="pill" *ngIf="profile.completedEncountersIds?.length">
+            {{ profile.completedEncountersIds.length }}
+          </span>
+        </div>
+
+        <ng-container *ngIf="profile.completedEncountersIds?.length; else noEncountersTpl">
+          <div class="encounters-list">
+            <a class="encounter-item"
+               *ngFor="let encounterId of profile.completedEncountersIds; trackBy: trackById"
+               [routerLink]="['/encounters', encounterId]">
+              <mat-icon aria-hidden="true">map</mat-icon>
+              <span>Encounter #{{ encounterId }}</span>
+              <mat-icon class="chev" aria-hidden="true">chevron_right</mat-icon>
+            </a>
+          </div>
+        </ng-container>
+
+        <ng-template #noEncountersTpl>
+          <div class="empty-state">
+            <mat-icon>explore_off</mat-icon>
+            <p>No encounters completed yet.</p>
+          </div>
+        </ng-template>
+      </mat-card>
+
+      <!-- Coupons -->
+      <mat-card class="section-card">
+        <div class="section-header">
+          <h2>Your Coupons</h2>
+          <span class="pill" *ngIf="coupons?.length">{{ coupons.length }}</span>
+        </div>
+
+        <div *ngIf="isLoadingCoupons" class="inline-loading">
+          <mat-progress-spinner mode="indeterminate" diameter="22"></mat-progress-spinner>
+          <span>Loading coupons…</span>
+        </div>
+
+        <ng-container *ngIf="!isLoadingCoupons">
+          <ng-container *ngIf="coupons?.length; else noCouponsTpl">
+            <div class="coupon-grid">
+              <mat-card class="coupon-card" *ngFor="let coupon of coupons; trackBy: trackByCoupon">
+                <div class="coupon-head">
+                  <mat-icon>local_offer</mat-icon>
+                  <span class="code">{{ coupon.code }}</span>
+                </div>
+                <div class="coupon-body">
+                  <div class="row">
+                    <span class="k">Discount</span>
+                    <span class="v">-{{ coupon.discountPercentage }}%</span>
+                  </div>
+                  <div class="row" *ngIf="coupon.expiryDate as d">
+                    <span class="k">Expires</span>
+                    <span class="v">
+                      {{ d | date:'mediumDate' }}
+                      <span class="expire-pill" [class.expiring]="daysUntil(d) <= 7">
+                        {{ daysUntil(d) }}d left
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="coupon-actions">
+                  <button mat-stroked-button (click)="copyCode(coupon.code)">
+                    <mat-icon>content_copy</mat-icon>
+                    Copy code
+                  </button>
+                </div>
+              </mat-card>
+            </div>
+          </ng-container>
+
+          <ng-template #noCouponsTpl>
+            <div class="empty-state">
+              <mat-icon>local_offer</mat-icon>
+              <p>You currently have no coupons.</p>
+            </div>
+          </ng-template>
+        </ng-container>
+      </mat-card>
+    </div>
+  </ng-template>
 </div>

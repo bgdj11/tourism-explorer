@@ -1,40 +1,166 @@
 <div class="home-container">
+    <video autoplay muted loop class="background-video">
+        <source src="assets/world.mp4" type="video/mp4"/>
+        Your browser does not support the video tag.
+    </video>
     <div class="slogan-container">
         <h1 class="slogan">Do More with Explorer</h1>
-        <div class="input-button-group">
-            <input 
-                type="text" 
-                placeholder="Where would you like to go?" 
-                class="destination-input"
-            />
-            <button mat-raised-button class="discover-btn" [routerLink]="['/tour-preferences']">Discover</button>
-        </div>
-    </div>
+        <button class="discover-btn" [routerLink]="['/tour-preferences']">Discover</button>
+    </div>    
 </div>
 
-<div>
-    <mat-icon>plane</mat-icon>
+
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>explore</mat-icon>
+    </div>
     <h1>Explore with us</h1>
 </div>
 <div class="tours">
     <xp-tours-view></xp-tours-view>
 </div>
 
-<div>
-    <mat-icon>plane</mat-icon>
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>newspaper</mat-icon>
+    </div>
     <h1>From the blog</h1>
 </div>
 <div class="blog">
     <img src="assets/blog.jpeg" alt="Blog Image" class="blog-image" />
     <div class="green-background">
         <p class="blog-text">
-            <span class="highlight">SHARE</span> your travel adventures and inspire others! Leave a <span class="highlight">COMMENT</span>, blog about your favorite destinations, or <span class="highlight">EXPLORE</span> the stories and experiences of other travelers. 
+            <span class="highlight">EXPLORE</span> amazing travel blogs and get inspired! Not sure where to go next? <span class="highlight">READ</span> a post and maybe you'll discover your next dream destination. 
+        </p>
+        <p class="blog-text">
+            <span class="highlight">SHARE</span> your thoughts in the comments and connect with other travelers!
+        </p>
+        <button class="blog-button" [routerLink]="['/blog']">View more</button>
+    </div>
+</div>
+
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>grade</mat-icon>
+    </div>
+    <h1>Make your voice heard</h1>
+</div>
+<div class="rating">
+    <img src="assets/travel.jpg" alt="Rate us Image" class="rating-image" />
+    <div class="stats-wrapper">
+        <div class="stat">
+            <p>Grade</p>
+            <h2 id="stat-grade">0</h2>
+        </div>
+        <div class="stat">
+            <p>Tours</p>
+            <h2 id="stat-tours">0</h2>
+        </div>
+        <div class="stat">
+            <p>Countries</p>
+            <h2 id="stat-countries">0</h2>
+        </div>
+          
+    </div>  
+    <button class="rating-button" (click)="openReviewModal()">Rate us</button>
+    <xp-rating-dialog (reviewSubmitted)="handleReview($event)"></xp-rating-dialog>
+</div>
+
+<!-- Custom Modal -->
+<div class="custom-modal" *ngIf="!isLoggedIn">
+    <div class="modal-content">
+      <button class="close-btn" (click)="closeModal()">×</button>
+      <div class="modal-message">
+        To continue, please log in.
+      </div>
+      <button class="login-btn" (click)="navigateToLogin()">
+        <div class="log-icon">
+            <mat-icon>lock_open</mat-icon>
+        </div>
+        Login</button>
+    </div>
+</div>
+  
+
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>comment</mat-icon>
+    </div>
+    <h1>What travellers say</h1>
+</div>
+<div>
+    <div class="comments-content">
+        <div class="comments-card">
+            <img src="assets/comment.png" class="comment-image" />
+            <p class="quote">"Explorer made our trip unforgettable with personalized local tours. We’ll never do large group tours again!"</p>            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="author">Marko D.</p>
+            <p class="description">traveller</p>
+        </div>
+        <div class="comments-card">
+            <img src="assets/comment.png" class="comment-image" />
+            <p class="quote">"Explorer has so many exciting things! I won a coupon playing a game and ended up on the best trip of my life!"</p>            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="author">Luka L.</p>
+            <p class="description">traveller</p>
+        </div>
+        <div class="comments-card">
+            <img src="assets/comment.png" class="comment-image" />
+            <p class="quote">"Our tour was one of the most delightful experiences this group of world travellers has ever had!"</p>
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+            <p class="author">Ana T.</p>
+            <p class="description">traveller</p>
+        </div>
+    </div>
+</div>
+
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>groups</mat-icon>
+    </div>
+    <h1>Make new friendships</h1>
+</div>
+<div class="blog">
+    <div class="club-background">
+        <p class="blog-text">
+            <span class="highlight">SHARE</span> your travel adventures and inspire others! Join a <span class="highlight">CLUB</span> and discover the world through new friendships! <span class="highlight">CONNECT</span>, share stories, and create unforgettable travel memories.
         </p>
         <p class="blog-text">
             Your story could spark someone's next unforgettable journey!
         </p>
-        <button class="blog-button" [routerLink]="['/blog']">Post</button>
+        <button class="blog-button" (click)="joinClub()">Join now</button>
     </div>
+    <img src="assets/club.jpg" alt="Rate us Image" class="blog-image" />
+</div>
+
+<div class="icons">
+    <div class="icon-container">
+      <mat-icon>sports_esports</mat-icon>
+    </div>
+    <h1>Play, win and get your coupon!</h1>
+</div>
+<div class="game-slider">
+  <button class="arrow-btn left" (click)="prev()">&#8249;</button>
+
+  <div class="game-container">
+    <div *ngFor="let game of visibleGames" class="game-card">
+      <img [src]="game.img" alt="Game Image" class="game-image" />
+      <button class="card-button" [routerLink]="[game.link]">Play now</button>
+    </div>
+  </div>
+
+  <button class="arrow-btn right" (click)="next()">&#8250;</button>
 </div>
 
 
+<div class="footer-background">
+    <p class="footer-text">
+        About us
+    </p>
+    <p class="footer-text">
+        Contact us
+    </p>
+    <div class="horizontal-line">
+        <p class="footer-text" style="margin-top: 50px;">
+            2024 Explorer. Made in Novi Sad, Serbia.
+        </p>
+    </div>
+</div>

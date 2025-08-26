@@ -11,6 +11,7 @@ import { ShoppingCartBundleDTO, ShoppingCartDTO, ShoppingCartItemDTO } from './m
 import { TourSale } from './model/tour-sale.model';
 import { Coupon } from './model/coupon';
 import { BundleDTO } from './model/pacages-publ';
+import { ExchangeRateDTO } from './model/course';
 
 @Injectable({
   providedIn: 'root'
@@ -83,7 +84,7 @@ export class MarketplaceService {
   
   checkout(touristId: number): Observable<any> {
     return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/checkout/${touristId}`, {});
-    }
+  }
 
   addSale(tourSale: TourSale): Observable<TourSale> {
       return this.http.post<TourSale>(environment.apiHost + 'author/tourSale', tourSale);
@@ -134,12 +135,21 @@ export class MarketplaceService {
       return this.http.delete<void>(environment.apiHost + `author/coupon/${id}`);
     }
 
+    publishCoupon(id: number): Observable<any>{
+      return this.http.patch<any>(environment.apiHost + `author/coupon/${id}`, {} );
+    }
+
     applyCoupon(touristId: number | null, couponCode: string): Observable<ShoppingCartDTO> {
       const url = `${environment.apiHost}tourist/shoppingcart/${touristId}/apply-coupon?couponCode=${couponCode}`;
   
-  // Ako nema potrebe za dodatnim podacima u telu zahteva, možete poslati prazan objekat
-      const body = {};  // Možete dodati telo zahteva ako je potrebno
+      const body = {};  
 
+      return this.http.post<ShoppingCartDTO>(url, body);
+    }
+    
+    cancelUsedCoupon(touristId: number | null, couponCode: string): Observable<ShoppingCartDTO> {
+      const url = `${environment.apiHost}tourist/shoppingcart/${touristId}/cancel-coupon?couponCode=${couponCode}`;
+      const body = {};
       return this.http.post<ShoppingCartDTO>(url, body);
     }
     
@@ -151,12 +161,32 @@ export class MarketplaceService {
   
     addBundleToCart(touristId: number, shoppingCartBundleDTO: ShoppingCartBundleDTO): Observable<any> {
       return this.http.post<any>(`${environment.apiHost}tourist/shoppingcart/addboundle/${touristId}`, shoppingCartBundleDTO);
-      }
-      removeBundleFromCart(touristId: number, bundleId: number): Observable<any> {
-        return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove-bundle/${touristId}/${bundleId}`);
-        }
+    }
 
-        getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
-          return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
-        }
+    removeBundleFromCart(touristId: number, bundleId: number): Observable<any> {
+      return this.http.delete<any>(`${environment.apiHost}tourist/shoppingcart/remove-bundle/${touristId}/${bundleId}`);
+    }
+
+    getBundlesForTourist(touristId: number): Observable<BundleDTO[]> {
+      return this.http.get<BundleDTO[]>(`${environment.apiHost}tourist/shoppingcart/prni/${touristId}`);
+    }
+
+private exchangeUrl = environment.apiHost + 'tourist/exchange';
+
+getAllCurrencies(): Observable<{ [key: string]: string }> {
+  return this.http.get<{ [key: string]: string }>(`${this.exchangeUrl}/currencies`);
+}
+
+convertCurrency(amount: number, fromCurrency: string, toCurrency: string): Observable<ExchangeRateDTO> {
+  let params = new HttpParams()
+    .set('amount', amount.toString())
+    .set('fromCurrency', fromCurrency)
+    .set('toCurrency', toCurrency);
+
+  return this.http.get<ExchangeRateDTO>(`${this.exchangeUrl}/convert`, { params });
+}
+
+    
+
+
 }

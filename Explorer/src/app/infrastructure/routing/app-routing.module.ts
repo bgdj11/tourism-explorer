@@ -34,12 +34,21 @@ import { BundleComponent } from 'src/app/feature-modules/tour-authoring/bundle/b
 import { PacagesPublComponent } from 'src/app/feature-modules/marketplace/pacages-publ/pacages-publ.component';
 import { MyPacagesComponent } from 'src/app/feature-modules/marketplace/my-pacages/my-pacages.component';
 import {TetrisComponent} from "../../feature-modules/tetris/tetris.component";
+
 import { AccomodationComponent } from 'src/app/feature-modules/administration/accomodation-create/accomodation-create.component';
+
+
+import {MemoryGameComponent} from "../../feature-modules/memory-game/memory-game.component";
+import {GameMenuComponent} from "../../feature-modules/game-menu/game-menu.component";
+import { LightsOutComponent } from '../../feature-modules/lights-out/lights-out.component';
+import { MastermindComponent } from '../../feature-modules/mastermind/mastermind.component';
+import { TourProblemsStatisticsComponent } from 'src/app/feature-modules/administration/tour-problems-statistics/tour-problems-statistics.component';
+import { ExchangeCalculatorComponent } from 'src/app/feature-modules/marketplace/course/exchange-calculator.component';
 
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
-  {path: '', component: HomeComponent },
+  {path: '', component: HomePageComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'equipment', component: EquipmentComponent, canActivate: [AuthGuard],},
@@ -52,10 +61,10 @@ const routes: Routes = [
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
   {path: 'my-equipment', component: MyEquipmentComponent, canActivate: [AuthGuard],},
   {path: 'author-object', component: ObjectComponent, canActivate: [AuthGuard] },
-  {path: 'tour-preferences', component: TourPreferencesComponent, canActivate: [AuthGuard]},
+  {path: 'tour-preferences', component: TourPreferencesComponent},
   {path: 'blog', component: BlogComponent},
   {path: 'author', component: TourComponent, canActivate: [AuthGuard] },
-  {path: 'location-simulator', component:LocationSimulatorComponent, canActivate: [AuthGuard]},
+  {path: 'location-simulator', component: LocationSimulatorComponent, canActivate: [AuthGuard]},
   {path: 'editUserAccount',component: UserAccountComponent},
   {path: 'allclubs', component: ClubsComponent, canActivate: [AuthGuard],},
   {path: 'tour-search', component: TourSearchComponent},
@@ -64,6 +73,7 @@ const routes: Routes = [
   {path: 'followers', component: FollowersComponent, canActivate: [AuthGuard],},
   {path: 'market', component: MarketComponent, canActivate: [AuthGuard],},
   {path: 'tour-problems', component: TourProblemsComponent, canActivate: [AuthGuard],},
+  {path: 'tour-problems-statistics', component: TourProblemsStatisticsComponent, canActivate: [AuthGuard],},
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'sales', component: TourSaleComponent, canActivate: [AuthGuard],},
   {path: 'home-page', component: HomePageComponent},
@@ -71,13 +81,29 @@ const routes: Routes = [
   {path: 'shopping-cart', component: ShoppingCartComponent, canActivate: [AuthGuard],},
   {path: 'tourist-profile', component: TouristProfileComponent, canActivate: [AuthGuard],},
   {path: 'coupon', component: CouponComponent, canActivate: [AuthGuard],},
-  { path: 'space-invaders', component: SpaceInvadersComponent },
+  {path: 'space-invaders', component: SpaceInvadersComponent },
   {path: 'tetris', component: TetrisComponent},
-  { path: 'bundle', component: BundleComponent },
+  {path: 'bundle', component: BundleComponent },
   {path: 'paceges-publ', component: PacagesPublComponent, canActivate: [AuthGuard],},
   {path: 'my-pacages', component: MyPacagesComponent, canActivate: [AuthGuard],},
+
   {path: 'accomodation', component: AccomodationComponent}
 
+  {path: 'exchange-calculator', component: ExchangeCalculatorComponent, canActivate: [AuthGuard],},
+
+
+  {
+    path: 'game-menu',
+    component: GameMenuComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'space-invaders', component: SpaceInvadersComponent },
+      { path: 'tetris', component: TetrisComponent },
+      { path: 'memory-game', component: MemoryGameComponent },
+      { path: 'mastermind', component: MastermindComponent },
+      { path: 'lights-out', component: LightsOutComponent }
+    ]
+  },
 ];
 
 @NgModule({

@@ -1,232 +1,296 @@
 <div class="encounter-page">
-  <!-- Forma za kreiranje ili uređivanje Encounter-a -->
-  <div class="form-container">
+
+  <!-- Header / context -->
+  <div class="page-header">
     <h2>{{ isEditing ? 'Edit Encounter' : 'Create New Encounter' }}</h2>
+    <div class="chip-row">
+      <mat-chip-set>
+        <mat-chip [selected]="true" [color]="isEditing ? 'accent' : 'primary'">
+          <mat-icon>build</mat-icon>
+          {{ isEditing ? 'Editing' : 'Creating' }}
+        </mat-chip>
+        <mat-chip *ngIf="isAdmin" color="primary" selected>
+          <mat-icon>verified</mat-icon> Admin
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </div>
+
+  <!-- Forma -->
+  <mat-card class="form-card">
     <form [formGroup]="encounterForm" (ngSubmit)="onSubmit()" class="form">
 
-      <!-- Name Field -->
-      <mat-form-field class="full-width">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" placeholder="Enter encounter name" />
-      </mat-form-field>
-
-      <!-- Description Field -->
-      <mat-form-field class="full-width">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" placeholder="Enter encounter description"></textarea>
-      </mat-form-field>
-
-      <!-- Location Field -->
-      <div formGroupName="location">
-        <mat-form-field class="full-width">
-          <mat-label>Latitude</mat-label>
-          <input matInput type="number" formControlName="latitude" placeholder="Enter latitude" />
+      <div class="grid-2">
+        <!-- Name -->
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" placeholder="Enter encounter name">
+          <mat-icon matSuffix>label</mat-icon>
         </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <mat-label>Longitude</mat-label>
-          <input matInput type="number" formControlName="longitude" placeholder="Enter longitude" />
+        <!-- XP -->
+        <mat-form-field appearance="outline">
+          <mat-label>XP</mat-label>
+          <input matInput type="number" formControlName="xp" placeholder="0">
+          <mat-icon matSuffix>bolt</mat-icon>
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option *ngFor="let t of types" [value]="t.value">{{ t.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Description (full width) -->
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="3" formControlName="description" placeholder="Describe the encounter"></textarea>
         </mat-form-field>
       </div>
 
+      <mat-divider></mat-divider>
 
-      <!-- XP Field -->
-      <mat-form-field class="full-width">
-        <mat-label>XP</mat-label>
-        <input matInput type="number" formControlName="xp" placeholder="Enter XP value" />
-      </mat-form-field>
+      <!-- Location -->
+      <div class="section-head">
+        <h3><mat-icon>place</mat-icon> Location</h3>
+      </div>
 
-      <!-- Status Field -->
-      <mat-form-field class="full-width">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option *ngFor="let status of statuses" [value]="status.value">
-            {{ status.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="grid-3" formGroupName="location">
+        <mat-form-field appearance="outline">
+          <mat-label>Latitude</mat-label>
+          <input matInput type="number" formControlName="latitude" placeholder="e.g. 44.8125">
+        </mat-form-field>
 
-      <!-- Type Field -->
-      <mat-form-field class="full-width">
-        <mat-label>Type</mat-label>
-        <mat-select formControlName="type">
-          <mat-option *ngFor="let type of types" [value]="type.value">
-            {{ type.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Longitude</mat-label>
+          <input matInput type="number" formControlName="longitude" placeholder="e.g. 20.4612">
+        </mat-form-field>
 
-      <div *ngIf="showImageForHiddenEncounter">
-        <div class="form-group">
-          <label for="image">Image</label>
-          <input
-            type="file"
-            class="form-control"
-            id="image"
-            (change)="onImageSelected($event)"
-          />
+        <!-- Additional info (ostaje vezano na postojeći kontroler) -->
+        <mat-form-field appearance="outline" class="full" *ngIf="showImageForHiddenEncounter">
+          <mat-label>Additional Location Info</mat-label>
+          <input matInput formControlName="additionalLocationInfo" placeholder="Tips, access notes…">
+        </mat-form-field>
+      </div>
+
+      <!-- Upload za LOCATION (koristi već postojeći flag i field) -->
+      <div class="upload-wrap" *ngIf="showImageForHiddenEncounter">
+        <div class="upload">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>image</mat-icon> Upload image
+          </button>
+          <input #fileInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden>
+          <span class="muted">Optional illustration for hidden/location encounters</span>
+        </div>
+        <div class="preview" *ngIf="image">
+          <img [src]="image" alt="Encounter image preview">
         </div>
       </div>
 
-      <div *ngIf="encounterForm.get('type')?.value === 'SOCIAL'">
-        <mat-form-field class="full-width">
+      <!-- Social options -->
+      <div class="section-head" *ngIf="encounterForm.get('type')?.value === 'SOCIAL'">
+        <h3><mat-icon>group</mat-icon> Social Options</h3>
+      </div>
+
+      <div class="grid-2" *ngIf="encounterForm.get('type')?.value === 'SOCIAL'">
+        <mat-form-field appearance="outline">
           <mat-label>Required Participants</mat-label>
-          <input matInput type="number" formControlName="requiredParticipants" placeholder="Enter number of participants" />
+          <input matInput type="number" formControlName="requiredParticipants" placeholder="e.g. 3">
         </mat-form-field>
 
-        <mat-form-field class="full-width">
+        <mat-form-field appearance="outline">
           <mat-label>Radius (meters)</mat-label>
-          <input matInput type="number" formControlName="radius" placeholder="Enter radius in meters" />
+          <input matInput type="number" formControlName="radius" placeholder="e.g. 50">
         </mat-form-field>
       </div>
 
-
-      <!-- Submit and Cancel Buttons -->
+      <!-- Actions -->
       <div class="form-actions">
         <button mat-raised-button color="primary" type="submit">
+          <mat-icon>save</mat-icon>
           {{ isEditing ? 'Update Encounter' : 'Create Encounter' }}
         </button>
-        <button mat-button color="warn" type="button" (click)="resetForm()">Cancel</button>
+        <button mat-stroked-button color="warn" type="button" (click)="resetForm()">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
       </div>
     </form>
-  </div>
+  </mat-card>
 
-  <!-- Tabela za prikaz Encounter-a -->
-  <div *ngIf="isAdmin" class="list-container">
-    <h2>Encounter List</h2>
-    <table mat-table [dataSource]="encounters" class="mat-elevation-z8">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.name }}</td>
-      </ng-container>
+  <!-- Lista (reviewed) -->
+  <mat-card class="list-card" *ngIf="isAdmin">
+    <div class="section-head">
+      <h2><mat-icon>list_alt</mat-icon> Encounter List</h2>
+    </div>
 
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.description }}</td>
-      </ng-container>
+    <div *ngIf="encounters?.length; else emptyReviewed">
+      <div class="table-wrap">
+        <table mat-table [dataSource]="encounters" class="mat-elevation-z8 sticky">
 
-      <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef>Location</th>
-        <td mat-cell *matCellDef="let encounter">
-          Latitude: {{ encounter.location.latitude }}, Longitude: {{ encounter.location.longitude }}
-        </td>
-      </ng-container>
+          <!-- Name -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let e">{{ e.name }}</td>
+          </ng-container>
 
+          <!-- Description -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let e"><span class="muted">{{ e.description }}</span></td>
+          </ng-container>
 
-      <ng-container matColumnDef="xp">
-        <th mat-header-cell *matHeaderCellDef>XP</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.xp }}</td>
-      </ng-container>
+          <!-- Location -->
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef>Location</th>
+            <td mat-cell *matCellDef="let e">
+              <span class="mono">Lat {{ e.location.latitude }}, Lng {{ e.location.longitude }}</span>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.type }}</td>
-      </ng-container>
+          <!-- XP -->
+          <ng-container matColumnDef="xp">
+            <th mat-header-cell *matHeaderCellDef>XP</th>
+            <td mat-cell *matCellDef="let e"><strong>{{ e.xp }}</strong></td>
+          </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
-      </ng-container>
+          <!-- Type -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let e">
+              <span class="badge" [ngClass]="typeClass(e.type)">{{ e.type }}</span>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="authorId">
-        <th mat-header-cell *matHeaderCellDef>Author ID</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.authorId }}</td>
-      </ng-container>
+          <!-- Status -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let e">
+              <span class="badge" [ngClass]="statusClass(e.status)">{{ e.status }}</span>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let encounter">
-          <button mat-icon-button (click)="editEncounter(encounter)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteEncounter(encounter.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button color="primary" (click)="publishEncounter(encounter.id)">
-            <mat-icon>publish</mat-icon>
-          </button>
-          <button mat-icon-button (click)="archiveEncounter(encounter.id)">
-            <mat-icon>archive</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+          <!-- Author -->
+          <ng-container matColumnDef="authorId">
+            <th mat-header-cell *matHeaderCellDef>Author ID</th>
+            <td mat-cell *matCellDef="let e"><span class="mono">#{{ e.authorId }}</span></td>
+          </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['name', 'description', 'location', 'xp', 'type', 'status', 'authorId', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'description', 'location', 'xp', 'type', 'status', 'authorId', 'actions']"></tr>
-    </table>
-  </div>
-  <div *ngIf="isAdmin" class="to-review-container">
-    <h2>To Review</h2>
-    <table mat-table [dataSource]="toReviewEncounters" class="mat-elevation-z8">
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let e">
+              <div class="row-actions">
+                <button mat-icon-button matTooltip="Edit" (click)="editEncounter(e)"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteEncounter(e.id)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button color="primary" matTooltip="Publish" (click)="publishEncounter(e.id)"><mat-icon>publish</mat-icon></button>
+                <button mat-icon-button matTooltip="Archive" (click)="archiveEncounter(e.id)"><mat-icon>archive</mat-icon></button>
+              </div>
+            </td>
+          </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.name }}</td>
-      </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['name','description','location','xp','type','status','authorId','actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name','description','location','xp','type','status','authorId','actions']"></tr>
+        </table>
+      </div>
+    </div>
 
-      <!-- Description Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.description }}</td>
-      </ng-container>
+    <ng-template #emptyReviewed>
+      <div class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <p>No reviewed encounters yet.</p>
+      </div>
+    </ng-template>
+  </mat-card>
 
-      <!-- Type Column -->
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.type }}</td>
-      </ng-container>
+  <!-- To Review -->
+  <mat-card class="list-card" *ngIf="isAdmin">
+    <div class="section-head">
+      <h2><mat-icon>rule_folder</mat-icon> To Review</h2>
+    </div>
 
-      <!-- XP Column -->
-      <ng-container matColumnDef="xp">
-        <th mat-header-cell *matHeaderCellDef>XP</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.xp }}</td>
-      </ng-container>
+    <div *ngIf="toReviewEncounters?.length; else emptyToReview">
+      <div class="table-wrap">
+        <table mat-table [dataSource]="toReviewEncounters" class="mat-elevation-z8 sticky">
 
-      <!-- Location Column -->
-      <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef>Location</th>
-        <td mat-cell *matCellDef="let encounter">
-          Latitude: {{ encounter.location.latitude }}, Longitude: {{ encounter.location.longitude }}
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let e">{{ e.name }}</td>
+          </ng-container>
 
-      <!-- Author ID Column -->
-      <ng-container matColumnDef="authorId">
-        <th mat-header-cell *matHeaderCellDef>Author</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.authorId }}</td>
-      </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let e"><span class="muted">{{ e.description }}</span></td>
+          </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let encounter">{{ encounter.status }}</td>
-      </ng-container>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let e"><span class="badge" [ngClass]="typeClass(e.type)">{{ e.type }}</span></td>
+          </ng-container>
 
-      <!-- Published Date Column -->
-      <ng-container matColumnDef="publishedDate">
-        <th mat-header-cell *matHeaderCellDef>Published Date</th>
-        <td mat-cell *matCellDef="let encounter">
-          {{ encounter.publishedDate | date: 'medium' }}
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="xp">
+            <th mat-header-cell *matHeaderCellDef>XP</th>
+            <td mat-cell *matCellDef="let e"><strong>{{ e.xp }}</strong></td>
+          </ng-container>
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let encounter">
-          <button mat-icon-button color="primary" (click)="markAsReviewed(encounter.id)">
-            <mat-icon>check_circle</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="deleteEncounter(encounter.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef>Location</th>
+            <td mat-cell *matCellDef="let e">
+              <span class="mono">Lat {{ e.location.latitude }}, Lng {{ e.location.longitude }}</span>
+            </td>
+          </ng-container>
 
-      <!-- Table Header and Rows -->
-      <tr mat-header-row *matHeaderRowDef="['name', 'description', 'type', 'xp', 'location', 'authorId', 'status', 'publishedDate', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'description', 'type', 'xp', 'location', 'authorId', 'status', 'publishedDate', 'actions']"></tr>
-    </table>
-  </div>
+          <ng-container matColumnDef="authorId">
+            <th mat-header-cell *matHeaderCellDef>Author</th>
+            <td mat-cell *matCellDef="let e"><span class="mono">#{{ e.authorId }}</span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let e"><span class="badge" [ngClass]="statusClass(e.status)">{{ e.status }}</span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="publishedDate">
+            <th mat-header-cell *matHeaderCellDef>Published Date</th>
+            <td mat-cell *matCellDef="let e">{{ e.publishedDate | date:'medium' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let e">
+              <div class="row-actions">
+                <button mat-icon-button color="primary" matTooltip="Mark as reviewed" (click)="markAsReviewed(e.id)">
+                  <mat-icon>check_circle</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteEncounter(e.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['name','description','type','xp','location','authorId','status','publishedDate','actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name','description','type','xp','location','authorId','status','publishedDate','actions']"></tr>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #emptyToReview>
+      <div class="empty-state">
+        <mat-icon>task_alt</mat-icon>
+        <p>No items pending review.</p>
+      </div>
+    </ng-template>
+  </mat-card>
+
 </div>

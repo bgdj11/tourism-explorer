@@ -5,6 +5,10 @@ import { Encounter, EncounterStatus, EncounterType } from "../model/encounter.mo
 import { AuthService } from "../../../infrastructure/auth/auth.service";
 import { BehaviorSubject } from "rxjs";
 import { User } from "../../../infrastructure/auth/model/user.model";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+
 
 @Component({
   selector: 'app-encounter',
@@ -126,6 +130,28 @@ export class EncounterComponent implements OnInit {
       });
     }
   }
+
+  // lak mapping za klase (prikaz)
+  statusClass(status: EncounterStatus | string): string {
+    // očekujem 'DRAFT' | 'ACTIVE' | 'ARCHIVED'
+    switch (String(status)) {
+      case 'ACTIVE': return 'badge success';
+      case 'DRAFT': return 'badge info';
+      case 'ARCHIVED': return 'badge danger';
+      default: return 'badge';
+    }
+  }
+
+  typeClass(type: EncounterType | string): string {
+    // očekujem 'SOCIAL' | 'LOCATION' | 'MISC'
+    switch (String(type)) {
+      case 'SOCIAL': return 'badge';
+      case 'LOCATION': return 'badge warn';
+      case 'MISC': return 'badge info';
+      default: return 'badge';
+    }
+  }
+
 
   editEncounter(encounter: Encounter): void {
     this.isEditing = true;

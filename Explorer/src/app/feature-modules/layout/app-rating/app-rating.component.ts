@@ -6,7 +6,7 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'xp-app-rating',
@@ -55,4 +55,4 @@ export class AppRatingComponent implements OnInit {
     });
   }
   
-}
+} 

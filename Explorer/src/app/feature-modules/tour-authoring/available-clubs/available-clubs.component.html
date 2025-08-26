@@ -1,13 +1,49 @@
+<!-- Dugme za prikazivanje/sakrivanje poruka -->
+<button class="show-messages-button" (click)="toggleMessagesVisibility()">
+  {{ showMessages ? 'Hide Messages' : 'Show Messages' }}
+</button>
+
+<div *ngIf="showMessages" class="messages">
+    <div *ngFor="let message of messages" class="message-item">
+      <!-- Prikaz userName iznad sadržaja poruke -->
+      <p class="message-sender">From: {{ getUserNameById(message.senderId) }}</p>
+      
+      <!-- Sadržaj poruke -->
+      <p>{{ message.content }}</p>
+      
+      <div class="message-actions">
+        <!-- Prikazivanje dugmeta za update samo ako je senderId jednak trenutnom korisniku -->
+        <button *ngIf="message.senderId === currentTouristId" (click)="editMessage(message)">Update</button>
+        
+        <!-- Prikazivanje dugmeta za brisanje samo ako je trenutni korisnik vlasnik kluba -->
+        <button *ngIf="ownerClubId === currentTouristId" (click)="deleteMessage(message.id || 0)">Delete</button>
+      </div>
+    </div>
+</div>
+
+<!-- Forma za unos nove poruke -->
+<div *ngIf="isOwnerOfClub(clubId) && showMessages" class="club-card">
+  <textarea [(ngModel)]="messageContent" placeholder="Write your message"></textarea>
+  <button (click)="sendMessageOrUpdate(1)">Send Message</button>
+</div>
+
 <div *ngFor="let club of clubs" class="club-card">
-    <h4>{{ club.name }}</h4>
-    <p>{{ club.description }}</p>
-    <img [src]="club.photo" alt="{{ club.name }}" width="100" height="100">
+  <div *ngIf="club.id === clubId">
+    
+    <!-- Tabela sa porukama -->  
+    
     
     <!-- Prikaz za turiste koji su već članovi -->
     <div *ngIf="hasJoinedTheClub(club.id)">
       <p>You are a member of this club!</p>
+      
+      <!-- Forma za slanje poruke -->
+      <div *ngIf="canSendMessage(club.id) && showMessages">
+        <textarea [(ngModel)]="messageContent" placeholder="Write your message"></textarea>
+        <button (click)="sendMessageOrUpdate(club.id)">Send Message</button>
+      </div>
     </div>
-    
+
     <!-- Prikaz za turiste koji imaju poziv -->
     <div *ngIf="hasInvitationForClub(club.id)">
       <p>You have been invited to join this club!</p>
@@ -21,4 +57,4 @@
       <button *ngIf="club.id && hasRequestSent(club.id)" (click)="withdrawMembershipRequest(club.id)">Withdraw Request</button>
     </div>
   </div>
-  
+</div>

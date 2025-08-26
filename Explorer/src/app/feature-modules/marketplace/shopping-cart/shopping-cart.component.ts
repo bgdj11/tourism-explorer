@@ -4,6 +4,7 @@ import { ShoppingCartDTO, ShoppingCartItemDTO } from '../model/shopping-cart';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { empty } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'xp-shopping-cart',
@@ -19,6 +20,7 @@ export class ShoppingCartComponent implements OnInit {
   
   couponCode: string = '';
   showCouponForm: boolean = false;
+  isCouponAccepted: boolean = false;
 
   constructor(private service: MarketplaceService, private authService: AuthService) {}
 
@@ -42,10 +44,6 @@ export class ShoppingCartComponent implements OnInit {
 
     this.service.getShoppingCart(this.touristId).subscribe({
       next: (cart) => {
-        console.log('Shopping cart data:', cart);  // Proverite sve podatke
-        console.log('Shopping Bundles:', cart.shopingBundles);  // Proverite samo pakete
-        console.log('Shopping Bundles:', cart.shopingItems);  // Proverite samo pakete
-
         this.shoppingCart = cart;
         this.errorMessage = null;  // Resetujemo grešku ako je učitavanje uspešno
       },
@@ -57,7 +55,6 @@ export class ShoppingCartComponent implements OnInit {
     });
   }
 
-
   // Metoda za brisanje ture iz shopping kartice
   removeTour(tourId: number): void {
     if (!this.touristId) {
@@ -66,24 +63,6 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     this.service.removeTourFromCart(this.touristId, tourId).subscribe({
-      next: () => {
-        this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
-        this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
-      },
-      error: (err) => {
-        console.error('Error removing tour from cart', err);
-        this.removeErrorMessage = 'There was an error removing the tour from your cart. Please try again later.';
-      }
-    });
-  }
-
-  removeBundle(bundleId: number): void {
-    if (!this.touristId) {
-      this.removeErrorMessage = 'User not logged in';
-      return;
-    }
-
-    this.service.removeBundleFromCart(this.touristId, bundleId).subscribe({
       next: () => {
         this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
         this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
@@ -106,7 +85,7 @@ export class ShoppingCartComponent implements OnInit {
       return; 
     }
   
-    this.service.checkout(this.touristId).subscribe({
+    this.service.checkout(this.touristId, ).subscribe({
       next: () => {
         this.errorMessage = null;
         this.shoppingCart = null; 
@@ -125,7 +104,7 @@ export class ShoppingCartComponent implements OnInit {
 
   applyCoupon(){
     if(!this.couponCode.trim()){
-      alert('put the valid coupon code.');
+      alert('Put the valid coupon code.');
       return;
     }
 
@@ -133,26 +112,83 @@ export class ShoppingCartComponent implements OnInit {
       alert('Tourist ID is invalid!');
       return;
     }    
+    
 
     this.service.applyCoupon(this.touristId, this.couponCode).subscribe(
       (response: ShoppingCartDTO) => {
-        //ucitaj ture sa novim cijenama.. neka funkcija 
         alert('Coupon has successfully been applied.');
-        this.loadShoppingCart();
+        //this.couponCode = '';
+        this.shoppingCart = response;
+        this.isCouponAccepted = true;
+        console.log('Response after execution of method: ', response);
+        //this.loadShoppingCart();
       },
-      (err) => {
+      (err: HttpErrorResponse) => {
         console.log('An error occured while applying a coupon: ', err);
+
+        let errorMessage = 'An unexpected error occurred. Please contact support.';
+
+        if (err.error && err.error.message) {
+          errorMessage = err.error.message;
+        } else {
+          switch (err.status) {
+            case 400:
+              errorMessage = 'Invalid request.';
+              break;
+            case 404:
+              errorMessage = 'Invalid coupon code.';
+              break;
+            case 500:
+              errorMessage = 'Something went wrong. Please try again later.';
+              break;
+          }
       }
+      alert(errorMessage);
+    }
     );
-
-
   }
 
-  clearCoupon(){
+  clearCoupon(): void{
     this.couponCode = '';
     this.errorMessage = null;
-    alert('Coupon is not used.');
+    //alert('Coupon is not used.');
     this.showCouponForm = !this.showCouponForm;
+  }
+
+  cancelCoupon(): void{
+    this.service.cancelUsedCoupon(this.touristId, this.couponCode).subscribe({
+      next: (response) =>{
+        this.shoppingCart = response;
+        alert('Coupon is canceled.');
+      },
+      error: (err: HttpErrorResponse) =>{
+        let errorMessage = "Something went wrong. Please try again later.";
+        if(err.error && err.error.message){
+          errorMessage = err.error.message;
+        }
+        alert(errorMessage);
+      }
+    });
+  }
+
+
+
+  removeBundle(bundleId: number): void {
+    if (!this.touristId) {
+      this.removeErrorMessage = 'User not logged in';
+      return;
+    }
+
+    this.service.removeBundleFromCart(this.touristId, bundleId).subscribe({
+      next: () => {
+        this.removeErrorMessage = null;  // Resetujemo grešku nakon uspešnog brisanja
+        this.loadShoppingCart();  // Ponovo učitavamo shopping karticu
+      },
+      error: (err) => {
+        console.error('Error removing tour from cart', err);
+        this.removeErrorMessage = 'There was an error removing the tour from your cart. Please try again later.';
+      }
+    });
   }
 }
 

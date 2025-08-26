@@ -1,3 +1,6 @@
+<div style="margin-top: 10px;" *ngIf="loggedInUserRole === 'administrator'">
+  <button type="button" routerLink="/tour-problems-statistics" mat-raised-button class="custom-save-button" style="background-color: darkolivegreen; color: white;"><mat-icon>pie_chart</mat-icon>Statistics</button>
+</div>
 <div class="tour-problems-container" *ngIf="!isLoading; else loading">
     <ng-container *ngIf="tourProblems.length > 0; else noProblems">
       <div *ngFor="let problem of tourProblems" class="tour-problem-card"
@@ -52,7 +55,7 @@
         <p class="problem-description"><strong>Description:</strong> {{ problem.description }}</p>
         <div *ngIf="problem.problemComments.length > 0">
             <p class="comment-comment">Comments:</p>
-            <div *ngFor="let comment of problemComments" class="comment-section">             
+            <div *ngFor="let comment of problemComments[problem.id!]" class="comment-section">             
               <p class="comment-date" style=" color: gray;  font-style: italic;">{{ comment.commentedAt | date:'short' }}</p>
               <p class="comment-meta" style=" color: gray; font-style: italic;">
                 {{ comment.userRole || 'Loading...' }}
@@ -72,7 +75,7 @@
                   </textarea>
                 <button class="comment-section-button"
                   [disabled]="!commentText"
-                  (click)="submitComment(problem.id!)">
+                  (click)="submitComment(problem)">
                   Submit
                 </button>
               </div>
