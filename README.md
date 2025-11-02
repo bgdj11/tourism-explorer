@@ -48,7 +48,7 @@ tourism-explorer/
 Detailed documentation for each part of the application:
 
 ### 🔧 Backend Documentation
-**Location**: Root directory (see backend code in `src/`)
+**Location**: [`src/README.md`](./src/README.md)
 
 The backend is an ASP.NET Core 7.0 application following Clean Architecture and Domain-Driven Design principles.
 
@@ -61,7 +61,7 @@ The backend is an ASP.NET Core 7.0 application following Clean Architecture and 
 
 **Technologies**: ASP.NET Core 7.0, Entity Framework Core, PostgreSQL, JWT, BCrypt
 
-**Note**: Backend documentation is in the root README as the backend forms the base of this repository.
+👉 [**Read Backend Documentation →**](./src/README.md)
 
 ### 🎨 Frontend Documentation
 **Location**: [`frontend/README.md`](./frontend/README.md)
@@ -176,5 +176,24 @@ npm test
 ## 🔗 Links
 
 - **Repository**: [https://github.com/bgdj11/tourism-explorer](https://github.com/bgdj11/tourism-explorer)
+- **Backend Documentation**: [`src/README.md`](./src/README.md)
 - **Frontend Documentation**: [`frontend/README.md`](./frontend/README.md)
 
+<<<<<<< HEAD
+=======
+## 📄 License
+
+This project contains code from two repositories, each with their own license terms. See LICENSE files in respective directories.
+
+## 🛠 Merge History
+
+This monorepo was created on November 2, 2025 by merging:
+- Backend repository (psw-be-ra-2024-group-8) - all commits preserved
+- Frontend repository (psw-fe-ra-2024-group-8) - all commits preserved in `frontend/` directory
+
+The merge strategy used `git read-tree` to preserve complete commit history from both repositories.
+
+---
+
+**Built with ❤️ for Tourism Explorer** | [Backend Docs](./src/README.md) | [Frontend Docs](./frontend/README.md)
+>>>>>>> 68ead9b0 (docs: add comprehensive backend and frontend documentation with proper linking)
