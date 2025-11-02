@@ -4,16 +4,16 @@ A comprehensive ASP.NET Core backend application for a tourism exploration platf
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Technology Stack](#technology-stack)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Running the Application](#running-the-application)
-- [Testing](#testing)
-- [API Documentation](#api-documentation)
-- [Database](#database)
-- [Contributing](#contributing)
+- [Overview](#-overview)
+- [Technology Stack](#-technology-stack)
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Running the Application](#️-running-the-application)
+- [Testing](#-testing)
+- [API Documentation](#-api-documentation)
+- [Database](#-database)
+- [Contributing](#-contributing)
 
 ## 🎯 Overview
 

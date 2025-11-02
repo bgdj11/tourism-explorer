@@ -4,18 +4,25 @@ A modern Angular-based single-page application (SPA) for the Tourism Explorer pl
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Technology Stack](#technology-stack)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Running the Application](#running-the-application)
-- [Building for Production](#building-for-production)
-- [Testing](#testing)
-- [Configuration](#configuration)
-- [UI Components](#ui-components)
-- [Contributing](#contributing)
+- [Overview](#-overview)
+- [Technology Stack](#-technology-stack)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Running the Application](#️-running-the-application)
+- [Building for Production](#-building-for-production)
+- [Testing](#-testing)
+- [Configuration](#️-configuration)
+- [UI Components](#-ui-components)
+- [Maps Integration](#️-maps-integration)
+- [Internationalization (i18n)](#-internationalization-i18n)
+- [Authentication](#-authentication)
+- [Performance Optimizations](#-performance-optimizations)
+- [Contributing](#-contributing)
+- [Additional Resources](#-additional-resources)
+- [Troubleshooting](#-troubleshooting)
+- [License](#-license)
 
 ## 🎯 Overview
 
