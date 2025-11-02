@@ -503,4 +503,4 @@ This project is licensed under the terms specified in the LICENSE file.
 
 ---
 
-**[← Back to Main Documentation](../README.md)** | **[Backend Documentation →](../src/README.md)** - Frontend
+**[← Back to Main Documentation](../README.md)** | **[Backend Documentation →](../src/README.md)** 
