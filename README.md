@@ -179,21 +179,7 @@ npm test
 - **Backend Documentation**: [`src/README.md`](./src/README.md)
 - **Frontend Documentation**: [`frontend/README.md`](./frontend/README.md)
 
-<<<<<<< HEAD
-=======
 ## 📄 License
 
 This project contains code from two repositories, each with their own license terms. See LICENSE files in respective directories.
 
-## 🛠 Merge History
-
-This monorepo was created on November 2, 2025 by merging:
-- Backend repository (psw-be-ra-2024-group-8) - all commits preserved
-- Frontend repository (psw-fe-ra-2024-group-8) - all commits preserved in `frontend/` directory
-
-The merge strategy used `git read-tree` to preserve complete commit history from both repositories.
-
----
-
-**Built with ❤️ for Tourism Explorer** | [Backend Docs](./src/README.md) | [Frontend Docs](./frontend/README.md)
->>>>>>> 68ead9b0 (docs: add comprehensive backend and frontend documentation with proper linking)
