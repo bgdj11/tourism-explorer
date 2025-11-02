@@ -166,22 +166,6 @@ npm test
 - **Component-Based** UI with Angular
 - **Service Layer** for business logic
 
-## 🤝 Contributing
-
-This repository was created by merging two separate repositories while preserving full commit history:
-
-- **Backend**: Original repository at `kzi-nastava/psw-be-ra-2024-group-8`
-- **Frontend**: Original repository at `kzi-nastava/psw-fe-ra-2024-group-8`
-
-All commits from both repositories are preserved and can be viewed in the git history.
-
-### Development Workflow
-
-1. Create feature branches from `development`
-2. Follow the coding standards outlined in respective documentation
-3. Write tests for new features
-4. Submit pull requests to `development` branch
-
 ## 📊 Repository Statistics
 
 - **Combined Commits**: 23,900+ commits from both repositories
@@ -194,16 +178,3 @@ All commits from both repositories are preserved and can be viewed in the git hi
 - **Repository**: [https://github.com/bgdj11/tourism-explorer](https://github.com/bgdj11/tourism-explorer)
 - **Frontend Documentation**: [`frontend/README.md`](./frontend/README.md)
 
-## 📄 License
-
-This project contains code from two repositories, each with their own license terms. See LICENSE files in respective directories.
-
-## 🛠 Merge History
-
-This monorepo was created on November 2, 2025 by merging:
-- Backend repository (psw-be-ra-2024-group-8) - all commits preserved
-- Frontend repository (psw-fe-ra-2024-group-8) - all commits preserved in `frontend/` directory
-
-The merge strategy used `git read-tree` to preserve complete commit history from both repositories.
-
----
