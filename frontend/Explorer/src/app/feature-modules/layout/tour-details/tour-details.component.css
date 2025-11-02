@@ -1,0 +1,157 @@
+.tour-details-container {
+  padding: 25px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.tour-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.checkpoints-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.checkpoint-card {
+  width: 200px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.checkpoint-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.checkpoint-card h4 {
+  padding: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.checkpoint-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.travel-times ul {
+  list-style: none;
+  padding: 0;
+}
+
+.travel-times li {
+  background-color: #f1f5f9;
+  margin-bottom: 8px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.accomodations-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.accomodation-card {
+  flex: 1 1 250px;
+  background: #fefefe;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 50px;
+  color: #555;
+}
+
+.tour-info-box {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin: 20px auto;
+  max-width: 700px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.tour-info-box p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #444;
+}
+
+.tour-details-container {
+  padding: 25px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.section {
+  margin-top: 25px;
+}
+
+.info-section-box {
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin: 20px auto;
+  max-width: 700px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.info-section-box h3 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.info-section-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-section-box li {
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #444;
+  background-color: #e9ecef;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+
+@media (max-width: 768px) {
+  .checkpoints-container,
+  .accomodations-container {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,47 @@
+.comment-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+  max-width: 100%; /* Adjusts to the container's width */
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.comment-time, .comment-modified-time {
+  font-size: 0.85em;
+  color: #888;
+  margin-left: 8px;
+}
+
+.comment-body {
+  margin-top: 8px;
+  font-size: 1em;
+  line-height: 1.5; /* Ensures readability */
+  white-space: pre-wrap; /* Preserves spaces and line breaks */
+  word-wrap: break-word; /* Breaks long words to prevent overflow */
+}
+
+.comment-action {
+  margin-top: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.comment-card button mat-icon {
+  font-size: 1.1em;
+}
+
+.xp-comment-form {
+  margin-top: 12px;
+}

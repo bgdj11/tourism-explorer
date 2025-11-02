@@ -1,0 +1,46 @@
+<div class="game-menu-page">
+  <!-- Jedan red, 5 manjih kartica -->
+  <section class="gallery">
+    <button class="game-card" [routerLink]="['/game-menu','space-invaders']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:false }">
+      <div class="thumb">
+        <img src="assets/space_inv.jpg" alt="Space Invaders" />
+        <span class="title">Space Invaders</span>
+      </div>
+    </button>
+
+    <button class="game-card" [routerLink]="['/game-menu','tetris']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:false }">
+      <div class="thumb">
+        <img src="assets/tetris.jpeg" alt="Tetris" />
+        <span class="title">Tetris</span>
+      </div>
+    </button>
+
+    <button class="game-card" [routerLink]="['/game-menu','memory-game']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:false }">
+      <div class="thumb">
+        <img src="assets/memory_game.jpg" alt="Memory Game" />
+        <span class="title">Memory Game</span>
+      </div>
+    </button>
+
+    <button class="game-card" [routerLink]="['/game-menu','mastermind']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:false }">
+      <div class="thumb">
+        <img src="assets/mastermind.jpg" alt="Mastermind" />
+        <span class="title">Mastermind</span>
+      </div>
+    </button>
+
+    <button class="game-card" [routerLink]="['/game-menu','lights-out']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact:false }">
+      <div class="thumb">
+        <img src="assets/lightsout.jfif" alt="Lights Out" />
+        <span class="title">Lights Out</span>
+      </div>
+    </button>
+  </section>
+
+  <section class="play-wrapper">
+    <div id="playArea" class="play-area" role="region" aria-label="Zona za igru">
+      <router-outlet #outlet="outlet"></router-outlet>
+      <div class="play-placeholder" *ngIf="!outlet.isActivated"><span>Let’s play!</span></div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,73 @@
+<div id="tour-preferences">
+  <hr>
+  <div id="tour-preferences-details">
+    <table>
+      <thead>
+        <tr>
+            <th>Difficulty</th>
+            <th>WalkRating</th>
+            <th>BikeRating</th>
+            <th>CarRating</th>
+            <th>BoatRating</th>
+            <th>Tages</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tp of tourPreferences">
+        <td>{{ getDifficultyString(tp.difficulty) }}</td>
+        <td>{{tp.walkRating}}</td>
+        <td>{{tp.bikeRating}}</td>
+        <td>{{tp.carRating}}</td>
+        <td>{{tp.boatRating}}</td>
+        <td>{{tp.interestTags}}</td>
+        <td> 
+          <button color="accent" (click)="deleteTourPreferences(tp.id || 0)" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button color="primary" (click)="onEditClicked(tp)" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </button>
+        </td>
+      </tr>
+      <tr><button color="primary" (click)="onAddClicked()" mat-icon-button>
+        <mat-icon>add</mat-icon>
+    </button></tr>
+    </tbody>
+    </table>
+  </div>
+  <div>
+    <button (click)="shouldRenderTourSearch = true">Find Your Adventure</button>
+    <div *ngIf="shouldRenderTourSearch">
+      <!-- Input za distancu i dugme -->
+        <div>
+          <label for="distance">Unesite distancu (u kilometrima):</label>
+          <input type="number" id="distance" min="0" [(ngModel)]="distance">
+      </div>
+      <button (click)="search()">Pretraži</button>
+      <!-- Mapa -->
+      <xp-map
+          class="map-container"
+          [initialCenter]="[45.2396, 19.8227]"
+          [initialZoom]="13"
+          (mapClick)="onMapClick($event)">
+      </xp-map>
+    </div>
+  </div>
+  <hr>
+  <xp-tour-preferences-form *ngIf="shouldRenderTourPreferencesForm" [shouldEdit]="shouldEdit" [tourPreferences]="selectedTourPreferences" (tourPreferencesUpdate) = "getTourPreferences()"></xp-tour-preferences-form>
+</div>
+
+<div class="tour-card-container">
+  <div class="tour-card" *ngFor="let tour of tours">
+    <h3>{{ tour.name }}</h3>
+    <p><strong>Description:</strong> {{ tour.description }}</p>
+    <p><strong>Difficulty:</strong> {{ tour.weight }}</p>
+    <p><strong>Price:</strong> {{ tour.price | currency }}</p>
+    <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
+    <div *ngIf="tour.tourCheckpoints && tour.tourCheckpoints.length > 0">
+      <h4>First Checkpoint:</h4>
+      <p><strong>Name:</strong> {{ tour.tourCheckpoints[0].checkpointName }}</p>
+      <p><strong>Description:</strong> {{ tour.tourCheckpoints[0].checkpointDescription || 'No description available' }}</p>
+    </div>
+  </div>
+</div>

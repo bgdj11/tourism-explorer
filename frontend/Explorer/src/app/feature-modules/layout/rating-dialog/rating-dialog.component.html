@@ -1,0 +1,27 @@
+<div class="modal" *ngIf="isModalVisible">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>Give us a star!</h2>
+    <form (ngSubmit)="submitReview()">
+      <div class="star-rating">
+        <label
+          *ngFor="let star of stars; let i = index"
+          class="star"
+          [class.active]="stars[i]"
+          [class.hovered]="hoveredStars[i]"
+          (click)="setRating(i + 1)"
+          (mouseenter)="handleHover(i + 1)"
+          (mouseleave)="clearHover()"
+          >★</label>
+      </div>
+      <textarea
+        id="comment"
+        [(ngModel)]="review.comment"
+        name="comment"
+        required
+        placeholder="Leave your comment"
+      ></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>

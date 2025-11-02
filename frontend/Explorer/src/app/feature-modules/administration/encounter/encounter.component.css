@@ -1,0 +1,73 @@
+:host { display:block; }
+
+.encounter-page {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* header */
+.page-header {
+  display:flex; align-items:center; justify-content: space-between; gap: 12px;
+}
+.chip-row { display:flex; align-items:center; }
+
+/* cards */
+.form-card, .list-card { padding: 12px; }
+
+/* grids */
+.grid-2 {
+  display:grid; gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-3 {
+  display:grid; gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.full { grid-column: 1 / -1; }
+
+/* sections */
+.section-head {
+  display:flex; align-items:center; gap:8px; margin: 12px 0 8px;
+}
+.section-head h3, .section-head h2 { display:flex; gap:8px; align-items:center; margin:0; }
+
+/* upload */
+.upload-wrap {
+  display:flex; align-items:flex-start; gap: 16px; margin: 4px 0 8px;
+}
+.upload { display:flex; flex-direction:column; gap:6px; }
+.preview img {
+  width: 160px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;
+}
+.muted { color:#6b7280; font-size:12px; }
+
+/* table */
+.table-wrap { overflow:auto; border-radius: 12px; }
+table.sticky thead th { position: sticky; top: 0; background: #fff; z-index: 1; }
+
+.mat-header-cell, .mat-cell { padding: 10px 12px; }
+.row-actions { display:flex; gap:6px; justify-content:flex-end; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+/* badges */
+.badge {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb;
+  background:#f9fafb; color:#374151;
+}
+.badge.success { background:#ecfdf5; border-color:#a7f3d0; color:#065f46; }
+.badge.warn    { background:#fffbeb; border-color:#fde68a; color:#92400e; }
+.badge.danger  { background:#fef2f2; border-color:#fecaca; color:#991b1b; }
+.badge.info    { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}

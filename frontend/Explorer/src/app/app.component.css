@@ -1,0 +1,11 @@
+/*.language-buttns {
+  display: flex;
+  gap: 10px;
+  padding-left: 20px; /* isto kao padding navbar-a 
+  margin-top: 20px; /* da budu malo ispod navbar-a 
+} 
+*/
+.content {
+  padding-top: 70px; /* visina navbara */
+}
+

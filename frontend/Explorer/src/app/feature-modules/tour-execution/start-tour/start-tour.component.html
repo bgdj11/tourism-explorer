@@ -1,0 +1,243 @@
+<!-- start-tour.component.html -->
+<div class="tour-page">
+
+  <!-- Naslov / header -->
+  <div class="header">
+    <h2 *ngIf="!activeTourExecution">Available Tours</h2>
+    <h2 *ngIf="activeTourExecution">Active Tour Execution</h2>
+    <span class="count-pill" *ngIf="!activeTourExecution && tours?.length">{{ tours.length }}</span>
+  </div>
+
+  <!-- Error banner -->
+  <div *ngIf="errorMessage" class="error-banner" role="alert">
+    <mat-icon aria-hidden="true">error</mat-icon>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- LISTA TURA (kada nema aktivne) -->
+  <ng-container *ngIf="!activeTourExecution">
+    <mat-card *ngIf="tours?.length; else emptyToursTpl" class="section-card">
+      <div class="table-wrap">
+        <table mat-table [dataSource]="tours" class="mat-elevation-z1">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let t">#{{ t.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let t">
+              <div class="name-cell">
+                <mat-icon>route</mat-icon>
+                <span>{{ t.name }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let t">
+              <span class="muted">{{ t.description }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let t">
+              <div class="row-actions">
+                <button mat-raised-button color="primary" (click)="startTour(t.id)">
+                  <mat-icon>play_arrow</mat-icon>
+                  Start
+                </button>
+                <button mat-stroked-button (click)="showReviews(t.id)">
+                  <mat-icon>star</mat-icon>
+                  Reviews
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </mat-card>
+
+    <ng-template #emptyToursTpl>
+      <mat-card class="empty-state">
+        <mat-icon>explore_off</mat-icon>
+        <p>No tours available right now.</p>
+      </mat-card>
+    </ng-template>
+  </ng-container>
+
+  <!-- AKTIVNA TURA -->
+  <ng-container *ngIf="activeTourExecution">
+    <mat-card class="hero-card">
+      <div class="hero">
+        <div class="left">
+          <div class="avatar">#{{ activeTourExecution.tourId }}</div>
+          <div>
+            <h3 class="title">Tour #{{ activeTourExecution.tourId }}</h3>
+            <div class="meta">
+              <span class="badge"
+                    [class.success]="activeTourExecution?.status === TourExecutionStatus.COMPLETED"
+                    [class.warn]="activeTourExecution?.status === TourExecutionStatus.IN_PROGRESS"
+                    [class.danger]="activeTourExecution?.status === TourExecutionStatus.ABANDONED">
+  {{ activeTourExecution?.status }}
+</span>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="times">
+          <div class="time-row">
+            <mat-icon>play_circle</mat-icon>
+            <span>{{ activeTourExecution.startTime | date:'short' }}</span>
+          </div>
+          <div class="time-row" *ngIf="activeTourExecution.endTime">
+            <mat-icon>stop_circle</mat-icon>
+            <span>{{ activeTourExecution.endTime | date:'short' }}</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button mat-stroked-button color="primary" (click)="completeTour()">
+            <mat-icon>check_circle</mat-icon>
+            Complete
+          </button>
+          <button mat-stroked-button color="warn" (click)="abandonTour()">
+            <mat-icon>cancel</mat-icon>
+            Abandon
+          </button>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- UNLOCKED SECRETS -->
+    <mat-card class="section-card">
+      <div class="section-header">
+        <h3>Unlocked Secrets</h3>
+        <span class="count-pill" *ngIf="activeTourExecution?.visitedCheckpoints?.length">
+          {{ activeTourExecution.visitedCheckpoints.length }}
+        </span>
+      </div>
+
+      <ng-container *ngIf="activeTourExecution.visitedCheckpoints?.length; else noSecretsTpl">
+        <div class="checkpoints">
+          <div class="cp-row" *ngFor="let v of activeTourExecution.visitedCheckpoints; trackBy: trackByVisited">
+            <div class="cp-id">
+              <mat-icon>place</mat-icon>
+              <span>CP {{ v.checkpointId }}</span>
+            </div>
+            <div class="cp-secret">{{ v.secret }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noSecretsTpl>
+        <div class="empty-inline">
+          <mat-icon>lock_open</mat-icon>
+          <span>No secrets unlocked yet.</span>
+        </div>
+      </ng-template>
+    </mat-card>
+  </ng-container>
+
+  <!-- REVIEWS LIST (kada nema aktivne ture i kad je traženo) -->
+  <mat-card class="section-card" *ngIf="!activeTourExecution && showReviewForTour">
+    <div class="section-header">
+      <h3>Tour Reviews</h3>
+      <span class="count-pill" *ngIf="reviews?.length">{{ reviews.length }}</span>
+    </div>
+
+    <div class="review-list" *ngIf="reviews?.length; else noReviewsTpl">
+      <div class="review-item" *ngFor="let r of reviews; trackBy: trackByReview">
+        <div class="review-head">
+          <div class="stars" [attr.aria-label]="'Rating ' + r.rating + ' of 5'">
+            <mat-icon *ngFor="let s of [1,2,3,4,5]">{{ s <= r.rating ? 'star' : 'star_border' }}</mat-icon>
+          </div>
+          <span class="date">{{ r.reviewDate | date:'mediumDate' }}</span>
+        </div>
+        <p class="comment">“{{ r.comment }}”</p>
+        <div class="review-actions" *ngIf="canEditReview(r)">
+          <button mat-button color="accent" (click)="editReview(r)">
+            <mat-icon>edit</mat-icon> Edit
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #noReviewsTpl>
+      <div class="empty-inline">
+        <mat-icon>rate_review</mat-icon>
+        <span>No reviews yet.</span>
+      </div>
+    </ng-template>
+  </mat-card>
+
+  <!-- REVIEW FORM (uvek vidljiva sekcija kao kod tebe, samo ulepšana) -->
+  <mat-card class="section-card">
+    <h3>Leave a Review</h3>
+
+    <form (ngSubmit)="submitReview()" class="review-form" #reviewForm="ngForm">
+      <div class="rating-picker" aria-label="Select rating">
+        <button type="button" mat-icon-button *ngFor="let s of [1,2,3,4,5]"
+                [class.active]="s <= review.rating"
+                (click)="review.rating = s"
+                [attr.aria-pressed]="s <= review.rating">
+          <mat-icon>{{ s <= review.rating ? 'star' : 'star_border' }}</mat-icon>
+        </button>
+        <span class="rating-hint">{{ review.rating || 0 }}/5</span>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Comment</mat-label>
+        <textarea matInput [(ngModel)]="review.comment" name="comment" required rows="3"
+                  placeholder="What did you like or dislike?"></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!review.rating || !review.comment">
+          <mat-icon>send</mat-icon>
+          Submit Review
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- EDIT REVIEW -->
+  <mat-card class="section-card" *ngIf="editingReview">
+    <h3>Edit Review</h3>
+
+    <form (ngSubmit)="submitEditedReview()" class="review-form">
+      <div class="rating-picker" aria-label="Edit rating">
+        <button type="button" mat-icon-button *ngFor="let s of [1,2,3,4,5]"
+                [class.active]="s <= reviewToEdit.rating"
+                (click)="reviewToEdit.rating = s">
+          <mat-icon>{{ s <= reviewToEdit.rating ? 'star' : 'star_border' }}</mat-icon>
+        </button>
+        <span class="rating-hint">{{ reviewToEdit.rating || 0 }}/5</span>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Comment</mat-label>
+        <textarea matInput [(ngModel)]="reviewToEdit.comment" name="editComment" required rows="3"></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>check</mat-icon>
+          Confirm Edit
+        </button>
+        <button mat-stroked-button type="button" (click)="cancelEdit()">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+</div>

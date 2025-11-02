@@ -1,0 +1,61 @@
+<div *ngIf="!loading && tour" class="tour-details-container">
+  <h2 class="tour-title">{{ tour?.name }}</h2>
+
+  <!-- Info box -->
+  <div class="tour-info-box">
+    <p><strong>Description:</strong> {{ tour?.description }}</p>
+    <p><strong>Difficulty:</strong> {{ tour?.weight }}</p>
+    <p><strong>Price:</strong> {{ tour?.price | currency }}</p>
+    <p><strong>Tags:</strong> {{ tour?.tags?.join(', ') }}</p>
+    <p><strong>Length:</strong> {{ tour?.lengthInKm }} km</p>
+    <p><strong>Published:</strong> {{ tour?.publishedDate | date:'mediumDate' }}</p>
+  </div>
+
+  <!-- Equipment box -->
+  <div *ngIf="tour?.equipments?.length" class="info-section-box">
+    <h3>Equipment</h3>
+    <ul>
+      <li *ngFor="let eq of tour?.equipments">{{ eq?.name }}</li>
+    </ul>
+  </div>
+
+  <!-- Checkpoints -->
+  <div *ngIf="tour?.tourCheckpoints as checkpoints">
+    <div *ngIf="checkpoints.length > 0" class="checkpoints-container">
+      <div class="checkpoint-card" *ngFor="let cp of checkpoints">
+        <img [src]="cp.image" alt="{{ cp.checkpointName }}" />
+        <h4>{{ cp.checkpointName }}</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- Travel Times box -->
+  <div *ngIf="tour?.travelTimes?.length" class="info-section-box">
+    <h3>Travel Times</h3>
+    <ul>
+      <li *ngFor="let tt of tour.travelTimes">
+        {{ tt.time }} min - Transport: {{ getTransportName(tt.transportType) }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Daily Agendas box -->
+  <div *ngIf="tour?.dailyAgendas?.length" class="info-section-box">
+    <h3>Daily Agenda</h3>
+    <ul>
+      <li *ngFor="let da of tour?.dailyAgendas">{{ da?.description }}</li>
+    </ul>
+  </div>
+
+  <!-- Accommodations box -->
+  <div *ngIf="tour?.accomodations?.length" class="info-section-box">
+    <h3>Accommodations</h3>
+    <div class="accomodations-container">
+      <div *ngFor="let acc of tour?.accomodations" class="accomodation-card">
+        <h4>{{ acc?.name }}</h4>
+        <p>{{ acc?.city }}</p>
+        <p>{{ acc?.category }}</p>
+      </div>
+    </div>
+  </div>
+</div>

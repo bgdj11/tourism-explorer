@@ -1,0 +1,23 @@
+<div *ngIf="loading" class="loading-spinner">
+  Loading bundles...
+</div>
+
+<div *ngIf="!loading && errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="!loading && !errorMessage" class="container">
+  <h2 class="text-center">Purchased Bundles</h2>
+  <div *ngFor="let bundle of bundles" class="card">
+    <h3 class="card-title">{{ bundle.name }}</h3>
+    <p class="card-content"><strong>Custom Price:</strong> {{ bundle.customPrice | currency }}</p>
+    <p class="card-content"><strong>Total Tours Price:</strong> {{ bundle.totalToursPrice | currency }}</p>
+    <p class="card-content"><strong>Status:</strong> {{ bundle.status }}</p>
+    <h4>Tours in Bundle</h4>
+    <ul>
+      <li *ngFor="let tour of bundle.tours">
+        {{ tour.name }} - {{ tour.price | currency }}
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+/* host popunjava play-area */
+:host{ display:block; width:100%; height:100%; }
+
+/* zajedničke varijable iz TS-a */
+.lo{
+  --n: 5;            /* broj kolona/redova */
+  --gap: 8px;        /* razmak */
+  --cell: 64px;      /* veličina kvadrata */
+  --fs: 16px;        /* bazni font */
+  width:100%; height:100%;
+  display:grid; place-items:center;
+  font: 600 var(--fs)/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#0b1120;
+}
+
+/* panel je transparentan – oslanjamo se na play-area pozadinu */
+.panel{
+  width: min(920px, 100%);
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--gap);
+  padding: clamp(8px, 1.2vmin, 14px);
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.head h2{
+  margin:0;
+  font-size: clamp(20px, 2.2vmin + .5rem, 28px);
+  font-weight: 900;
+  letter-spacing:.6px;
+  text-align:center;
+}
+.head .sub{
+  margin-top:2px;
+  text-align:center;
+  font-weight:600;
+  color:#64748b;
+}
+
+/* BOARD */
+.board{
+  min-height:0;
+  display:grid; place-items:center;
+}
+
+/* grid je NxN, uz varijable */
+.grid{
+  display:grid;
+  gap: var(--gap);
+}
+.row{
+  display:grid;
+  grid-template-columns: repeat(var(--n), var(--cell));
+  gap: var(--gap);
+}
+
+/* dugmad – kvadrati koji se skaliraju */
+.tile{
+  width: var(--cell);
+  height: var(--cell);
+  border-radius: 12px;
+  border: 2px solid #0f172a;           /* default ivica – vidi se i OFF stanje */
+  background: #0b1220;                  /* tamno OFF */
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.04),
+    0 2px 6px rgba(0,0,0,.18);
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+  cursor: pointer;
+}
+
+/* ON (svetli) – “glow” + žućkasto */
+.tile.on{
+  background: #facc15;                  /* amber-400 */
+  border-color: #f59e0b;                /* amber-500 */
+  box-shadow:
+    0 0 0 3px rgba(250,204,21,.25),
+    0 10px 24px rgba(250,204,21,.28),
+    inset 0 0 0 1px rgba(0,0,0,.08);
+  filter: saturate(1.05);
+}
+
+/* OFF – ugašeno, blagi gradient */
+.tile.off{
+  background: linear-gradient(180deg, #0b1220, #0b1120 60%, #09101d);
+  border-color: #0f172a;
+}
+
+/* interakcije */
+.tile:hover{ transform: translateY(-1px); }
+.tile:active{ transform: translateY(0); }
+.tile:focus-visible{
+  outline: 0;
+  box-shadow:
+    0 0 0 3px rgba(59,130,246,.35),
+    0 2px 6px rgba(0,0,0,.18);
+}
+
+/* KONTROLE */
+.controls{ display:grid; place-items:center; }
+
+.btn{
+  padding: 10px 18px;
+  border: 0; border-radius: 999px;
+  font: inherit; font-weight: 800;
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{
+  background:#22c55e; color:#fff;
+  box-shadow: 0 6px 16px rgba(34,197,94,.25);
+}
+.btn.primary:hover{ filter: brightness(.96); }
+
+/* Responsivnost – automatski jer računamo varijable iz TS-a */
+/* JAČI glow na hover za pločice */
+.tile:hover{
+  transform: translateY(-1px);
+  /* malo naglašeni “opšti” hover i kad je OFF */
+  box-shadow:
+    0 0 0 2px rgba(59,130,246,.22),
+    0 10px 22px rgba(0,0,0,.20);
+}
+
+/* kad je upaljena (ON) – još jači amber glow */
+.tile.on:hover{
+  box-shadow:
+    0 0 0 5px rgba(250,204,21,.45),      /* spoljašnji žuti oreol */
+    0 30px 50px rgba(250,204,21,.42),    /* jača “svetlost” */
+    inset 0 0 0 1px rgba(0,0,0,.08);
+  filter: saturate(1.18) brightness(1.06);
+}
+
+/* dugme – malo istaknutiji hover + lift */
+.btn.primary:hover{
+  filter: none;                           /* umesto samo brightness */
+  transform: translateY(-1px);
+  box-shadow:
+    20px 20px 26px rgba(34,197,94,.35),
+    0 0 0 3px rgba(34,197,94,.22);
+}

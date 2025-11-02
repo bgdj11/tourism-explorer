@@ -1,0 +1,90 @@
+<div class="shopping-cart" *ngIf="shoppingCart">
+    <h2>Shopping Cart</h2>
+
+    <!-- Prikazujemo grešku učitavanja ako postoji -->
+    <div *ngIf="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <div *ngIf="shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0">
+      <ul>
+        <!-- Iteriramo kroz shopingItems -->
+        <li *ngFor="let item of shoppingCart.shopingItems">
+          <div class="cart-item">
+            <span class="tour-name">{{ item.tourName }}</span>
+            
+            <!-- Prikaz cijena-->
+            <span class="tour-price" *ngIf="item.tourPriceWithDiscount !== null">
+              <s>{{ item.tourPrice |  currency }}</s>
+              <span class="discount-price"> {{ item.tourPriceWithDiscount | currency}}</span>
+            </span>
+            <span *ngIf="item.tourPriceWithDiscount === null">
+              {{ item.tourPrice | currency}}
+            </span>
+              <button (click)="removeTour(item.tourId)">Remove</button>
+          </div>
+        </li>
+
+        <!-- Iteriramo kroz shopingBoundles (pakete) -->
+        <li *ngFor="let bundle of shoppingCart.shopingBundles">
+          <div class="cart-item">
+            <span class="tour-name">{{ bundle.name }}</span>
+            <span class="tour-price">{{ bundle.price | currency }}</span>
+            <button (click)="removeBundle(bundle.bundleId)">Remove</button>
+
+          </div>
+        </li>
+      </ul>
+
+      <div class="coupon-section" (click)="toggleCouponForm()" >
+        <div class="coupon-header">
+          Coupon
+        </div>
+        <div>
+          Unesi promo kod i ostvari pogodnosti.
+        </div>
+      </div>
+
+      <div *ngIf="showCouponForm" class="coupon-form">
+        <label for="couponCode">Promo kod:</label>
+        <input type="text" id="couponCode"
+         [(ngModel)]="couponCode" 
+        />
+        <div class="coupon-actions">
+          <button (click)="applyCoupon()">Prihvati</button>
+          <button (click)="cancelCoupon()">Otkaži kupon</button>
+        </div>
+
+      </div>
+
+      <!-- Ukupna cena -->
+      <div class="total-price">
+        <p><strong>Total Price:</strong> {{ shoppingCart.totalPrice | currency }}</p>
+      </div>
+    </div>
+
+    <div>
+      <button *ngIf="shoppingCart && shoppingCart.shopingItems.length > 0 || shoppingCart.shopingBundles.length > 0" (click)="checkout()">Checkout</button>
+    </div>
+
+    <!-- Poruka kada je korpa prazna -->
+    <ng-template #emptyCart>
+      <p>Your shopping cart is empty.</p>
+    </ng-template>
+  </div>
+
+  <!-- Prikazujemo grešku brisanja ako postoji -->
+  <div *ngIf="removeErrorMessage" class="error-message">
+    <p>{{ removeErrorMessage }}</p>
+  </div>
+
+  <!-- Poruka kada shopping kartica nije učitana -->
+  <div *ngIf="!shoppingCart && !errorMessage">
+    <p>Loading your shopping cart...</p>
+  </div>
+
+  <!-- Poruka kada korisnik nije ulogovan -->
+  <div *ngIf="!touristId && !shoppingCart">
+    <p>You must be logged in to view your shopping cart.</p>
+  </div>
+

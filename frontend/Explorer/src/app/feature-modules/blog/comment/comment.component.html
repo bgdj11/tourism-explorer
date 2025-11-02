@@ -1,0 +1,28 @@
+<div>
+    <div *ngFor="let comment of comments" class="comment-card">
+        <div class="comment-header">
+            <strong> {{comment.userId}} </strong>
+            <span class="comment-time">
+                Created: {{ comment.creationTime | date: 'dd.MM.yyy, HH: mm'}}
+            </span>
+            <span *ngIf="comment.lastModifiedTime !== comment.creationTime" class="comment-modified-time">
+                (Last modified:{{ comment.lastModifiedTime | date: 'dd.MM.yyyy, HH:mm' }})
+            </span>
+        </div>
+        <div class="comment-body">
+            <p> {{ comment.text }} </p>
+        </div>
+
+        <div class="comment-action" *ngIf="(isAuthor || isTourist) && !isBlogReadOnly">
+            <button *ngIf="user?.id == comment.userId" (click)="deleteComment(comment)" color="accent" mat-icon-button>
+                <mat-icon>delete</mat-icon>
+            </button>
+            <button *ngIf="user?.id == comment.userId" (click)="onEditClicked(comment)" color="primary" mat-icon-button>
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngIf="(isAuthor || isTourist) && !isBlogReadOnly">
+       <xp-comment-form  [blogId]="blogId" (commentUpdated)="onCommentUpdated()" [comment]="selectedComment" [shouldEdit]="shouldEdit" ></xp-comment-form>
+    </div>
+</div>

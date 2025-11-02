@@ -1,0 +1,118 @@
+{
+  "NAVBAR": {
+    "HOME": "Početna",
+    "LOGIN": "Prijava",
+    "LOGOUT": "Odjava",
+    "MANAGE_TOURS": "Upravljanje Turama",
+    "MANAGE_OBJECTS": "Upravljanje Objektima",
+    "MANAGE_EQUIPMENT": "Upravljanje Opreme",
+    "MANAGE_ACCOUNTS": "Upravljanje Nalozima",
+    "RATINGS": "Ocene",
+    "RATE_US": "Oceni Nas",
+    "SET_PREFERENCES": "Postavi Preferencije Tura",
+    "BLOGS": "Blogovi",
+    "EDIT_ACCOUNT": "Izmeni Nalog",
+    "MY_EQUIPMENT": "Moja Oprema",
+    "LOCATION_SIMULATOR": "Simulacija Lokacije",
+    "CLUB": "Klub",
+    "START_TOUR": "Započni Turu",
+    "MY_TOURS": "Moje Ture",
+    "FOLLOWERS": "Pratioci",
+    "TOURS_MARKET": "Tržište Tura",
+    "TOUR_PROBLEMS": "Problemi Tura",
+    "PACAGES_PUBL": "Paketi",
+    "PACAGES_MY": "Moji Paketi",
+    "CREATE_ENCOUNTER": "Kreiraj Susret",
+    "CARD": "Kartica",
+    "PROFILE": "Profil",
+    "LANGUAGE": "Jezik",
+    "LOG_IN_OR_SIGN_UP": "Prijavi se ili se registruj",
+    "CART": "Korpa",
+    "SALES": "Prodaja",
+    "COUPON": "Kupon",
+    "BUNDLE": "Paketi",
+    "MY_ACCOUNT": "Moj nalog"
+  },
+  "RATINGS": {
+    "TITLE": "Ocene",
+    "HEADER_RATING": "Ocena",
+    "HEADER_COMMENT": "Komentar",
+    "LABEL_RATING": "Ocena",
+    "LABEL_COMMENT": "Komentar",
+    "BUTTON_DONE": "Završeno"
+  },
+  "SLOGAN": "Uradi više sa Explorer-om",
+  "DISCOVER": "Istraži",
+  "EXPLORE_WITH_US": "Istraži sa nama",
+  "SEARCH": {
+    "INPUT_LABEL": "Unesite udaljenost (u km):",
+    "BUTTON_SEARCH": "Pretraži",
+    "RESULTS_FOUND": "Pronađene ture:",
+    "NO_RESULTS": "Nema pronađenih tura"
+  },
+  "TOURS_LIST": {
+    "PREV": "Prethodna",
+    "NEXT": "Sledeća",
+    "DESCRIPTION": "Opis",
+    "DIFFICULTY": "Težina",
+    "PRICE": "Cena",
+    "TAGS": "Oznake",
+    "FIRST_CHECKPOINT": "Prva tačka",
+    "NAME": "Naziv",
+    "NO_DESCRIPTION": "Opis nije dostupan",
+    "CHECKPOINT_IMAGE": "Slika tačke",
+    "CHECKPOINT_IMAGE_ALT": "Slika tačke",
+    "VIEW_MORE": "Pogledaj više",
+    "PAGE_INFO": "Strana {{currentPage}} od {{totalPages}}",
+    "REVIEWS": "Recenzije",
+    "AVG_RATE": "Prosečna ocena za ovu turu: {{avg}}",
+    "USER_PROFILE": "Profil korisnika",
+    "COMMENT": "Komentar",
+    "NO_REVIEWS": "Nema dostupnih recenzija za ovu turu"
+  },
+  "FROM_THE_BLOG_SECTION": {
+    "FROM_THE_BLOG": "Sa Bloga",
+    "EXPLORE": "ISTRAŽI",
+    "TEXT1": " sjajne putničke blogove i inspiriši se!",
+    "TEXT2.1": "Nisi siguran gde sledeće da putuješ?",
+    "READ": "PROČITAJ",
+    "TEXT2.2": " post i možda ćeš otkriti svoje sledeće odredište iz snova.",
+    "SHARE": "PODELI",
+    "TEXT3": " svoje mišljenje u komentarima i poveži se sa drugim putnicima!",
+    "VIEW_MORE": "Pogledaj više"
+  },
+  "MAKE_YOU_VOICE_HEARD_SECTION": {
+    "MAKE_YOU_VOICE_HEARD": "Neka se tvoj glas čuje",
+    "GRADE": "Ocena",
+    "TOURS": "Ture",
+    "COUNTRIES": "Zemlje",
+    "RATE_US": "Oceni nas"
+  },
+  "WHAT_TRAVELLERS_SAY_SECTION": {
+    "WHAT_TRAVELLERS_SAY": "Šta kažu putnici",
+    "TRAVELER": "putnik",
+    "TEXT1": "Explorer je učinio naše putovanje nezaboravnim uz personalizovane lokalne ture. Više nikada nećemo ići na velike grupne ture!",
+    "TEXT2": "Explorer ima toliko uzbudljivih stvari! Osvojio sam kupon igrajući igru i završio na najboljem putovanju u životu!",
+    "TEXT3": "Naša tura je bila jedno od najdivnijih iskustava koje je ova grupa svetskih putnika ikada imala!"
+  },
+  "MAKE_NEW_FRIENDSHIPS_SECTION": {
+    "MAKE_NEW_FRIENDSHIPS": "Stvori nova prijateljstva",
+    "SHARE": "PODELI",
+    "TEXT1.1": " svoje putničke avanture i inspiriši druge! Pridruži se",
+    "CLUB": "KLUBU",
+    "TEXT1.2": " i otkrij svet kroz nova prijateljstva!",
+    "CONNECT": "POVEŽI SE",
+    "TEXT1.3": "podeli priče i stvori nezaboravne putničke uspomene.",
+    "TEXT2": "Tvoja priča može pokrenuti nečije sledeće nezaboravno putovanje!",
+    "JOIN_NOW": "pridruži se sada"
+  },
+  "PLAY_SECTION": {
+    "PLAY_WIN_AND_GET_YOUR_COUPON": "Igraj, pobedi i dobij svoj kupon!",
+    "PLAY_NOW": "Igraj sada"
+  },
+  "FOOTER_SECTION": {
+    "ABOUT_US": "O nama",
+    "CONTACT": "Kontakt",
+    "TEXT": "2024 Explorer. Napravljeno u Novom Sadu, Srbija."
+  }
+}

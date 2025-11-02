@@ -1,0 +1,25 @@
+.tour-card-container {
+    display: flex; /* Koristi Flexbox za raspored */
+    flex-wrap: wrap; /* Omogući prelazak u novi red ako nema dovoljno prostora */
+    gap: 16px; /* Razmak između kartica */
+    justify-content: space-between; /* Raspored kartica sa razmakom između */
+    padding: 16px; /* Unutrašnja margina kontejnera */
+  }
+  
+  .tour-card {
+    flex: 1 1 calc(33.333% - 32px); /* Kartice zauzimaju po trećinu širine */
+    box-sizing: border-box; /* Uključuje margine i padding u širinu */
+    max-width: calc(33.333% - 32px); /* Osigurava maksimalnu širinu kartice */
+    background-color: #f9f9f9; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    padding: 16px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.2s, box-shadow 0.2s; /* Animacija na hover */
+  }
+  
+  .tour-card:hover {
+    transform: translateY(-4px); /* Efekat podizanja kartice */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  }
+  

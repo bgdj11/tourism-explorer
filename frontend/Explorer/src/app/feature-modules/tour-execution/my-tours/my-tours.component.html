@@ -1,0 +1,66 @@
+<div class="tour-container" *ngIf="purchasedTours.length > 0; else noTours">
+  <div *ngFor="let tour of purchasedTours" class="tour-card">
+    <h2 class="tour-name">{{ tour.name }}</h2>
+    <p class="tour-description">{{ tour.description }}</p>
+
+    <div class="tour-details">
+  <div class="checkpoints-images" *ngIf="getFirstCheckpoint(tour) as firstCheckpoint; else noCheckpoints">
+  <div class="checkpoint-item">
+    <img *ngIf="firstCheckpoint.image" 
+         [src]="firstCheckpoint.image" 
+         alt="{{ firstCheckpoint.checkpointName }}" 
+         class="checkpoint-img-large" />
+  </div>
+</div>
+<ng-template #noCheckpoints>
+  <p>No checkpoints available.</p>
+</ng-template>
+
+
+
+
+
+      <div class="tour-meta">
+        <p><strong>Length:</strong> {{ tour.lengthInKm }} km</p>
+        <p><strong>Tags:</strong> {{ tour.tags.join(', ') }}</p>
+<p *ngIf="tourReviews[tour.id] && tourReviews[tour.id].length > 0" class="tour-rating">
+          <mat-icon class="star">star</mat-icon> 
+          {{ (avgGrade[tour.id] / tourReviews[tour.id].length) | number:'1.1-2' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="tour-checkpoints-list">
+      <p><strong>Checkpoints:</strong></p>
+      <ul>
+        <li *ngFor="let point of tour.tourCheckpoints">
+          {{ point.checkpointName || 'Nema CheckPoint' }}
+        </li>
+      </ul>
+    </div>
+
+<div *ngIf="tourReviews[tour.id] && tourReviews[tour.id].length > 0" class="reviews-section">
+      <p class="reviews-title">Reviews:</p>
+      <div class="reviews-container">
+        <div *ngFor="let review of tourReviews[tour.id]" class="review-item">
+          <div class="review-header">
+            <div class="profile-picture">
+              <img src="assets/tourist.png" alt="User Profile Picture" />
+            </div>
+            <p class="user-name">{{ review.personn.name }} {{ review.personn.surname }}</p>
+          </div>
+          <p class="review-comment">{{ review.comment }}</p>
+          <p class="review-rating">
+            <mat-icon class="star-c">star</mat-icon> {{ review.rating }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <button mat-raised-button class="start-btn" (click)="startTour(tour.id)">Start tour</button>
+  </div>
+</div>
+
+<ng-template #noTours>
+  <p>No purchased tours found.</p>
+</ng-template>
+<xp-my-pacages></xp-my-pacages>

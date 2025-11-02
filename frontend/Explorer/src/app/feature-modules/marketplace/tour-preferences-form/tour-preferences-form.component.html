@@ -1,0 +1,38 @@
+<form [formGroup]="preferencesForm" >
+  <div>
+    <label for="difficulty">Tour difficulty:</label>
+    <select formControlName="difficulty">
+      <option [ngValue]="1">Easy</option>
+      <option [ngValue]="2">Medium</option>
+      <option [ngValue]="3">Hard</option>
+    </select>
+  </div>
+   
+  <div>
+    <label for="walkRating">Rating for walking:</label>
+    <input id="walkRating" type="number" formControlName="walkRating" min="0" max="3">
+  </div>
+
+  <div>
+    <label for="bikeRating">Rating for riding a bike:</label>
+    <input id="bikeRating" type="number" formControlName="bikeRating" min="0" max="3">
+  </div>
+
+  <div>
+    <label for="carRating">Rating for driving a car:</label>
+    <input id="carRating" type="number" formControlName="carRating" min="0" max="3">
+  </div>
+
+  <div>
+    <label for="boatRating">Rating for driving a boat:</label>
+    <input id="boatRating" type="number" formControlName="boatRating" min="0" max="3">
+  </div>
+
+  <div>
+    <label for="interestTags">Tags:</label>
+    <input id="interestTags" type="text" formControlName="interestTagsIn" placeholder="Tag1, Tag2, Tag3...">
+  </div>
+
+  <button *ngIf="!shouldEdit" color="primary" type="submit" (click)="addTourPreferences()" mat-raised-button>Add</button>
+  <button *ngIf="shouldEdit" color="primary" type="submit" (click)="updateTourPreferences()" mat-raised-button>Edit</button>
+</form>

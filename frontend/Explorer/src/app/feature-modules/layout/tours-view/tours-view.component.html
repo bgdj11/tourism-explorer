@@ -1,0 +1,17 @@
+<div class="tour-slider">
+  <button class="arrow left-arrow" (click)="scrollLeft()">&lt;</button>
+  <div class="tour-container">
+    <div class="tour-card" *ngFor="let tour of tours">
+      <div class="tour-image">
+        <img [src]="getTourImage(tour)" alt="Tour Image" />
+      </div>
+      <div class="tour-map">
+        <div id="map-{{ tour.id }}" style="height: 120px;"></div>
+      </div>
+      <div class="tour-details">
+        <button [routerLink]="['/tour-list']">Available Tours ></button>
+      </div>
+    </div>
+  </div>
+  <button class="arrow right-arrow" (click)="scrollRight()">&gt;</button>
+</div>

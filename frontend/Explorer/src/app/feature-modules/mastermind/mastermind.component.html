@@ -1,0 +1,73 @@
+<div #root class="mm">
+  <div class="panel">
+    <header class="head">
+      <h2>MASTERMIND</h2>
+      <div class="sub">Attempt {{ currentAttempt + 1 }} / {{ maxAttempts }}</div>
+    </header>
+
+    <section class="palette">
+      <h3 class="section-title">Select Colors</h3>
+      <div class="row scroll-x">
+        <button
+          class="color"
+          *ngFor="let color of colors"
+          [style.--c]="color"
+          (click)="selectColor(color)"
+          [disabled]="gameOver"
+          [title]="color">
+        </button>
+      </div>
+    </section>
+
+    <section class="board">
+      <h3 class="section-title">Guesses</h3>
+
+      <div
+        class="guess-row"
+        *ngFor="let guessObj of guesses; let i = index"
+        [class.current]="i === currentAttempt">
+
+        <div class="guess-list">
+          <button
+            class="color slot"
+            *ngFor="let c of guessObj.guess; let j = index"
+            [style.--c]="c || '#e2e8f0'"
+            [class.empty]="!c"
+            [title]="i === currentAttempt && c ? 'Click to remove' : ''"
+            (click)="i === currentAttempt && c ? removeColor(j) : null">
+          </button>
+        </div>
+
+        <div class="feedback-list">
+          <span class="peg"
+                *ngFor="let f of guessObj.feedback"
+                [class.black]="f === 'black'"
+                [class.white]="f === 'white'"
+                [class.gray]="f === 'gray'"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="message" *ngIf="message">{{ message }}</div>
+
+      <div class="btns" *ngIf="!gameOver">
+        <button class="btn primary"
+                (click)="submitGuess()"
+                [disabled]="guesses[currentAttempt].guess.includes(null)">Submit Guess</button>
+        <button class="btn ghost" (click)="resetGame()">Reset</button>
+      </div>
+
+      <div class="secret" *ngIf="showSecretCode">
+        <h4>Secret Code</h4>
+        <div class="row">
+          <span class="color reveal"
+                *ngFor="let c of secretCode"
+                [style.--c]="c"
+                [title]="c"></span>
+        </div>
+        <button class="btn primary" (click)="resetGame()">Play Again</button>
+      </div>
+    </section>
+  </div>
+</div>

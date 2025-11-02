@@ -1,0 +1,212 @@
+/* ================== VARS ================== */
+:root {
+    --primary-color: #004D3B;
+    --secondary-color: #bbe6e4;
+    --font-family: 'Roboto', 'Segoe UI', sans-serif; 
+    --background-color: #f5f5f5;
+    --text-color: #333;
+  }
+  
+ 
+  body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-size: 16px; 
+    padding-top: 70px;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family);
+    color: var(--primary-color);
+    margin: 0 0 5 0;
+    font-weight: 700; 
+    text-align: center;
+  }
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+    color: #bbe6e4; 
+  }
+  
+  button {
+    border: 1.5px solid  rgba(152, 255, 152, 0.6);
+    padding: 10px 15px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #004D3B; 
+    background-color: #ffffff; 
+    border-radius: 10px;
+    cursor: pointer; 
+    transition: transform 0.5s ease;
+    box-shadow: 0px 5px 15px rgba(152, 255, 152, 0.6);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    
+  }
+  
+  button:hover {
+    color: #ffffff; 
+    background-color: #004D3B; 
+    transform: scale(1.1); 
+  }
+  
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mt-10 {
+    margin-top: 10px;
+  }
+  
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .card-content {
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+/* manji navbar na mobilnim */
+@media (max-width: 600px) {
+  :root { --toolbar-h: 56px; }
+}
+
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  font-size: 16px;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  text-align: center;
+}
+a { color: var(--primary-color); text-decoration: none; }
+a:hover { text-decoration: underline; color: #bbe6e4; }
+button {
+  border: none;
+  padding: 10px 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #004D3B;
+  background-color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover { color: #ffffff; background-color: #004D3B; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+.text-center { text-align: center; }
+.mt-10 { margin-top: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.card {
+  background-color: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.1); transition: box-shadow .3s ease;
+}
+.card:hover { box-shadow: 0 6px 10px rgba(0,0,0,.15); }
+.card-title { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 10px; font-weight: 600; }
+.card-content { color: var(--text-color); font-size: 1rem; line-height: 1.5; }
+
+/* ================== NAVBAR FIX ================== */
+/* Ako koristiš drugi selektor za navbar, dodaj ga ovde u listu */
+app-navbar, .navbar, header.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+}
+
+/* GameMenu zauzima tačno jedan ekran ispod navbara */
+/* ================== GAME MENU: GLOBAL LAYOUT ================== */
+.game-menu-page {
+  margin-top: var(--toolbar-h);                 /* ispod fixed navbara */
+  height: calc(100svh - var(--toolbar-h));      /* tačno jedan ekran */
+  max-width: 1200px;
+  margin-left: auto; margin-right: auto;
+  padding: 8px 16px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  overflow: hidden;                              /* bez skrola */
+}
+
+app-navbar, .navbar, header.site-header{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 2000;                /* iznad svega */
+  background: #ffffff;          /* puna pozadina – tekst se nikad ne “meša” sa slikama */
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.game-menu-page{
+  position: relative; z-index: 0;
+  margin-top: var(--toolbar-h);
+  height: calc(100svh - var(--toolbar-h));
+  max-width: 1200px; margin-left:auto; margin-right:auto;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 14px;
+  overflow: hidden;
+}
+
+/* >>> FULL-BLEED tamno plava pozadina, samo na ovoj strani */
+.game-menu-page::before{
+  content:"";
+  position: fixed;
+  top: var(--toolbar-h); left:0; right:0; bottom:0;
+  background:#0b1b34;
+  z-index: -1;  /* iza sadržaja */
+}
+.page-under-nav { margin-top: var(--toolbar-h, 64px); }
+
+.modal-dialog {
+  margin-top: 100px !important; /* koliko hoćeš da spustiš */
+}
+

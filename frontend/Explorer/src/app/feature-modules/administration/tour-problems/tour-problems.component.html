@@ -1,0 +1,92 @@
+<div style="margin-top: 10px;" *ngIf="loggedInUserRole === 'administrator'">
+  <button type="button" routerLink="/tour-problems-statistics" mat-raised-button class="custom-save-button" style="background-color: darkolivegreen; color: white;"><mat-icon>pie_chart</mat-icon>Statistics</button>
+</div>
+<div class="tour-problems-container" *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="tourProblems.length > 0; else noProblems">
+      <div *ngFor="let problem of tourProblems" class="tour-problem-card"
+      [ngClass]="{
+        'highlight-problem': loggedInUserRole === 'administrator' && !problem.closed && isOlderThanFiveDays(problem)
+      }">
+      <p *ngIf="loggedInUserRole === 'administrator' && !problem.closed && isOlderThanFiveDays(problem)" style="color: red; font-weight: bold;">
+        Not resolved in 5 days
+      </p>
+      <div *ngIf="loggedInUserRole === 'administrator' && isOlderThanFiveDays(problem) && problem.resolvingDue == null">
+        <mat-label style="color: red"><strong>Set resolving deadline: </strong></mat-label>
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Deadline</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [(ngModel)]="due"
+            name="Deadline"
+            [min]="calculateTomorrow()"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <button mat-raised-button class="custom-save-button" (click)="SaveDeadline(problem)" [disabled]="!due">Save</button>
+      </div>
+      <p *ngIf="(loggedInUserRole === 'administrator' || loggedInUserRole === 'author') && !problem.closed && isOlderThanFiveDays(problem) && problem.resolvingDue != null" 
+          style="color: red; font-weight: bold;">
+        Deadline for resolving: {{problem.resolvingDue | date:'short'}}
+      </p>
+        <h3 class="problem-title">about Tour: {{ problem.tourName || 'Loading...' }}
+            <button
+        *ngIf="loggedInUserRole === 'tourist' && !problem.resolved && !problem.closed"
+        class="resolve-button"
+        (click)="markAsResolved(problem)">
+        Mark as resolved
+      </button>
+      <button
+        *ngIf="loggedInUserRole === 'administrator' && hasDeadlineExpire(problem)  && !problem.closed"
+        class="closeP-button" mat-raised-button color="warn"
+        (click)="closeProblem(problem)"><mat-icon>close</mat-icon>
+        Close problem
+      </button>
+      <span *ngIf="problem.resolved" class="resolved-text"><mat-icon class="icon">check_circle</mat-icon> Resolved</span>
+      <mat-label *ngIf="problem.closed" class="closed-text"><mat-icon class="icon">close</mat-icon>Not resolved</mat-label>
+        </h3>
+        <p class="tourist-info" style="font-size: small; color: gray; font-style: italic;">
+            by tourist {{ problem.touristUsername || 'Loading...' }} on {{problem.reportedAt | date:'short' }}
+        </p>
+        <p class="problem-category"><strong>Category:</strong> {{ problem.category }}</p>
+        <p class="problem-priority"><strong>Priority:</strong> {{ problem.priority }}</p>
+        <p class="problem-description"><strong>Description:</strong> {{ problem.description }}</p>
+        <div *ngIf="problem.problemComments.length > 0">
+            <p class="comment-comment">Comments:</p>
+            <div *ngFor="let comment of problemComments[problem.id!]" class="comment-section">             
+              <p class="comment-date" style=" color: gray;  font-style: italic;">{{ comment.commentedAt | date:'short' }}</p>
+              <p class="comment-meta" style=" color: gray; font-style: italic;">
+                {{ comment.userRole || 'Loading...' }}
+                {{ comment.username || 'Loading...' }}:
+              </p>
+               <p class="comment-text">{{ comment.text }}</p>
+               <p class="line">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+            </div>
+          </div>
+          <div *ngIf="!problem.resolved && !problem.closed">
+            <div class="comment-section">
+                <textarea class="comment-section-text"
+                  id="comment"
+                  placeholder="Leave a comment..."
+                  [value]="commentText"
+                  (input)="onCommentChange($event)">
+                  </textarea>
+                <button class="comment-section-button"
+                  [disabled]="!commentText"
+                  (click)="submitComment(problem)">
+                  Submit
+                </button>
+              </div>
+          </div>
+        </div>
+    </ng-container>
+    <ng-template #noProblems>
+      <p class="no-problems-message">No tour problem exists.</p>
+    </ng-template>
+  </div>
+  
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>

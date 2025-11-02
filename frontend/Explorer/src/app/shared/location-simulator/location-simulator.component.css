@@ -1,0 +1,20 @@
+.simulator-container {
+  position: relative;
+}
+
+.map-container {
+  position: relative;
+}
+
+.location-display {
+  position: relative;
+  z-index: 10; /* Veći z-index od mape */
+  background-color: rgba(255, 255, 255, 0.8); /* Poluprovidna pozadina za bolju vidljivost */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+button {
+  position: relative;
+  z-index: 10; /* Veći z-index od mape */
+}

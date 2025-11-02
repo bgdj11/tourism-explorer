@@ -1,0 +1,15 @@
+<div class="game-board" #board>
+  <div
+    class="card"
+    *ngFor="let card of cards; let i = index"
+    [class.flipped]="card.flipped || card.matched"
+    (click)="flipCard(i)"
+  >
+    <div class="card-inner">
+      <div class="card-front">
+        <img [src]="card.image" alt="Card image" />
+      </div>
+      <div class="card-back">?</div>
+    </div>
+  </div>
+</div>
