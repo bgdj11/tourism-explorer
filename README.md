@@ -2,7 +2,7 @@
 
 A comprehensive full-stack tourism platform consisting of an ASP.NET Core backend and an Angular frontend. This monorepo contains both applications merged together while preserving complete commit history from both original repositories.
 
-## 🌍 Overview
+## Overview
 
 Tourism Explorer is a feature-rich application that enables:
 
@@ -13,7 +13,7 @@ Tourism Explorer is a feature-rich application that enables:
 - **Payment System**: Digital wallets and marketplace
 - **Analytics**: Interactive charts and statistics dashboards
 
-## 📁 Repository Structure
+## Repository Structure
 
 This repository is organized into two main parts:
 
@@ -43,11 +43,11 @@ tourism-explorer/
 └── README.md                 # This file
 ```
 
-## 📚 Documentation
+## Documentation
 
 Detailed documentation for each part of the application:
 
-### 🔧 Backend Documentation
+### Backend Documentation
 **Location**: [`src/README.md`](./src/README.md)
 
 The backend is an ASP.NET Core 7.0 application following Clean Architecture and Domain-Driven Design principles.
@@ -61,9 +61,9 @@ The backend is an ASP.NET Core 7.0 application following Clean Architecture and 
 
 **Technologies**: ASP.NET Core 7.0, Entity Framework Core, PostgreSQL, JWT, BCrypt
 
-👉 [**Read Backend Documentation →**](./src/README.md)
+[**Read Backend Documentation →**](./src/README.md)
 
-### 🎨 Frontend Documentation
+### Frontend Documentation
 **Location**: [`frontend/README.md`](./frontend/README.md)
 
 The frontend is an Angular 16 single-page application with a modular, feature-based architecture.
@@ -78,9 +78,9 @@ The frontend is an Angular 16 single-page application with a modular, feature-ba
 
 **Technologies**: Angular 16, TypeScript, Material Design, Bootstrap, Leaflet, ECharts
 
-👉 [**Read Frontend Documentation →**](./frontend/README.md)
+[**Read Frontend Documentation →**](./frontend/README.md)
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -132,7 +132,7 @@ npm start
 
 The app will be available at `http://localhost:4200`
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 
@@ -148,7 +148,7 @@ cd frontend/Explorer
 npm test
 ```
 
-## 🏗 Architecture Overview
+## Architecture Overview
 
 ### Backend Architecture
 
@@ -166,20 +166,20 @@ npm test
 - **Component-Based** UI with Angular
 - **Service Layer** for business logic
 
-## 📊 Repository Statistics
+## Repository Statistics
 
 - **Combined Commits**: 23,900+ commits from both repositories
 - **Backend**: ASP.NET Core with 50+ modules and components
 - **Frontend**: Angular with 12+ feature modules
 - **Combined Size**: ~90 MB of source code and assets
 
-## 🔗 Links
+## Links
 
 - **Repository**: [https://github.com/bgdj11/tourism-explorer](https://github.com/bgdj11/tourism-explorer)
 - **Backend Documentation**: [`src/README.md`](./src/README.md)
 - **Frontend Documentation**: [`frontend/README.md`](./frontend/README.md)
 
-## 📄 License
+## License
 
 This project contains code from two repositories, each with their own license terms. See LICENSE files in respective directories.
 
