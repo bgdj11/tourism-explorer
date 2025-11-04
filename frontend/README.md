@@ -2,7 +2,7 @@
 
 A modern Angular-based single-page application (SPA) for the Tourism Explorer platform. This frontend provides an intuitive and interactive user interface for tourists and tour operators to explore, create, and manage tourism experiences, complete with gamification elements and real-time map integration.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [Technology Stack](#-technology-stack)
@@ -10,12 +10,12 @@ A modern Angular-based single-page application (SPA) for the Tourism Explorer pl
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
-- [Running the Application](#️-running-the-application)
+- [Running the Application](-running-the-application)
 - [Building for Production](#-building-for-production)
 - [Testing](#-testing)
-- [Configuration](#️-configuration)
+- [Configuration](-configuration)
 - [UI Components](#-ui-components)
-- [Maps Integration](#️-maps-integration)
+- [Maps Integration](-maps-integration)
 - [Internationalization (i18n)](#-internationalization-i18n)
 - [Authentication](#-authentication)
 - [Performance Optimizations](#-performance-optimizations)
@@ -24,7 +24,7 @@ A modern Angular-based single-page application (SPA) for the Tourism Explorer pl
 - [Troubleshooting](#-troubleshooting)
 - [License](#-license)
 
-## 🎯 Overview
+## Overview
 
 The Tourism Explorer frontend is a feature-rich Angular application that enables users to:
 
@@ -37,7 +37,7 @@ The Tourism Explorer frontend is a feature-rich Angular application that enables
 - Process payments and manage wallets
 - View analytics and statistics with interactive charts
 
-## 🛠 Technology Stack
+## Technology Stack
 
 - **Framework**: Angular 16.2.12
 - **Language**: TypeScript 5.1.3
@@ -54,15 +54,15 @@ The Tourism Explorer frontend is a feature-rich Angular application that enables
 - **Testing**: Jasmine, Karma
 - **Build Tool**: Angular CLI with Webpack 5
 
-## ✨ Features
+## Features
 
-### 🗺 Tour Management
+### Tour Management
 - **Tour Authoring**: Create tours with multiple checkpoints, descriptions, and media
 - **Tour Execution**: Real-time GPS tracking and turn-by-turn navigation
 - **Interactive Maps**: Leaflet-based maps with custom markers and routing
 - **Checkpoint Management**: Add, edit, and organize tour stops
 
-### 🎮 Gamification
+### Gamification
 - **Mini-Games**: Integrated arcade games including:
   - Space Invaders
   - Tetris
@@ -72,29 +72,29 @@ The Tourism Explorer frontend is a feature-rich Angular application that enables
 - **Challenges & Encounters**: Interactive tasks and quizzes during tours
 - **Rewards System**: Points and achievements for completing activities
 
-### 📝 Blog & Content
+### Blog & Content
 - **Blog Platform**: Create, edit, and publish travel stories
 - **Markdown Support**: Rich text editing with markdown support
 - **Media Gallery**: Image and video uploads
 - **Social Interaction**: Comments and reactions
 
-### 💳 Payments & Marketplace
+### Payments & Marketplace
 - **Wallet Management**: Digital wallet for tour payments
 - **Marketplace**: Browse and purchase tours and experiences
 - **Transaction History**: View payment records and receipts
 
-### 📊 Analytics & Visualization
+### Analytics & Visualization
 - **Interactive Charts**: ECharts-powered data visualizations
 - **Statistics Dashboard**: Tour performance and user engagement metrics
 - **Reports**: Exportable analytics reports
 
-### 👤 User Management
+### User Management
 - **Authentication**: JWT-based secure login and registration
 - **User Profiles**: Customizable tourist and author profiles
 - **Role-Based Access**: Different views for tourists, authors, and administrators
 - **Administration Panel**: User and content management for admins
 
-## 🏗 Architecture
+## Architecture
 
 The application follows Angular best practices with a modular, feature-based architecture:
 
@@ -125,7 +125,7 @@ The application follows Angular best practices with a modular, feature-based arc
 - **Lazy Loading**: Route-based code splitting for performance
 - **Dependency Injection**: Angular's built-in DI for loose coupling
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Explorer/                           # Main Angular application
@@ -175,7 +175,7 @@ Explorer/                           # Main Angular application
 └── karma.conf.js                  # Test configuration
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -211,7 +211,7 @@ Ensure you have the following installed:
    };
    ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ### Development Server
 
@@ -238,7 +238,7 @@ ng serve --port 4300
 ng serve --host 0.0.0.0
 ```
 
-## 🔨 Building for Production
+## Building for Production
 
 ### Production Build
 
@@ -266,7 +266,7 @@ ng build --stats-json
 npx webpack-bundle-analyzer dist/explorer/stats.json
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Run Unit Tests
 
@@ -295,7 +295,7 @@ ng test --code-coverage
 
 Coverage reports will be generated in the `coverage/` directory.
 
-## ⚙️ Configuration
+## Configuration
 
 ### Environment Files
 
@@ -332,7 +332,7 @@ Run with proxy:
 ng serve --proxy-config proxy.conf.json
 ```
 
-## 🎨 UI Components
+## UI Components
 
 ### Material Design Components
 
@@ -362,7 +362,7 @@ Key shared components (`shared/components/`):
 - Form builders and validators
 - Media upload widgets
 
-## 🗺️ Maps Integration
+## Maps Integration
 
 The application uses Leaflet for interactive mapping:
 
@@ -385,7 +385,7 @@ L.Routing.control({
 }).addTo(map);
 ```
 
-## 🌐 Internationalization (i18n)
+## Internationalization (i18n)
 
 The app supports multiple languages using `@ngx-translate`:
 
@@ -407,7 +407,7 @@ Usage in templates:
 <h1>{{ 'WELCOME_MESSAGE' | translate }}</h1>
 ```
 
-## 🔐 Authentication
+## Authentication
 
 JWT-based authentication is handled via `@auth0/angular-jwt`:
 
@@ -422,7 +422,7 @@ JWT-based authentication is handled via `@auth0/angular-jwt`:
 
 Token is stored in localStorage with the key defined in environment config.
 
-## 🚀 Performance Optimizations
+## Performance Optimizations
 
 - **Lazy Loading**: Feature modules loaded on-demand
 - **OnPush Change Detection**: Used in performance-critical components
@@ -430,7 +430,7 @@ Token is stored in localStorage with the key defined in environment config.
 - **Pure Pipes**: Memoized transformations
 - **Production Build**: Ahead-of-Time (AOT) compilation, tree-shaking, minification
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Workflow
 
@@ -473,7 +473,7 @@ Token is stored in localStorage with the key defined in environment config.
 - Models: `feature-name.model.ts`
 - Modules: `feature-name.module.ts`
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [Angular Documentation](https://angular.io/docs)
 - [Angular Material](https://material.angular.io/)
@@ -481,7 +481,7 @@ Token is stored in localStorage with the key defined in environment config.
 - [ECharts Documentation](https://echarts.apache.org/)
 - [Bootstrap Documentation](https://getbootstrap.com/)
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -503,11 +503,5 @@ npm install -g @angular/cli
 ```bash
 ng serve --port 4300
 ```
-
-## 📄 License
-
-This project is licensed under the terms specified in the LICENSE file.
-
----
 
 **[← Back to Main Documentation](../README.md)** | **[Backend Documentation →](../src/README.md)** 
