@@ -2,20 +2,20 @@
 
 A comprehensive ASP.NET Core backend application for a tourism exploration platform. This project provides REST APIs, domain models, business logic, and infrastructure for managing tours, stakeholders, encounters, payments, blog posts, and games functionality.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [Technology Stack](#-technology-stack)
 - [Architecture](#-architecture)
 - [Project Structure](#-project-structure)
 - [Getting Started](#-getting-started)
-- [Running the Application](#️-running-the-application)
+- [Running the Application](-running-the-application)
 - [Testing](#-testing)
 - [API Documentation](#-api-documentation)
 - [Database](#-database)
 - [Contributing](#-contributing)
 
-## 🎯 Overview
+## Overview
 
 The Tourism Explorer backend is built using a modular monolithic architecture following Clean Architecture principles. It manages:
 
@@ -26,7 +26,7 @@ The Tourism Explorer backend is built using a modular monolithic architecture fo
 - **Blog**: Content management for tourism-related blog posts
 - **Games**: Gamification features and challenges
 
-## 🛠 Technology Stack
+## Technology Stack
 
 - **Framework**: ASP.NET Core 7.0
 - **Language**: C# 11
@@ -38,7 +38,7 @@ The Tourism Explorer backend is built using a modular monolithic architecture fo
 - **Testing**: xUnit, Moq
 - **Architecture Testing**: NetArchTest
 
-## 🏗 Architecture
+## Architecture
 
 This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles, organized into:
 
@@ -79,7 +79,7 @@ The application is divided into distinct bounded contexts:
 - **Payments** - Payment processing and wallet management
 - **Games** - Gamification and quiz functionality
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -111,7 +111,7 @@ src/
 └── Explorer.sln                     # Solution file
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -152,7 +152,7 @@ Before you begin, ensure you have the following installed:
    dotnet ef database update
    ```
 
-## ▶️ Running the Application
+## Running the Application
 
 ### Development Mode
 
@@ -180,7 +180,7 @@ This provides interactive API documentation where you can test endpoints.
 2. Set `Explorer.API` as the startup project
 3. Press `F5` or click the "Run" button
 
-## 🧪 Testing
+## Testing
 
 The project includes comprehensive unit, integration, and architecture tests.
 
@@ -214,7 +214,7 @@ Tests include:
 - **Integration Tests**: Repository and database operations
 - **Architecture Tests**: Enforcement of architectural rules and dependencies
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication
 
@@ -240,7 +240,7 @@ Most endpoints require JWT authentication. To authenticate:
 
 Detailed API documentation is available through Swagger UI when running in development mode.
 
-## 🗄 Database
+## Database
 
 ### Entity Framework Migrations
 
@@ -272,7 +272,7 @@ Initial data seeding occurs automatically on application startup (see `Program.c
 - Sample tourist profiles
 - Test data for development
 
-## 🤝 Contributing
+## Contributing
 
 ### Branch Strategy
 
@@ -296,7 +296,7 @@ Initial data seeding occurs automatically on application startup (see `Program.c
 4. Run architecture tests to verify design compliance
 5. Submit a pull request to `development`
 
-## 📝 Configuration
+## Configuration
 
 ### Application Settings
 
@@ -313,7 +313,7 @@ export ConnectionStrings__DefaultConnection="your-connection-string"
 export JwtSettings__Secret="your-jwt-secret"
 ```
 
-## 🔐 Security
+## Security
 
 - Passwords are hashed using BCrypt
 - JWT tokens for stateless authentication
@@ -321,7 +321,7 @@ export JwtSettings__Secret="your-jwt-secret"
 - HTTPS enforced in production
 - Input validation on all endpoints
 
-## 📦 Dependencies
+## Dependencies
 
 Major NuGet packages:
 - `Microsoft.EntityFrameworkCore` - ORM
@@ -332,7 +332,7 @@ Major NuGet packages:
 - `AutoMapper` - Object mapping
 - `xUnit`, `Moq` - Testing
 
-## 📄 License
+## License
 
 This project is licensed under the terms specified in the LICENSE file.
 
